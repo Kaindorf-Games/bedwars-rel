@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.bedwarsrel</groupId>
+  <groupId>at.kaindorf.games</groupId>
   <artifactId>BedwarsRel-Parent</artifactId>
   <packaging>pom</packaging>
   <version>1.3.6</version>
@@ -11,46 +11,43 @@
   <name>BedwarsRel</name>
   <description>A Bedwars Plugin for Minecraft servers.</description>
   <url>https://bedwarsrel.github.io</url>
+
   <licenses>
     <license>
       <name>GNU GENERAL PUBLIC LICENSE, Version 3.0</name>
       <url>https://github.com/BedwarsRel/BedwarsRel/blob/master/LICENSE</url>
     </license>
   </licenses>
+
   <developers>
     <developer>
       <name>BedwarsRel-Team</name>
       <organizationUrl>https://github.com/orgs/BedwarsRel/people</organizationUrl>
     </developer>
   </developers>
+
   <scm>
     <url>https://github.com/BedwarsRel/BedwarsRel/tree/master/</url>
     <connection>scm:git:ssh://github.com:BedwarsRel/BedwarsRel.git</connection>
     <developerConnection>scm:git:ssh://github.com:BedwarsRel/BedwarsRel.git</developerConnection>
   </scm>
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/BedwarsRel/BedwarsRel/issues</url>
-  </issueManagement>
+
+<!--  <issueManagement>-->
+<!--    <system>GitHub</system>-->
+<!--    <url>https://github.com/BedwarsRel/BedwarsRel/issues</url>-->
+<!--  </issueManagement>-->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <modules>
-    <module>v1_8_r1</module>
-    <module>v1_8_r2</module>
     <module>v1_8_r3</module>
-    <module>v1_9_r1</module>
-    <module>v1_9_r2</module>
-    <module>v1_10_r1</module>
-    <module>v1_11_r1</module>
-    <module>v1_12_r1</module>
     <module>common</module>
     <module>plugin</module>
   </modules>
 
-  <profiles>
+  <!--<profiles>
     <profile>
       <id>default</id>
       <activation>
@@ -185,7 +182,7 @@
         </plugins>
       </build>
     </profile>
-  </profiles>
+  </profiles>-->
 
   <repositories>
     <repository>
@@ -200,15 +197,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
-      <version>1.12-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.16</version>
+      <version>1.18.20</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

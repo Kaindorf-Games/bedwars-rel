@@ -5,7 +5,7 @@ description: |
 author: "The BedwarsRel-Team | www.github.com/orgs/BedwarsRel/people"
 website: "www.github.com/BedwarsRel"
 
-main: io.github.bedwarsrel.BedwarsRel
+main: at.kaindorf.games.BedwarsRel
 version: ${versionstring}
 
 awareness:

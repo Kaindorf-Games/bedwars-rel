@@ -278,17 +278,17 @@ titles:
     # If true, the title configured in this section will be displayed
     enabled: true
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Fade-In time
+    # at.kaindorf.games.com.v1_8_r1.Title Fade-In time
     # type: double
     # The time how long the title fade-in should take in seconds
     title-fade-in: 1.5
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Stay time
+    # at.kaindorf.games.com.v1_8_r1.Title Stay time
     # type: double
     # The time how long the title will stay in seconds
     title-stay: 5.0
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Fade-Out time
+    # at.kaindorf.games.com.v1_8_r1.Title Fade-Out time
     # type: double
     # The time how long the title fade-out should take in seconds
     title-fade-out: 2.0
@@ -317,17 +317,17 @@ titles:
     # as subtitle. (/bw setbuilder {game})
     enabled: false
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Fade-In time
+    # at.kaindorf.games.com.v1_8_r1.Title Fade-In time
     # type: double
     # The time how long the title fade-in should take in seconds
     title-fade-in: 1.5
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Stay time
+    # at.kaindorf.games.com.v1_8_r1.Title Stay time
     # type: double
     # The time how long the title will stay in seconds
     title-stay: 2.0
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title Fade-Out time
+    # at.kaindorf.games.com.v1_8_r1.Title Fade-Out time
     # type: double
     # The time how long the title fade-out should take in seconds
     title-fade-out: 1.5
@@ -355,7 +355,7 @@ titles:
     # in countdown (from 10) in lobby
     enabled: true
     
-    # io.github.bedwarsrel.com.v1_8_r1.Title format
+    # at.kaindorf.games.com.v1_8_r1.Title format
     # type: string
     # The format of the countdown (colors addable)
     format: "&3{countdown}"
@@ -406,10 +406,10 @@ use-internal-shop: true
 # If true the inventory gets restore after the game ends
 save-inventory: true
 
-# Show team in io.github.bedwarsrel.com.v1_8_r1.ActionBar
+# Show team in at.kaindorf.games.com.v1_8_r1.ActionBar
 # Type: boolean
 # Sets if the name of a player's team should be displayed
-# in the io.github.bedwarsrel.com.v1_8_r1.ActionBar
+# in the at.kaindorf.games.com.v1_8_r1.ActionBar
 show-team-in-actionbar: false
 
 # Chat to all prefix
