@@ -140,6 +140,10 @@ commands:
     description: Add teams to the Tournament
     usage: /<command> [fileName]
     permission: tourney.manage
+  tourney clear:
+    description: Clears all tournament configuration (teams, players, matches, ...)
+    usage: /<command>
+    permission: tourney.manage
 
 permissions:
   bw.base:

@@ -1,6 +1,10 @@
 package at.kaindorf.games;
 
 import at.kaindorf.games.commands.*;
+import at.kaindorf.games.commands.Bedwars.*;
+import at.kaindorf.games.commands.Tournament.AddTournamentTeamsCommand;
+import at.kaindorf.games.commands.Tournament.ClearTournamentCommand;
+import at.kaindorf.games.commands.Tournament.TournamentHelpCommand;
 import at.kaindorf.games.shop.Specials.SpecialItem;
 import at.kaindorf.games.updater.ConfigUpdater;
 import at.kaindorf.games.updater.PluginUpdater;
@@ -840,6 +844,7 @@ public class BedwarsRel extends JavaPlugin {
     // Tournament Commands
     this.tourneyCommands.add(new TournamentHelpCommand(this));
     this.tourneyCommands.add(new AddTournamentTeamsCommand(this));
+    this.tourneyCommands.add(new ClearTournamentCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

@@ -8,12 +8,10 @@ import at.kaindorf.games.events.BedwarsExecuteCommandEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.material.Bed;
 
 public class MyCommandExecutor implements CommandExecutor {
 
@@ -27,7 +25,6 @@ public class MyCommandExecutor implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    Bukkit.getLogger().info(cmd.getName());
     if (cmd.getName().equals("bw")) {
       return execute(sender, args, this.plugin.getBedwarsCommands());
     } else if (cmd.getName().equals("tourney")) {

@@ -2,6 +2,7 @@ package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -23,11 +24,13 @@ public class Tournament {
   private List<TourneyGroup> groups;
   private List<TourneyTeam> teams;
   private List<TourneyPlayer> players;
+  private List<TourneyMatch> matches;
 
   private Tournament() {
-    groups = new LinkedList<>();
-    teams = new ArrayList<>();
-    players = new ArrayList<>();
+    this.groups = new LinkedList<>();
+    this.teams = new ArrayList<>();
+    this.players = new ArrayList<>();
+    this.matches = new ArrayList<>();
   }
 
   public void addGroup(String name) {
@@ -69,12 +72,13 @@ public class Tournament {
     this.players.clear();
     this.teams.clear();
     this.groups.clear();
+    this.matches.clear();
   }
 
   public void show() {
-    String gs = groups.stream().map(TourneyGroup::getName).reduce((g1,g2) -> g1 + ", "+g2).get();
-    String ts = teams.stream().map(TourneyTeam::getName).reduce((g1,g2) -> g1 + ", "+g2).get();
-    String ps = players.stream().map(TourneyPlayer::getName).reduce((g1,g2) -> g1 + ", "+g2).get();
+    String gs = groups.stream().map(TourneyGroup::getName).reduce((g1,g2) -> g1 + ", "+g2).orElse("-");
+    String ts = teams.stream().map(TourneyTeam::getName).reduce((g1,g2) -> g1 + ", "+g2).orElse("-");
+    String ps = players.stream().map(TourneyPlayer::getName).reduce((g1,g2) -> g1 + ", "+g2).orElse("-");
 
     Bukkit.getLogger().info("Groups: "+gs);
     Bukkit.getLogger().info("Teams: "+ts);
