@@ -144,6 +144,10 @@ commands:
     description: Clears all tournament configuration (teams, players, matches, ...)
     usage: /<command>
     permission: tourney.manage
+  tourney save:
+    description: Saves all the configuration to yml files
+    usage: /<command>
+    permission: tourney.manage
 
 permissions:
   bw.base:

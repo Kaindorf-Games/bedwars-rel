@@ -4,6 +4,7 @@ import at.kaindorf.games.commands.*;
 import at.kaindorf.games.commands.Bedwars.*;
 import at.kaindorf.games.commands.Tournament.AddTournamentTeamsCommand;
 import at.kaindorf.games.commands.Tournament.ClearTournamentCommand;
+import at.kaindorf.games.commands.Tournament.SaveTourneyConfigCommand;
 import at.kaindorf.games.commands.Tournament.TournamentHelpCommand;
 import at.kaindorf.games.shop.Specials.SpecialItem;
 import at.kaindorf.games.updater.ConfigUpdater;
@@ -845,6 +846,7 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new TournamentHelpCommand(this));
     this.tourneyCommands.add(new AddTournamentTeamsCommand(this));
     this.tourneyCommands.add(new ClearTournamentCommand(this));
+    this.tourneyCommands.add(new SaveTourneyConfigCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

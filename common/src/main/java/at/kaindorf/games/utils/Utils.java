@@ -20,6 +20,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import at.kaindorf.games.tournament.TourneyGroup;
+import at.kaindorf.games.tournament.TourneyPlayer;
+import at.kaindorf.games.tournament.TourneyTeam;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -759,4 +763,28 @@ public final class Utils {
     return sb.toString();
   }
 
+  public static Map<String, Object> tourneyGroupSerialize(TourneyGroup group) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("name", group.getName());
+
+    return map;
+  }
+
+  public static Map<String, Object> tourneyTeamSerialize(TourneyTeam team, String group) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("name", team.getName());
+    map.put("group", group);
+//    map.put("statistics", team.getStatistics());
+
+    return map;
+  }
+
+  public static Map<String, Object> tourneyPlayerSerialize(TourneyPlayer player, String team) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("name", player.getName());
+    map.put("team", team);
+    map.put("kills", player.getKills());
+    map.put("destroyedBeds", player.getDestroyedBeds());
+    return map;
+  }
 }
