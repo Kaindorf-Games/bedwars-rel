@@ -781,7 +781,7 @@ public final class Utils {
 
   public static Map<String, Object> tourneyPlayerSerialize(TourneyPlayer player, String team) {
     Map<String, Object> map = new HashMap<>();
-    map.put("name", player.getName());
+    map.put("uuid", player.getUuid());
     map.put("team", team);
     map.put("kills", player.getKills());
     map.put("destroyedBeds", player.getDestroyedBeds());

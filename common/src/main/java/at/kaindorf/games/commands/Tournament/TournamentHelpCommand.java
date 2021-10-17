@@ -3,7 +3,6 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
@@ -18,7 +17,6 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
-    Bukkit.getLogger().info("execute thelp" + this.getPermission());
 
     if (!sender.hasPermission("tourney." + this.getPermission())) {
       return false;

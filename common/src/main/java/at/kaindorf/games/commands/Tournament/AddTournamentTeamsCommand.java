@@ -6,8 +6,11 @@ import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyPlayer;
+import at.kaindorf.games.utils.ChatWriter;
 import lombok.SneakyThrows;
+import net.minecraft.server.v1_8_R3.ChatMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,17 +35,25 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     tourney.clear();
 
     if (!sender.hasPermission("tourney." + this.getPermission())) {
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.GREEN + "Permissions required"));
+      return false;
+    }
+
+    if(args.size() == 0) {
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "Filename is required"));
       return false;
     }
 
     String fileName = args.get(0);
     if (!fileName.endsWith(".json")) {
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "File has to be .json"));
       return false;
     }
     Bukkit.getLogger().info(getPlugin().getDataFolder().getAbsolutePath());
     File teamFile = new File(getPlugin().getDataFolder(), fileName);
 
     if (!teamFile.exists()) {
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "File not found"));
       return false;
     }
     JSONParser parser = new JSONParser();
@@ -76,12 +87,15 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     } catch (TournamentEntityExistsException e) {
       Bukkit.getLogger().log(Level.WARNING, e.getMessage());
       tourney.clear();
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + e.getMessage()));
+      return false;
+    } catch (Exception e) {
+      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "Invalid file"));
       return false;
     }
 
     tourney.show();
-
-
+    sender.sendMessage(ChatWriter.pluginMessage(ChatColor.GREEN + "All teams are added"));
     return true;
   }
 

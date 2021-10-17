@@ -54,7 +54,7 @@ public class Tournament {
   }
 
   public void addPlayer(String name, String teamName) throws TournamentEntityExistsException {
-    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getName().equals(name)).findFirst();
+    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(name)).findFirst();
     if (optional.isPresent()) {
       throw new TournamentEntityExistsException("Player exists already: " + name);
     }
@@ -76,7 +76,7 @@ public class Tournament {
   }
 
   private TourneyTeam getTeamOfPlayer(String player) {
-    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p -> p.getName().equals(player))).findFirst().get();
+    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p -> p.getUuid().equals(player))).findFirst().get();
   }
 
   public void clear() {
@@ -89,7 +89,7 @@ public class Tournament {
   public void show() {
     String gs = groups.stream().map(TourneyGroup::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
     String ts = teams.stream().map(TourneyTeam::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
-    String ps = players.stream().map(TourneyPlayer::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
+    String ps = players.stream().map(TourneyPlayer::getUuid).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
 
     Bukkit.getLogger().info("Groups: " + gs);
     Bukkit.getLogger().info("Teams: " + ts);
@@ -117,7 +117,7 @@ public class Tournament {
     yml = new YamlConfiguration();
     for (int i = 0; i < players.size(); i++) {
       TourneyPlayer player = players.get(i);
-      yml.set("player"+i, Utils.tourneyPlayerSerialize(player, getTeamOfPlayer(player.getName()).getName()));
+      yml.set("player"+i, Utils.tourneyPlayerSerialize(player, getTeamOfPlayer(player.getUuid()).getName()));
     }
     yml.save(playersFile);
 

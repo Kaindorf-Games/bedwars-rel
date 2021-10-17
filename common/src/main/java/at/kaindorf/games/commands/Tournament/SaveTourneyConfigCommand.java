@@ -4,6 +4,8 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.utils.ChatWriter;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
@@ -28,7 +30,10 @@ public class SaveTourneyConfigCommand extends BaseCommand implements ICommand {
     if(groupsFile.exists()) groupsFile.delete();
     if(teamsFile.exists()) teamsFile.delete();
 
-    return Tournament.getInstance().save(groupsFile, teamsFile, playersFile);
+    boolean res = Tournament.getInstance().save(groupsFile, teamsFile, playersFile);
+    if(res) sender.sendMessage(ChatWriter.pluginMessage(ChatColor.GREEN + "Configuration is saved"));
+    else sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "Configuration could not be saved"));
+    return res;
   }
 
   @Override
