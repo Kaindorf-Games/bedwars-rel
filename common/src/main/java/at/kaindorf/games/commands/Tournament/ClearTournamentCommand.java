@@ -16,6 +16,9 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
+    if(!sender.hasPermission("tourney."+this.getPermission())) {
+      return false;
+    }
     Tournament.getInstance().clear();
     Tournament.getInstance().show();
     return true;
