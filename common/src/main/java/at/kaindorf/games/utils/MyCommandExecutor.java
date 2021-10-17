@@ -4,18 +4,22 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.BedwarsCommandExecutedEvent;
 import at.kaindorf.games.events.BedwarsExecuteCommandEvent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.material.Bed;
 
-public class BedwarsCommandExecutor implements CommandExecutor {
+public class MyCommandExecutor implements CommandExecutor {
 
   private BedwarsRel plugin = null;
 
-  public BedwarsCommandExecutor(BedwarsRel plugin) {
+  public MyCommandExecutor(BedwarsRel plugin) {
     super();
 
     this.plugin = plugin;
@@ -23,10 +27,16 @@ public class BedwarsCommandExecutor implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-    if (!cmd.getName().equals("bw")) {
-      return false;
+    Bukkit.getLogger().info(cmd.getName());
+    if (cmd.getName().equals("bw")) {
+      return execute(sender, args, this.plugin.getBedwarsCommands());
+    } else if (cmd.getName().equals("tourney")) {
+      return execute(sender, args, this.plugin.getTourneyCommands());
     }
+    return false;
+  }
 
+  private boolean execute(CommandSender sender, String[] args, ArrayList<BaseCommand> commands) {
     if (args.length < 1) {
       return false;
     }
@@ -35,7 +45,7 @@ public class BedwarsCommandExecutor implements CommandExecutor {
     ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
     arguments.remove(0);
 
-    for (BaseCommand bCommand : this.plugin.getCommands()) {
+    for (BaseCommand bCommand : commands) {
       if (bCommand.getCommand().equalsIgnoreCase(command)) {
         if (bCommand.getArguments().length > arguments.size()) {
           sender.sendMessage(

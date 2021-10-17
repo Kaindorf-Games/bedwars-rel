@@ -28,7 +28,7 @@ import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.statistics.PlayerStatisticManager;
 import at.kaindorf.games.statistics.StorageType;
 import at.kaindorf.games.utils.BStatsMetrics;
-import at.kaindorf.games.utils.BedwarsCommandExecutor;
+import at.kaindorf.games.utils.MyCommandExecutor;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.McStatsMetrics;
 import at.kaindorf.games.utils.SupportData;
@@ -39,13 +39,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -70,7 +65,8 @@ public class BedwarsRel extends JavaPlugin {
   private List<Material> breakableTypes = null;
   @Getter
   private Bugsnag bugsnag;
-  private ArrayList<BaseCommand> commands = new ArrayList<>();
+  private ArrayList<BaseCommand> bwCommands = new ArrayList<>();
+  private ArrayList<BaseCommand> tourneyCommands = new ArrayList<>();
   private Package craftbukkit = null;
   private DatabaseManager dbManager = null;
   @Getter
@@ -239,8 +235,7 @@ public class BedwarsRel extends JavaPlugin {
     });
   }
 
-  private ArrayList<BaseCommand> filterCommandsByPermission(ArrayList<BaseCommand> commands,
-      String permission) {
+  private ArrayList<BaseCommand> filterCommandsByPermission(ArrayList<BaseCommand> commands, String permission) {
     Iterator<BaseCommand> it = commands.iterator();
 
     while (it.hasNext()) {
@@ -264,7 +259,7 @@ public class BedwarsRel extends JavaPlugin {
 
   @SuppressWarnings("unchecked")
   public ArrayList<BaseCommand> getBaseCommands() {
-    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.commands.clone();
+    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.bwCommands.clone();
     commands = this.filterCommandsByPermission(commands, "base");
 
     return commands;
@@ -286,13 +281,20 @@ public class BedwarsRel extends JavaPlugin {
     return null;
   }
 
-  public ArrayList<BaseCommand> getCommands() {
-    return this.commands;
+  @SuppressWarnings("unchecked")
+  public ArrayList<BaseCommand> getBedwarsCommands() {
+    return (ArrayList<BaseCommand>) this.bwCommands.clone();
+  }
+
+  @SuppressWarnings("unchecked")
+  public ArrayList<BaseCommand> getTourneyCommands() {
+    return (ArrayList<BaseCommand>) this.tourneyCommands.clone();
   }
 
   @SuppressWarnings("unchecked")
   public ArrayList<BaseCommand> getCommandsByPermission(String permission) {
-    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.commands.clone();
+    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.bwCommands.clone();
+    commands.addAll((ArrayList<BaseCommand>) tourneyCommands.clone());
     commands = this.filterCommandsByPermission(commands, permission);
 
     return commands;
@@ -469,7 +471,7 @@ public class BedwarsRel extends JavaPlugin {
 
   @SuppressWarnings("unchecked")
   public ArrayList<BaseCommand> getSetupCommands() {
-    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.commands.clone();
+    ArrayList<BaseCommand> commands = (ArrayList<BaseCommand>) this.bwCommands.clone();
     commands = this.filterCommandsByPermission(commands, "setup");
 
     return commands;
@@ -796,43 +798,49 @@ public class BedwarsRel extends JavaPlugin {
   }
 
   private void registerCommands() {
-    BedwarsCommandExecutor executor = new BedwarsCommandExecutor(this);
+    MyCommandExecutor executor = new MyCommandExecutor(this);
 
-    this.commands.add(new HelpCommand(this));
-    this.commands.add(new SetSpawnerCommand(this));
-    this.commands.add(new AddGameCommand(this));
-    this.commands.add(new StartGameCommand(this));
-    this.commands.add(new StopGameCommand(this));
-    this.commands.add(new SetRegionCommand(this));
-    this.commands.add(new AddTeamCommand(this));
-    this.commands.add(new SaveGameCommand(this));
-    this.commands.add(new JoinGameCommand(this));
-    this.commands.add(new SetSpawnCommand(this));
-    this.commands.add(new SetLobbyCommand(this));
-    this.commands.add(new LeaveGameCommand(this));
-    this.commands.add(new SetTargetCommand(this));
-    this.commands.add(new SetBedCommand(this));
-    this.commands.add(new ReloadCommand(this));
-    this.commands.add(new SetMainLobbyCommand(this));
-    this.commands.add(new ListGamesCommand(this));
-    this.commands.add(new RegionNameCommand(this));
-    this.commands.add(new RemoveTeamCommand(this));
-    this.commands.add(new RemoveGameCommand(this));
-    this.commands.add(new ClearSpawnerCommand(this));
-    this.commands.add(new GameTimeCommand(this));
-    this.commands.add(new StatsCommand(this));
-    this.commands.add(new SetMinPlayersCommand(this));
-    this.commands.add(new SetGameBlockCommand(this));
-    this.commands.add(new SetBuilderCommand(this));
-    this.commands.add(new SetAutobalanceCommand(this));
-    this.commands.add(new KickCommand(this));
-    this.commands.add(new AddTeamJoinCommand(this));
-    this.commands.add(new AddHoloCommand(this));
-    this.commands.add(new RemoveHoloCommand(this));
-    this.commands.add(new DebugPasteCommand(this));
-    this.commands.add(new ItemsPasteCommand(this));
-    this.commands.add(new AutoConnectCommand(this));
+    // Bedwars Commands
+    this.bwCommands.add(new HelpCommand(this));
+    this.bwCommands.add(new SetSpawnerCommand(this));
+    this.bwCommands.add(new AddGameCommand(this));
+    this.bwCommands.add(new StartGameCommand(this));
+    this.bwCommands.add(new StopGameCommand(this));
+    this.bwCommands.add(new SetRegionCommand(this));
+    this.bwCommands.add(new AddTeamCommand(this));
+    this.bwCommands.add(new SaveGameCommand(this));
+    this.bwCommands.add(new JoinGameCommand(this));
+    this.bwCommands.add(new SetSpawnCommand(this));
+    this.bwCommands.add(new SetLobbyCommand(this));
+    this.bwCommands.add(new LeaveGameCommand(this));
+    this.bwCommands.add(new SetTargetCommand(this));
+    this.bwCommands.add(new SetBedCommand(this));
+    this.bwCommands.add(new ReloadCommand(this));
+    this.bwCommands.add(new SetMainLobbyCommand(this));
+    this.bwCommands.add(new ListGamesCommand(this));
+    this.bwCommands.add(new RegionNameCommand(this));
+    this.bwCommands.add(new RemoveTeamCommand(this));
+    this.bwCommands.add(new RemoveGameCommand(this));
+    this.bwCommands.add(new ClearSpawnerCommand(this));
+    this.bwCommands.add(new GameTimeCommand(this));
+    this.bwCommands.add(new StatsCommand(this));
+    this.bwCommands.add(new SetMinPlayersCommand(this));
+    this.bwCommands.add(new SetGameBlockCommand(this));
+    this.bwCommands.add(new SetBuilderCommand(this));
+    this.bwCommands.add(new SetAutobalanceCommand(this));
+    this.bwCommands.add(new KickCommand(this));
+    this.bwCommands.add(new AddTeamJoinCommand(this));
+    this.bwCommands.add(new AddHoloCommand(this));
+    this.bwCommands.add(new RemoveHoloCommand(this));
+    this.bwCommands.add(new DebugPasteCommand(this));
+    this.bwCommands.add(new ItemsPasteCommand(this));
+    this.bwCommands.add(new AutoConnectCommand(this));
     this.getCommand("bw").setExecutor(executor);
+
+    // Tournament Commands
+    this.tourneyCommands.add(new TournamentHelpCommand(this));
+    this.tourneyCommands.add(new AddTournamentTeamsCommand(this));
+    this.getCommand("tourney").setExecutor(executor);
   }
 
   private void registerConfigurationClasses() {
