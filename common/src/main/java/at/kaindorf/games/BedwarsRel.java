@@ -1,49 +1,24 @@
 package at.kaindorf.games;
 
-import at.kaindorf.games.commands.*;
+import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.Bedwars.*;
 import at.kaindorf.games.commands.Tournament.*;
+import at.kaindorf.games.database.DatabaseManager;
+import at.kaindorf.games.game.*;
+import at.kaindorf.games.listener.*;
+import at.kaindorf.games.localization.LocalizationConfig;
 import at.kaindorf.games.shop.Specials.SpecialItem;
+import at.kaindorf.games.statistics.PlayerStatistic;
+import at.kaindorf.games.statistics.PlayerStatisticManager;
+import at.kaindorf.games.statistics.StorageType;
+import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.updater.ConfigUpdater;
 import at.kaindorf.games.updater.PluginUpdater;
+import at.kaindorf.games.utils.*;
 import com.bugsnag.Bugsnag;
 import com.bugsnag.Report;
 import com.bugsnag.callbacks.Callback;
 import com.google.common.collect.ImmutableMap;
-import at.kaindorf.games.database.DatabaseManager;
-import at.kaindorf.games.game.Game;
-import at.kaindorf.games.game.GameManager;
-import at.kaindorf.games.game.GameState;
-import at.kaindorf.games.game.ResourceSpawner;
-import at.kaindorf.games.game.Team;
-import at.kaindorf.games.listener.BlockListener;
-import at.kaindorf.games.listener.ChunkListener;
-import at.kaindorf.games.listener.EntityListener;
-import at.kaindorf.games.listener.HangingListener;
-import at.kaindorf.games.listener.PlayerListener;
-import at.kaindorf.games.listener.PlayerSpigotListener;
-import at.kaindorf.games.listener.ServerListener;
-import at.kaindorf.games.listener.SignListener;
-import at.kaindorf.games.listener.WeatherListener;
-import at.kaindorf.games.localization.LocalizationConfig;
-import at.kaindorf.games.statistics.PlayerStatistic;
-import at.kaindorf.games.statistics.PlayerStatisticManager;
-import at.kaindorf.games.statistics.StorageType;
-import at.kaindorf.games.utils.BStatsMetrics;
-import at.kaindorf.games.utils.MyCommandExecutor;
-import at.kaindorf.games.utils.ChatWriter;
-import at.kaindorf.games.utils.McStatsMetrics;
-import at.kaindorf.games.utils.SupportData;
-import at.kaindorf.games.utils.Utils;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,6 +33,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.ScoreboardManager;
+
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class BedwarsRel extends JavaPlugin {
 
@@ -785,6 +765,7 @@ public class BedwarsRel extends JavaPlugin {
       }
       this.holographicInteraction.loadHolograms();
     }
+    Tournament.getInstance();
   }
 
   private void registerBugsnag() {
@@ -846,6 +827,7 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new SaveTourneyConfigCommand(this));
     this.tourneyCommands.add(new ShowTeamsCommand(this));
     this.tourneyCommands.add(new ShowGroupsCommand(this));
+    this.tourneyCommands.add(new LoadTourneyConfigCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

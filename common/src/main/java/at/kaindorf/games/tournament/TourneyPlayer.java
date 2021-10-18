@@ -17,4 +17,12 @@ public class TourneyPlayer {
     this.kills = 0;
     this.destroyedBeds = 0;
   }
+
+  public TourneyPlayer(String uuid, int kills, int destroyedBeds) {
+    this.uuid = uuid;
+    this.name="TestPlayer";
+//    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
+    this.kills = kills;
+    this.destroyedBeds = destroyedBeds;
+  }
 }
