@@ -53,12 +53,12 @@ public class Tournament {
     this.getGroup(groupName).addTeam(team);
   }
 
-  public void addPlayer(String name, String teamName) throws TournamentEntityExistsException {
-    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(name)).findFirst();
+  public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException {
+    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player exists already: " + name);
+      throw new TournamentEntityExistsException("Player exists already: " + uuid);
     }
-    TourneyPlayer player = new TourneyPlayer(name);
+    TourneyPlayer player = new TourneyPlayer(uuid);
     players.add(player);
     this.getTeam(teamName).addPlayer(player);
   }

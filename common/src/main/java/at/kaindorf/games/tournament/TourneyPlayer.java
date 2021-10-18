@@ -5,13 +5,14 @@ import org.bukkit.entity.Player;
 
 @Data
 public class TourneyPlayer {
-  private String uuid;
+  private String uuid, name;
   private TourneyTeam team;
   private Player player;
   private int kills, destroyedBeds;
 
   public TourneyPlayer(String uuid) {
     this.uuid = uuid;
+    this.name="TestPlayer";
 //    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = 0;
     this.destroyedBeds = 0;

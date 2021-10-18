@@ -148,6 +148,14 @@ commands:
     description: Saves all the configuration to yml files
     usage: /<command>
     permission: tourney.manage
+  tourney showteams:
+    description: Print all teams into the chat
+    usage: /<command>
+    permission: tourney.player
+  tourney showgroups:
+    description: Print all groups into the chat
+    usage: /<command>
+    permission: tourney.player
 
 permissions:
   bw.base:
@@ -177,3 +185,6 @@ permissions:
   tourney.manage:
     description: Allows to manage a tournament
     default: op
+  tourney.player:
+    description: Allows players to use show commands
+    default: true
