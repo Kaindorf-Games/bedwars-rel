@@ -12,4 +12,8 @@ public class ChatWriter {
         + " " + ChatColor.WHITE + str;
   }
 
+  public static String wrongPermissionMessage() {
+    return ChatColor.RED + "You don't have the required permissions";
+  }
+
 }

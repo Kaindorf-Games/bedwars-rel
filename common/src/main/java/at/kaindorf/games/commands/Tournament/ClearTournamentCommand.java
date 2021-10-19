@@ -18,7 +18,7 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
     if(!sender.hasPermission("tourney."+this.getPermission())) {
-      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + "Permissions required"));
+      sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
     Tournament.getInstance().clear();

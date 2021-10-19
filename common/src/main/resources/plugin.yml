@@ -23,7 +23,7 @@ commands:
   tourney:
     description: Base command for all Tournament commands
     usage: /<command> help
-    permission: tourney.manage
+    permission: tourney.player
 
 permissions:
   bw.base:

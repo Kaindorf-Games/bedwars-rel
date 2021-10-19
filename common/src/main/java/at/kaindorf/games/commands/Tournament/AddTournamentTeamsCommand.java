@@ -5,6 +5,7 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.utils.ChatWriter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +32,7 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     tourney.clear();
 
     if (!sender.hasPermission("tourney." + this.getPermission())) {
-      sender.sendMessage(ChatColor.GREEN + "Permissions required");
+      sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
 

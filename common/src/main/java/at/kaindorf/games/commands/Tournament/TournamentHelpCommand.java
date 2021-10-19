@@ -3,6 +3,7 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
+import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
@@ -19,6 +20,7 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
   public boolean execute(CommandSender sender, ArrayList<String> args) {
 
     if (!sender.hasPermission("tourney." + this.getPermission())) {
+      sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
 

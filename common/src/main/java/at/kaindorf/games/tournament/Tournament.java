@@ -164,7 +164,7 @@ public class Tournament {
   public void show() {
     String gs = groups.stream().map(TourneyGroup::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
     String ts = teams.stream().map(TourneyTeam::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
-    String ps = players.stream().map(TourneyPlayer::getUuid).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
+    String ps = players.stream().map(TourneyPlayer::getUsername).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
 
     Bukkit.getLogger().info("Groups: " + gs);
     Bukkit.getLogger().info("Teams: " + ts);
