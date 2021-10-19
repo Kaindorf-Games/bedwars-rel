@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
@@ -19,17 +21,37 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
 
-    if (!sender.hasPermission("tourney." + this.getPermission())) {
+    ArrayList<BaseCommand> commands = BedwarsRel.getInstance().getTourneyCommands();
+    String msg = "";
+    // generate the messages for the two main permissions
+    if(sender.hasPermission("tourney.manage")) {
+      msg = generateHelpMessage(commands);
+    } else if (sender.hasPermission("tourney.player")) {
+      msg = generateHelpMessage(commands.stream().filter(c -> c.getPermission().equals("player")).collect(Collectors.toList()));
+    } else {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
 
+    // get the current page number
     int page = 1;
     if (args != null && args.size() > 0) {
       page = Integer.parseInt(args.get(0));
     }
 
-    ArrayList<BaseCommand> commands = BedwarsRel.getInstance().getTourneyCommands();
+    // send the single lines
+    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(msg, page);
+    for (String l : chatPage.getLines()) {
+      sender.sendMessage(l);
+    }
+
+    sender.sendMessage(ChatColor.GREEN + "---------- "
+        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
+
+    return true;
+  }
+
+  private String generateHelpMessage(List<BaseCommand> commands) {
     StringBuilder sb = new StringBuilder();
     for (BaseCommand command : commands) {
       String arguments = "";
@@ -47,14 +69,7 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
           + " " + command.getCommand() + arguments + " - " + command.getDescription() + "\n");
     }
 
-    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(sb.toString(), page);
-    for (String l : chatPage.getLines()) {
-      sender.sendMessage(l);
-    }
-    sender.sendMessage(ChatColor.GREEN + "---------- "
-        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
-
-    return true;
+    return sb.toString();
   }
 
   @Override
@@ -79,6 +94,6 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getPermission() {
-    return "manage";
+    return "player";
   }
 }

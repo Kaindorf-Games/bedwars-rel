@@ -23,7 +23,6 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
 
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
-    sender.getEffectivePermissions().forEach(p -> sender.sendMessage(p.getPermission()));
     if (!sender.hasPermission("tourney." + this.getPermission())) {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
