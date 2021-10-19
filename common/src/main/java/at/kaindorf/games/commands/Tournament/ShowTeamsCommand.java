@@ -34,7 +34,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
     for (TourneyTeam team : teams) {
       sb.append(ChatColor.YELLOW + ""+team.getName()+"\n");
       team.getPlayers().forEach(p -> {
-        sb.append(ChatColor.YELLOW + "  "+p.getName()+"\n");
+        sb.append(ChatColor.YELLOW + "  "+p.getUsername()+"\n");
       });
     }
 

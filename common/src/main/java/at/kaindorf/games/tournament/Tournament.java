@@ -2,6 +2,7 @@ package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
+import at.kaindorf.games.utils.UsernameFetcher;
 import at.kaindorf.games.utils.Utils;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -122,13 +123,7 @@ public class Tournament {
   }
 
   public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException {
-    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
-    if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player exists already: " + uuid);
-    }
-    TourneyPlayer player = new TourneyPlayer(uuid);
-    players.add(player);
-    this.getTeam(teamName).addPlayer(player);
+    addPlayer(uuid, teamName, 0, 0);
   }
 
   public void addPlayer(String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
@@ -136,7 +131,8 @@ public class Tournament {
     if (optional.isPresent()) {
       throw new TournamentEntityExistsException("Player exists already: " + uuid);
     }
-    TourneyPlayer player = new TourneyPlayer(uuid, kills, destroyedBeds);
+    String username = UsernameFetcher.getUsernameFromUUID(uuid);
+    TourneyPlayer player = new TourneyPlayer(uuid, username, kills, destroyedBeds);
     players.add(player);
     this.getTeam(teamName).addPlayer(player);
   }

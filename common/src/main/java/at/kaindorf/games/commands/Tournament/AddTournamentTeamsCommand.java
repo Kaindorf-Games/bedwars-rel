@@ -5,8 +5,6 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.Tournament;
-import at.kaindorf.games.tournament.TourneyPlayer;
-import at.kaindorf.games.utils.ChatWriter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,7 +16,6 @@ import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
@@ -48,7 +45,6 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatColor.RED + "File has to be .json");
       return false;
     }
-    Bukkit.getLogger().info(getPlugin().getDataFolder().getAbsolutePath());
     File teamFile = new File(getPlugin().getDataFolder(), fileName);
 
     if (!teamFile.exists()) {
@@ -76,7 +72,6 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
         tourney.addTeam(teamName, groupName);
 
         JSONArray playersObj = (JSONArray) team.get("players");
-        List<TourneyPlayer> players = new ArrayList<>();
 
         for (Object player : playersObj) {
           // add player
@@ -86,7 +81,7 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     } catch (TournamentEntityExistsException e) {
       Bukkit.getLogger().log(Level.WARNING, e.getMessage());
       tourney.clear();
-      sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + e.getMessage()));
+      sender.sendMessage(ChatColor.RED + e.getMessage());
       return false;
     } catch (Exception e) {
       sender.sendMessage(ChatColor.RED + "Invalid file");
