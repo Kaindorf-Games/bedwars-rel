@@ -3,52 +3,44 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 
-public class ClearTournamentCommand extends BaseCommand implements ICommand {
-  public ClearTournamentCommand(BedwarsRel plugin) {
+public class StartTournamentCommand extends BaseCommand implements ICommand {
+  public StartTournamentCommand(BedwarsRel plugin) {
     super(plugin);
   }
 
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
-    if(!sender.hasPermission("tourney."+this.getPermission())) {
+    if (!sender.hasPermission("tourney." + this.getPermission())) {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
-    Tournament.getInstance().clear();
 
-    if(args.size() > 0 && args.get(0).equals("saves")) {
-      Tournament.getInstance().clearSaves();
-    }
-
-    sender.sendMessage(ChatColor.GREEN + "All configuration are cleared");
     return true;
   }
 
   @Override
   public String[] getArguments() {
-    return new String[]{"saves"};
+    return new String[]{};
   }
 
   @Override
   public String getCommand() {
-    return "clear";
+    return "start";
   }
 
   @Override
   public String getDescription() {
-    return "Clears all tournament configuration (teams, players, matches, ...)";
+    return "Command to start the tournament";
   }
 
   @Override
   public String getName() {
-    return "Clear Tournament";
+    return "Start Tournament";
   }
 
   @Override

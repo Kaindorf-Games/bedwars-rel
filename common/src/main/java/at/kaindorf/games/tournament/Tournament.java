@@ -44,16 +44,12 @@ public class Tournament {
   @SneakyThrows
   public void loadConfig() {
     BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Loading Tournament Config ...");
-    BedwarsRel bw = BedwarsRel.getInstance();
-    File playersFile = new File(bw.getDataFolder().getAbsolutePath()+"/tournament/players.yml");
-    File groupsFile = new File(bw.getDataFolder().getAbsolutePath()+"/tournament/groups.yml");
-    File teamsFile = new File(bw.getDataFolder().getAbsolutePath()+"/tournament/teams.yml");
 
     // load Groups
-    if(groupsFile.exists() && groupsFile.canRead()) {
+    if(TourneyProperties.groupsFile.exists() && TourneyProperties.groupsFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
       BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(groupsFile), "UTF-8"));
+          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.groupsFile), "UTF-8"));
       yaml.load(reader);
       Set<String> keys = yaml.getKeys(false);
       if(keys.size() > 0) {
@@ -67,10 +63,10 @@ public class Tournament {
     }
 
     // load Teams
-    if(teamsFile.exists() && teamsFile.canRead()) {
+    if(TourneyProperties.teamsFile.exists() && TourneyProperties.teamsFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
       BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(teamsFile), "UTF-8"));
+          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.teamsFile), "UTF-8"));
       yaml.load(reader);
       Set<String> keys = yaml.getKeys(false);
       if(keys.size() > 0) {
@@ -85,10 +81,10 @@ public class Tournament {
     }
 
     // load Player
-    if(playersFile.exists() && playersFile.canRead()) {
+    if(TourneyProperties.playersFile.exists() && TourneyProperties.playersFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
       BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(playersFile), "UTF-8"));
+          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.playersFile), "UTF-8"));
       yaml.load(reader);
       Set<String> keys = yaml.getKeys(false);
       if(keys.size() > 0) {
@@ -172,13 +168,17 @@ public class Tournament {
   }
 
   @SneakyThrows
-  public boolean save(File groupsFile, File teamsFile, File playersFile) {
+  public boolean save() {
+    if(TourneyProperties.groupsFile.exists()) TourneyProperties.groupsFile.delete();
+    if(TourneyProperties.teamsFile.exists()) TourneyProperties.teamsFile.delete();
+    if(TourneyProperties.playersFile.exists()) TourneyProperties.playersFile.delete();
+
     // save groups
     YamlConfiguration yml = new YamlConfiguration();
     for (int i = 0; i < groups.size(); i++) {
       yml.set("game"+i, Utils.tourneyGroupSerialize(groups.get(i)));
     }
-    yml.save(groupsFile);
+    yml.save(TourneyProperties.groupsFile);
 
     // save teams
     yml = new YamlConfiguration();
@@ -186,7 +186,7 @@ public class Tournament {
       TourneyTeam team = teams.get(i);
       yml.set("team"+i, Utils.tourneyTeamSerialize(team, getGroupOfTeam(team.getName()).getName()));
     }
-    yml.save(teamsFile);
+    yml.save(TourneyProperties.teamsFile);
 
     // save players
     yml = new YamlConfiguration();
@@ -194,8 +194,11 @@ public class Tournament {
       TourneyPlayer player = players.get(i);
       yml.set("player"+i, Utils.tourneyPlayerSerialize(player, getTeamOfPlayer(player.getUuid()).getName()));
     }
-    yml.save(playersFile);
+    yml.save(TourneyProperties.playersFile);
 
     return true;
+  }
+
+  public void clearSaves() {
   }
 }

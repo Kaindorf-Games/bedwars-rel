@@ -23,15 +23,8 @@ public class SaveTourneyConfigCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
-    File playersFile = new File(this.getPlugin().getDataFolder().getAbsolutePath()+"/tournament/players.yml");
-    File groupsFile = new File(this.getPlugin().getDataFolder().getAbsolutePath()+"/tournament/groups.yml");
-    File teamsFile = new File(this.getPlugin().getDataFolder().getAbsolutePath()+"/tournament/teams.yml");
 
-    if(playersFile.exists()) playersFile.delete();
-    if(groupsFile.exists()) groupsFile.delete();
-    if(teamsFile.exists()) teamsFile.delete();
-
-    boolean res = Tournament.getInstance().save(groupsFile, teamsFile, playersFile);
+    boolean res = Tournament.getInstance().save();
     if(res) sender.sendMessage(ChatColor.GREEN + "Configuration is saved");
     else sender.sendMessage(ChatColor.RED + "Configuration could not be saved");
     return res;
