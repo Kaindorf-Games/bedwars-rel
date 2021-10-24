@@ -169,9 +169,7 @@ public class Tournament {
 
   @SneakyThrows
   public boolean save() {
-    if(TourneyProperties.groupsFile.exists()) TourneyProperties.groupsFile.delete();
-    if(TourneyProperties.teamsFile.exists()) TourneyProperties.teamsFile.delete();
-    if(TourneyProperties.playersFile.exists()) TourneyProperties.playersFile.delete();
+    clearSaves();
 
     // save groups
     YamlConfiguration yml = new YamlConfiguration();
@@ -200,5 +198,8 @@ public class Tournament {
   }
 
   public void clearSaves() {
+    if(TourneyProperties.groupsFile.exists()) TourneyProperties.groupsFile.delete();
+    if(TourneyProperties.teamsFile.exists()) TourneyProperties.teamsFile.delete();
+    if(TourneyProperties.playersFile.exists()) TourneyProperties.playersFile.delete();
   }
 }

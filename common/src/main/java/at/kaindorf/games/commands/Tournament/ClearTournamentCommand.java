@@ -11,48 +11,55 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 
 public class ClearTournamentCommand extends BaseCommand implements ICommand {
-  public ClearTournamentCommand(BedwarsRel plugin) {
-    super(plugin);
-  }
-
-  @Override
-  public boolean execute(CommandSender sender, ArrayList<String> args) {
-    if(!sender.hasPermission("tourney."+this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
-      return false;
-    }
-    Tournament.getInstance().clear();
-
-    if(args.size() > 0 && args.get(0).equals("saves")) {
-      Tournament.getInstance().clearSaves();
+    public ClearTournamentCommand(BedwarsRel plugin) {
+        super(plugin);
     }
 
-    sender.sendMessage(ChatColor.GREEN + "All configuration are cleared");
-    return true;
-  }
+    @Override
+    public boolean execute(CommandSender sender, ArrayList<String> args) {
+        if (!sender.hasPermission("tourney." + this.getPermission())) {
+            sender.sendMessage(ChatWriter.wrongPermissionMessage());
+            return false;
+        }
+        if (args.size() == 0) {
+            Tournament.getInstance().clear();
+            Tournament.getInstance().clearSaves();
+        }
 
-  @Override
-  public String[] getArguments() {
-    return new String[]{"saves"};
-  }
+        if (args.size() > 0) {
+            if (args.get(0).equalsIgnoreCase("saves")) {
+                Tournament.getInstance().clearSaves();
+            } else if (args.get(0).equalsIgnoreCase("config")) {
+                Tournament.getInstance().clear();
+            }
+        }
 
-  @Override
-  public String getCommand() {
-    return "clear";
-  }
+        sender.sendMessage(ChatColor.GREEN + "Clearing done!");
+        return true;
+    }
 
-  @Override
-  public String getDescription() {
-    return "Clears all tournament configuration (teams, players, matches, ...)";
-  }
+    @Override
+    public String[] getArguments() {
+        return new String[]{};
+    }
 
-  @Override
-  public String getName() {
-    return "Clear Tournament";
-  }
+    @Override
+    public String getCommand() {
+        return "clear";
+    }
 
-  @Override
-  public String getPermission() {
-    return "manage";
-  }
+    @Override
+    public String getDescription() {
+        return "Clears all tournament configuration (teams, players, matches, ...)";
+    }
+
+    @Override
+    public String getName() {
+        return "Clear Tournament";
+    }
+
+    @Override
+    public String getPermission() {
+        return "manage";
+    }
 }

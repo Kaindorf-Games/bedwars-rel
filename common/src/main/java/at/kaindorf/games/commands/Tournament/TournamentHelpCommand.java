@@ -64,6 +64,9 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
           command.getCommand().equalsIgnoreCase("showgroups")) {
         arguments += " {page?}";
       }
+      else if(command.getCommand().equalsIgnoreCase("clear")) {
+        arguments += " {saves|config}";
+      }
 
       sb.append(ChatColor.YELLOW + "/" + "tourney"
           + " " + command.getCommand() + arguments + " - " + command.getDescription() + "\n");
