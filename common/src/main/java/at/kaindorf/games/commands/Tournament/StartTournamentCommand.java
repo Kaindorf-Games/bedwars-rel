@@ -4,6 +4,8 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
+import javafx.scene.chart.BubbleChart;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
+
+    Bukkit.getLogger().info("Start Tournament!");
 
     return true;
   }

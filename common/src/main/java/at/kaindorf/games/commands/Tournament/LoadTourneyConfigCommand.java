@@ -41,7 +41,7 @@ public class LoadTourneyConfigCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Loads all the configuration to yml files";
+    return "Loads all the configuration from yml files";
   }
 
   @Override
