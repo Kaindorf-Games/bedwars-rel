@@ -21,9 +21,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import at.kaindorf.games.tournament.TourneyGroup;
-import at.kaindorf.games.tournament.TourneyPlayer;
-import at.kaindorf.games.tournament.TourneyTeam;
+import at.kaindorf.games.tournament.models.TourneyGroup;
+import at.kaindorf.games.tournament.models.TourneyPlayer;
+import at.kaindorf.games.tournament.models.TourneyTeam;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -24,7 +24,7 @@ public class LoadTourneyConfigCommand extends BaseCommand implements ICommand {
     }
 
     Tournament.getInstance().clear();
-    Tournament.getInstance().loadConfig();
+    Tournament.getInstance().loadSaves();
     sender.sendMessage(ChatColor.GREEN + "Loaded Tournament Config");
     return true;
   }

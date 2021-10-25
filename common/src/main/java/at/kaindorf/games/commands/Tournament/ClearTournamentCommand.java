@@ -31,6 +31,8 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
                 Tournament.getInstance().clearSaves();
             } else if (args.get(0).equalsIgnoreCase("config")) {
                 Tournament.getInstance().clear();
+            } else if(args.get(0).equalsIgnoreCase("runningTournament")) {
+                Tournament.getInstance().clearRunningTournament();
             }
         }
 

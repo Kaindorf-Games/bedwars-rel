@@ -1,24 +1,28 @@
 package at.kaindorf.games.tournament;
 
-import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
+import at.kaindorf.games.tournament.rounds.GroupStage;
+import at.kaindorf.games.tournament.rounds.KoStage;
+import at.kaindorf.games.tournament.models.TourneyGroup;
+import at.kaindorf.games.tournament.models.TourneyGroupMatch;
+import at.kaindorf.games.tournament.models.TourneyPlayer;
+import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.utils.Loader;
+import at.kaindorf.games.utils.Saver;
 import at.kaindorf.games.utils.UsernameFetcher;
-import at.kaindorf.games.utils.Utils;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 @Data
 public class Tournament {
   private static Tournament instance;
+  private boolean tournamentRunning = false;
+
+  private KoStage koStage;
+  private GroupStage groupStage;
 
   public static Tournament getInstance() {
     if (instance == null) {
@@ -30,7 +34,7 @@ public class Tournament {
   private List<TourneyGroup> groups;
   private List<TourneyTeam> teams;
   private List<TourneyPlayer> players;
-  private List<TourneyMatch> matches;
+  private List<TourneyGroupMatch> matches;
 
   private Tournament() {
     this.groups = new LinkedList<>();
@@ -38,67 +42,20 @@ public class Tournament {
     this.players = new ArrayList<>();
     this.matches = new ArrayList<>();
 
-    loadConfig();
+    loadSaves();
   }
 
-  @SneakyThrows
-  public void loadConfig() {
-    BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Loading Tournament Config ...");
+  public void loadSaves() {
+    Bukkit.getLogger().info("Loading Tournament Saves ...");
 
     // load Groups
-    if(TourneyProperties.groupsFile.exists() && TourneyProperties.groupsFile.canRead()) {
-      YamlConfiguration yaml = new YamlConfiguration();
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.groupsFile), "UTF-8"));
-      yaml.load(reader);
-      Set<String> keys = yaml.getKeys(false);
-      if(keys.size() > 0) {
-        for(String key : keys) {
-          String groupName = yaml.getString(key+".name");
-          this.addGroup(groupName);
-        }
-      } else {
-        BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No group config found");
-      }
-    }
+    Loader.loadSavedGroups();
 
     // load Teams
-    if(TourneyProperties.teamsFile.exists() && TourneyProperties.teamsFile.canRead()) {
-      YamlConfiguration yaml = new YamlConfiguration();
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.teamsFile), "UTF-8"));
-      yaml.load(reader);
-      Set<String> keys = yaml.getKeys(false);
-      if(keys.size() > 0) {
-        for(String key : keys) {
-          String teamName = yaml.getString(key+".name");
-          String teamGroup = yaml.getString(key+".group");
-          this.addTeam(teamName, teamGroup);
-        }
-      } else {
-        BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No team config found");
-      }
-    }
+    Loader.loadSavedTeams();
 
     // load Player
-    if(TourneyProperties.playersFile.exists() && TourneyProperties.playersFile.canRead()) {
-      YamlConfiguration yaml = new YamlConfiguration();
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.playersFile), "UTF-8"));
-      yaml.load(reader);
-      Set<String> keys = yaml.getKeys(false);
-      if(keys.size() > 0) {
-        for(String key : keys) {
-          int kills = yaml.getInt(key+".kills");
-          String teamName = yaml.getString(key+".team");
-          int destroyedBeds = yaml.getInt(key+".destroyedBeds");
-          String uuid = yaml.getString(key+".uuid");
-          this.addPlayer(uuid, teamName, kills, destroyedBeds);
-        }
-      } else {
-        BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No player config found");
-      }
-    }
+    Loader.loadSavedPlayers();
   }
 
   public void addGroup(String name) {
@@ -142,14 +99,6 @@ public class Tournament {
     return teams.stream().filter(t -> t.getName().equals(name)).findFirst().get();
   }
 
-  private TourneyGroup getGroupOfTeam(String team) {
-    return groups.stream().filter(g -> g.getTeams().stream().anyMatch(t -> t.getName().equals(team))).findFirst().get();
-  }
-
-  private TourneyTeam getTeamOfPlayer(String player) {
-    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p -> p.getUuid().equals(player))).findFirst().get();
-  }
-
   public void clear() {
     this.players.clear();
     this.teams.clear();
@@ -168,38 +117,38 @@ public class Tournament {
   }
 
   @SneakyThrows
-  public boolean save() {
-    clearSaves();
+  public void save() {
+    Saver.clear();
+    Saver.saveGroups(this.groups);
+    Saver.saveTeams(this.teams);
+    Saver.savePlayers(this.players);
+  }
 
-    // save groups
-    YamlConfiguration yml = new YamlConfiguration();
-    for (int i = 0; i < groups.size(); i++) {
-      yml.set("game"+i, Utils.tourneyGroupSerialize(groups.get(i)));
-    }
-    yml.save(TourneyProperties.groupsFile);
 
-    // save teams
-    yml = new YamlConfiguration();
-    for (int i = 0; i < teams.size(); i++) {
-      TourneyTeam team = teams.get(i);
-      yml.set("team"+i, Utils.tourneyTeamSerialize(team, getGroupOfTeam(team.getName()).getName()));
-    }
-    yml.save(TourneyProperties.teamsFile);
+  /*TODO: Generates Matches automatically. At the moment he gets the Matches from a File*/
+  public boolean generateGroupMatches() {
+    groupStage = new GroupStage();
+    return groupStage.readGroupStageFromFile();
+  }
 
-    // save players
-    yml = new YamlConfiguration();
-    for (int i = 0; i < players.size(); i++) {
-      TourneyPlayer player = players.get(i);
-      yml.set("player"+i, Utils.tourneyPlayerSerialize(player, getTeamOfPlayer(player.getUuid()).getName()));
-    }
-    yml.save(TourneyProperties.playersFile);
+  private TourneyTeam findTeam(TourneyGroup g, TourneyTeam t) {
+    return g.getTeams().stream().filter(te -> te.getName().equals(t.getName())).findFirst().orElse(null);
+  }
+
+  private List<TourneyTeam> getQualifiedTeamsForKoRound(int numberOfQualifiedTeamsPerGroup) {
+    return groupStage.getQualifiedTeamsForKoRound(numberOfQualifiedTeamsPerGroup);
+  }
+
+  public boolean generateKoMatches(List<TourneyTeam> teams, int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {
+    koStage = new KoStage(qualifiedForNextKoRound, rematch, rematchFinal);
+
+    koStage.generateKoStage(teams);
 
     return true;
   }
 
-  public void clearSaves() {
-    if(TourneyProperties.groupsFile.exists()) TourneyProperties.groupsFile.delete();
-    if(TourneyProperties.teamsFile.exists()) TourneyProperties.teamsFile.delete();
-    if(TourneyProperties.playersFile.exists()) TourneyProperties.playersFile.delete();
+  public void clearRunningTournament() {
+    this.koStage = null;
+    this.matches.clear();
   }
 }

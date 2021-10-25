@@ -12,6 +12,7 @@ import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.statistics.PlayerStatisticManager;
 import at.kaindorf.games.statistics.StorageType;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.TourneyProperties;
 import at.kaindorf.games.updater.ConfigUpdater;
 import at.kaindorf.games.updater.PluginUpdater;
 import at.kaindorf.games.utils.*;
@@ -20,6 +21,7 @@ import com.bugsnag.Report;
 import com.bugsnag.callbacks.Callback;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -68,13 +70,13 @@ public class BedwarsRel extends JavaPlugin {
   private String version = null;
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
-      Map<String, String> params) {
+                          Map<String, String> params) {
     return BedwarsRel
         ._l(BedwarsRel.getInstance().getSenderLocale(commandSender), key, singularValue, params);
   }
 
   public static String _l(String locale, String key, String singularValue,
-      Map<String, String> params) {
+                          Map<String, String> params) {
     if ("1".equals(params.get(singularValue))) {
       return BedwarsRel._l(locale, key + "-one", params);
     }
@@ -765,7 +767,20 @@ public class BedwarsRel extends JavaPlugin {
       }
       this.holographicInteraction.loadHolograms();
     }
+
+    // Tournament mode
+
+    loadTournamentProps();
     Tournament.getInstance();
+  }
+
+  @SneakyThrows
+  public void loadTournamentProps() {
+    if (!TourneyProperties.propertiesFile.exists()) {
+      TourneyProperties.createPropertiesFile();
+      return;
+    }
+    TourneyProperties.loadPropertiesFile();
   }
 
   private void registerBugsnag() {

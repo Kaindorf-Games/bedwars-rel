@@ -1,18 +1,17 @@
-package at.kaindorf.games.tournament;
+package at.kaindorf.games.tournament.models;
 
 import lombok.Data;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 
 @Data
 public class TourneyGroup {
   private String name;
-  private List<TourneyTeam> teams;
+  private ArrayList<TourneyTeam> teams;
 
   public TourneyGroup(String name) {
     this.name = name;
-    this.teams = new LinkedList<>();
+    this.teams = new ArrayList<>();
   }
 
   public void addTeam(TourneyTeam team) {

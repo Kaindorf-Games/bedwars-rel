@@ -1,4 +1,4 @@
-package at.kaindorf.games.tournament;
+package at.kaindorf.games.tournament.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class TourneyTeamStatistics {
   private TourneyMatch match;
-  private int kills, destroyedBeds;
+  private int finalKills, destroyedBeds;
   private boolean win;
 
 }

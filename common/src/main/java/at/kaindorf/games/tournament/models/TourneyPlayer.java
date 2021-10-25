@@ -1,4 +1,4 @@
-package at.kaindorf.games.tournament;
+package at.kaindorf.games.tournament.models;
 
 import lombok.Data;
 import org.bukkit.entity.Player;
