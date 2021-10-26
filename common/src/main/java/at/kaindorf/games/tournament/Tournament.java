@@ -1,20 +1,25 @@
 package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
-import at.kaindorf.games.tournament.rounds.GroupStage;
-import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.tournament.models.TourneyGroup;
 import at.kaindorf.games.tournament.models.TourneyGroupMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.rounds.GroupStage;
+import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.utils.Loader;
+import at.kaindorf.games.utils.Pair;
 import at.kaindorf.games.utils.Saver;
 import at.kaindorf.games.utils.UsernameFetcher;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
 
 @Data
 public class Tournament {
@@ -34,31 +39,41 @@ public class Tournament {
   private List<TourneyGroup> groups;
   private List<TourneyTeam> teams;
   private List<TourneyPlayer> players;
-  private List<TourneyGroupMatch> matches;
 
   private Tournament() {
     this.groups = new LinkedList<>();
     this.teams = new ArrayList<>();
     this.players = new ArrayList<>();
-    this.matches = new ArrayList<>();
 
     loadSaves();
   }
 
   public void loadSaves() {
     Bukkit.getLogger().info("Loading Tournament Saves ...");
+    try {
+      // load Groups
+      for (String group : Loader.loadSavedGroups()) {
+        addGroup(group);
+      }
 
-    // load Groups
-    Loader.loadSavedGroups();
+      // load Teams
+      for (Pair<String, String> p : Loader.loadSavedTeams()) {
+        addTeam(p.getFirst(), p.getSecond());
+      }
 
-    // load Teams
-    Loader.loadSavedTeams();
+      // load Player
+      for (Pair<TourneyPlayer, String> p : Loader.loadSavedPlayers()) {
+        TourneyPlayer player = p.getFirst();
+        addPlayer(player.getUuid(), p.getSecond(), player.getKills(), player.getDestroyedBeds());
+      }
+    } catch (TournamentEntityExistsException e) {
+      Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
+      this.clear();
+    }
 
-    // load Player
-    Loader.loadSavedPlayers();
   }
 
-  public void addGroup(String name) {
+  public void addGroup(String name) throws TournamentEntityExistsException {
     Optional<TourneyGroup> optional = groups.stream().filter(g -> g.getName().equals(name)).findFirst();
     if (!optional.isPresent()) {
       groups.add(new TourneyGroup(name));
@@ -68,7 +83,7 @@ public class Tournament {
   public void addTeam(String name, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Team exists already: " + name);
+      throw new TournamentEntityExistsException("Team " + name + " exists already");
     }
     TourneyTeam team = new TourneyTeam(name);
     teams.add(team);
@@ -82,7 +97,7 @@ public class Tournament {
   public void addPlayer(String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
     Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player exists already: " + uuid);
+      throw new TournamentEntityExistsException("Player " + uuid + " exists already");
     }
     String username = UsernameFetcher.getUsernameFromUUID(uuid);
     TourneyPlayer player = new TourneyPlayer(uuid, username, kills, destroyedBeds);
@@ -103,7 +118,6 @@ public class Tournament {
     this.players.clear();
     this.teams.clear();
     this.groups.clear();
-    this.matches.clear();
   }
 
   public void show() {
@@ -149,6 +163,7 @@ public class Tournament {
 
   public void clearRunningTournament() {
     this.koStage = null;
-    this.matches.clear();
+    this.groupStage = null;
+    this.tournamentRunning = false;
   }
 }

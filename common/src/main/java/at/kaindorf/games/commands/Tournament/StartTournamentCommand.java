@@ -48,11 +48,6 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatColor.RED + "groupStage.yml is missing");
     }
 
-    for(TourneyGroupMatch match : Tournament.getInstance().getMatches()) {
-      Bukkit.getLogger().info(match.toString());
-    }
-
-
     return true;
   }
 

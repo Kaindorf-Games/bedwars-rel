@@ -1,18 +1,18 @@
 package at.kaindorf.games.tournament.models;
 
+import at.kaindorf.games.tournament.Tournament;
+
 import java.util.List;
 
 public class TourneyGroupMatch extends TourneyMatch {
-  private TourneyGroup group;
 
   public TourneyGroupMatch(List<TourneyTeam> teams) {
     super(teams);
-    group = null;
   }
 
   @Override
   public String toString() {
-    return group.getName() + " -> " + teams.stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", " + t2).orElse("");
+    return getGroup().getName() + " -> " + teams.stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", " + t2).orElse("");
   }
 
   public TourneyTeamStatistics getMatchStatistics(TourneyTeam team) {
@@ -20,10 +20,9 @@ public class TourneyGroupMatch extends TourneyMatch {
   }
 
   public TourneyGroup getGroup() {
-    return group;
-  }
-
-  public void setGroup(TourneyGroup group) {
-    this.group = group;
+    if (teams.size() > 0) {
+      return Tournament.getInstance().getGroups().stream().filter(g -> g.getTeams().stream().anyMatch(t -> t.getName().equals(teams.get(0).getName()))).findFirst().orElse(new TourneyGroup("Undefined"));
+    }
+    return new TourneyGroup("Undefined");
   }
 }

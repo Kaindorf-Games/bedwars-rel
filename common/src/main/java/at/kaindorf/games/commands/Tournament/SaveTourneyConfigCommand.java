@@ -25,6 +25,7 @@ public class SaveTourneyConfigCommand extends BaseCommand implements ICommand {
     }
 
     Tournament.getInstance().save();
+    sender.sendMessage(ChatColor.GREEN+"Configurations are saved");
     return true;
   }
 
