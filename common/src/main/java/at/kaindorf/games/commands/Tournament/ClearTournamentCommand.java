@@ -5,6 +5,7 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
+import at.kaindorf.games.utils.Saver;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -23,12 +24,12 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
         }
         if (args.size() == 0) {
             Tournament.getInstance().clear();
-            Tournament.getInstance().clearSaves();
+            Saver.clear();
         }
 
         if (args.size() > 0) {
             if (args.get(0).equalsIgnoreCase("saves")) {
-                Tournament.getInstance().clearSaves();
+                Saver.clear();
             } else if (args.get(0).equalsIgnoreCase("config")) {
                 Tournament.getInstance().clear();
             } else if(args.get(0).equalsIgnoreCase("runningTournament")) {
