@@ -1,7 +1,10 @@
 package at.kaindorf.games.tournament.models;
 
+import at.kaindorf.games.BedwarsRel;
 import lombok.Data;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 @Data
 public class TourneyPlayer {
@@ -24,5 +27,9 @@ public class TourneyPlayer {
 //    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = kills;
     this.destroyedBeds = destroyedBeds;
+  }
+
+  public void initPlayer() {
+    player = BedwarsRel.getInstance().getServer().getPlayer(UUID.fromString(uuid));
   }
 }

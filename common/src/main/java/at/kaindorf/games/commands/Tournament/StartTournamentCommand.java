@@ -3,6 +3,9 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
+import at.kaindorf.games.events.BedwarsGameStartEvent;
+import at.kaindorf.games.events.TournamentStartEvent;
+import at.kaindorf.games.tournament.GameLoop;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyGroupMatch;
 import at.kaindorf.games.utils.ChatWriter;
@@ -28,7 +31,6 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatColor.YELLOW +"Tournament has already started");
       return true;
     }
-    Tournament.getInstance().setTournamentRunning(true);
 
     int rounds = 1, qualifiedTeams = 0;
     boolean rematchKo = false, rematchFinal = false;
@@ -47,6 +49,11 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     if(!res) {
       sender.sendMessage(ChatColor.RED + "groupStage.yml is missing");
     }
+
+    sender.sendMessage(ChatColor.GREEN+"Tournament started");
+
+    TournamentStartEvent event = new TournamentStartEvent(qualifiedTeams, rematchKo, rematchFinal);
+    BedwarsRel.getInstance().getServer().getPluginManager().callEvent(event);
 
     return true;
   }

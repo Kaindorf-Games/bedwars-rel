@@ -10,10 +10,7 @@ public class TourneyGroupMatch extends TourneyMatch {
     super(teams);
   }
 
-  @Override
-  public String toString() {
-    return getGroup().getName() + " -> " + teams.stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", " + t2).orElse("");
-  }
+
 
   public TourneyTeamStatistics getMatchStatistics(TourneyTeam team) {
     return team.getStatistics().stream().filter(stat -> stat.getMatch().equals(this)).findFirst().orElse(null);

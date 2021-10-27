@@ -550,7 +550,7 @@ endgame:
 ### location (you can set with /bw setmainlobby {game}) after a game or when a player
 ### uses /bw leave. If this is set to false, the players will be teleported to the location
 ### where they joined the game!
-  mainlobby-enabled: false
+  mainlobby-enabled: true
   
 ### All players to mainlobby
 ### Type: boolean
@@ -558,7 +558,7 @@ endgame:
 ### Configures if all players will be teleported to mainlobby after game.
 ### If false, all players will be teleported back to lobby to restart
 ### a new game. This is only recognized if mainlobby-enabled set to true
-  all-players-to-mainlobby: false 
+  all-players-to-mainlobby: true
 
 # Bungeecord configurations
 bungeecord:

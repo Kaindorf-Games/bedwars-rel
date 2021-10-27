@@ -1,6 +1,10 @@
 package at.kaindorf.games.game;
 
 import at.kaindorf.games.events.BedwarsGameEndEvent;
+import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.TourneyGroupMatch;
+import at.kaindorf.games.tournament.models.TourneyKoMatch;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -103,6 +107,22 @@ public class SingleGameCycle extends GameCycle {
     // set state and with that, the sign
     this.getGame().setState(GameState.WAITING);
     this.getGame().updateScoreboard();
+
+    /*check if game was in Tournament*/
+    if(this.getGame().getMatch() != null) {
+      TourneyMatch match = this.getGame().getMatch();
+      this.getGame().setMatch(null);
+
+      // move match to done
+      if(match instanceof TourneyGroupMatch) {
+        Tournament.getInstance().getGroupStage().matchPlayed((TourneyGroupMatch) match);
+      } else if(match instanceof TourneyKoMatch) {
+        Tournament.getInstance().getKoStage().currentKoRound().matchPlayed((TourneyKoMatch) match);
+      }
+
+      // set teams to be ready
+      match.getTeams().forEach(t -> t.setGame(null));
+    }
   }
 
   @Override

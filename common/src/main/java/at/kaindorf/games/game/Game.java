@@ -2,6 +2,7 @@ package at.kaindorf.games.game;
 
 import at.kaindorf.games.shop.NewItemShop;
 import at.kaindorf.games.shop.Specials.SpecialItem;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -97,6 +98,7 @@ public class Game {
   private HashMap<String, Team> teams = null;
   private int time = 1000;
   private int timeLeft = 0;
+  private TourneyMatch match;
 
   public Game(String name) {
     super();
@@ -135,6 +137,8 @@ public class Game {
     } else {
       this.cycle = new SingleGameCycle(this);
     }
+
+    this.match = null;
   }
 
   /*
@@ -1317,7 +1321,7 @@ public class Game {
 
     PlayerStorage storage = this.playerStorages.get(p);
     storage.clean();
-    storage.restore();
+//    storage.restore();
 
     this.playerSettings.remove(p);
     this.updateScoreboard();

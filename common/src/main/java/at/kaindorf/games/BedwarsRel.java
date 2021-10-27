@@ -21,6 +21,7 @@ import com.bugsnag.Report;
 import com.bugsnag.callbacks.Callback;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,6 +69,10 @@ public class BedwarsRel extends JavaPlugin {
   private BukkitTask timeTask = null;
   private BukkitTask updateChecker = null;
   private String version = null;
+  @Setter
+  @Getter
+  private BukkitTask gameLoopTask = null;
+
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
                           Map<String, String> params) {
@@ -680,12 +685,19 @@ public class BedwarsRel extends JavaPlugin {
 
   @Override
   public void onDisable() {
+    if (gameLoopTask != null) {
+      Bukkit.getLogger().info("Cancel: " + gameLoopTask.getTaskId());
+      gameLoopTask.cancel();
+    }
+
     this.stopTimeListener();
     this.gameManager.unloadGames();
+
 
     if (this.isHologramsEnabled() && this.holographicInteraction != null) {
       this.holographicInteraction.unloadHolograms();
     }
+
   }
 
   @Override
@@ -854,6 +866,7 @@ public class BedwarsRel extends JavaPlugin {
   }
 
   private void registerListener() {
+    new TournamentListener();
     new WeatherListener();
     new BlockListener();
     new PlayerListener();

@@ -56,12 +56,12 @@ public class GroupStage {
     return matchesToDo.stream().filter(m -> m.getTeams().stream().anyMatch(t -> t.getName().equals(team.getName()))).collect(Collectors.toList());
   }
 
-  public boolean isGroupStageFinished() {
+  public boolean isFinished() {
     return matchesToDo.size() == 0;
   }
 
   public List<TourneyTeam> getQualifiedTeamsForKoRound(int numberOfQualifiedTeamPerGroup) {
-    if(!isGroupStageFinished()) {
+    if(!isFinished()) {
       return null;
     }
     List<TourneyTeam> qualifiedTeams = new LinkedList<>();

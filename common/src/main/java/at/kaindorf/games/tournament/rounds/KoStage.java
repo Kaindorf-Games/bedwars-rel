@@ -1,16 +1,20 @@
 package at.kaindorf.games.tournament.rounds;
 
+import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyKoMatch;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import lombok.Data;
+import org.bukkit.Bukkit;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class KoStage {
   private Map<Integer, KoRound> koRounds;
   private int currentKoRound, qualifiedForNextRound, createdKoRounds;
-  private boolean rematch, rematchFinal;
+  private boolean rematch, rematchFinal, finished = false;
 
   public KoStage(int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {
     currentKoRound = 0;
@@ -21,33 +25,47 @@ public class KoStage {
     this.rematchFinal = rematchFinal;
   }
 
+  public KoRound currentKoRound() {
+    return koRounds.get(currentKoRound);
+  }
+
   public void addKoRound(KoRound koRound) {
     createdKoRounds++;
     koRounds.put(createdKoRounds, koRound);
   }
 
-  public List<TourneyKoMatch> getMatchesOfCurrentKoRound() {
-    return (currentKoRound == 0) ? new LinkedList<>() : koRounds.get(currentKoRound).getMatchesTodo();
-  }
-
-  public void matchInCurrentKoRoundPlayed(TourneyKoMatch match) {
-    koRounds.get(currentKoRound).matchPlayed(match);
-  }
-
-  public List<TourneyTeam> getWinnerOfCurrentKoRound() {
+  private List<TourneyTeam> getWinnerOfCurrentKoRound() {
     return koRounds.get(currentKoRound).getWinnersOfCurrentKoRound(qualifiedForNextRound);
   }
 
   public void nextKoRound() {
+    List<TourneyTeam> teams = getWinnerOfCurrentKoRound();
+
+    // it was a final
+    if (!koRounds.containsKey(currentKoRound + 1)) {
+      Tournament.getInstance().announceWinner(teams.get(0));
+      this.finished = true;
+      return;
+    }
+
+    currentKoRound++;
+    Collections.shuffle(teams);
+    koRounds.get(currentKoRound).generateMatches(teams);
+  }
+
+  public void startKoRound() {
     currentKoRound++;
   }
 
   public void generateKoStage(List<TourneyTeam> teams) {
     int teamsRemaining = teams.size();
-    if (teamsRemaining == 4) {
+    Bukkit.getLogger().info("Teams Remaining: "+teamsRemaining);
+    if (teamsRemaining <= 4) {
       KoRound finalRound = new KoRound(null, rematchFinal);
-      finalRound.generateMatches(teams);
+      finalRound.generateFinal(teams);
       addKoRound(finalRound);
+      finalRound.getMatchesTodo().forEach(m -> Bukkit.getLogger().info(m.toString()));
+      startKoRound();
       return;
     }
     Collections.shuffle(teams);
@@ -69,6 +87,6 @@ public class KoStage {
     }
 
     // start Ko Stage Mode
-    nextKoRound();
+    startKoRound();
   }
 }

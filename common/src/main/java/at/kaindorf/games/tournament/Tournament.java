@@ -1,5 +1,6 @@
 package at.kaindorf.games.tournament;
 
+import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.models.TourneyGroup;
 import at.kaindorf.games.tournament.models.TourneyGroupMatch;
@@ -13,8 +14,11 @@ import at.kaindorf.games.utils.Saver;
 import at.kaindorf.games.utils.UsernameFetcher;
 import lombok.Data;
 import lombok.SneakyThrows;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +28,6 @@ import java.util.logging.Level;
 @Data
 public class Tournament {
   private static Tournament instance;
-  private boolean tournamentRunning = false;
 
   private KoStage koStage;
   private GroupStage groupStage;
@@ -153,17 +156,55 @@ public class Tournament {
     return groupStage.getQualifiedTeamsForKoRound(numberOfQualifiedTeamsPerGroup);
   }
 
-  public boolean generateKoMatches(List<TourneyTeam> teams, int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {
+  public void generateKoMatches(List<TourneyTeam> teams, int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {
     koStage = new KoStage(qualifiedForNextKoRound, rematch, rematchFinal);
 
     koStage.generateKoStage(teams);
-
-    return true;
   }
 
   public void clearRunningTournament() {
     this.koStage = null;
     this.groupStage = null;
-    this.tournamentRunning = false;
+    if(BedwarsRel.getInstance().getGameLoopTask() != null) {
+      BedwarsRel.getInstance().setGameLoopTask(null);
+    }
+  }
+
+  public void announceWinner(TourneyTeam team) {
+    BedwarsRel.getInstance().getGameLoopTask().cancel();
+    BedwarsRel.getInstance().setGameLoopTask(null);
+
+    try {
+      for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+
+        Class<?> clazz = Class.forName("at.kaindorf.games.com."
+            + BedwarsRel.getInstance().getCurrentVersion().toLowerCase() + ".Title");
+        Method showTitle = clazz
+            .getDeclaredMethod("showTitle", Player.class, String.class,
+                double.class, double.class, double.class);
+
+        double titleFadeIn =
+            BedwarsRel.getInstance().getConfig()
+                .getDouble("titles.win.title-fade-in", 1.5);
+        double titleStay =
+            BedwarsRel.getInstance().getConfig().getDouble("titles.win.title-stay", 5.0);
+        double titleFadeOut =
+            BedwarsRel
+                .getInstance().getConfig().getDouble("titles.win.title-fade-out", 2.0);
+
+        showTitle.invoke(null, p, ChatColor.GOLD+team.getName() + " has won", titleFadeIn, titleStay, titleFadeOut);
+      }
+    } catch (Exception e) {
+      Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
+    }
+    Bukkit.getLogger().info("We have Winner!!!");
+  }
+
+  public boolean isTournamentRunning() {
+    return BedwarsRel.getInstance().getGameLoopTask() != null;
+  }
+
+  public void identifyPlayers() {
+    players.stream().filter(p -> p.getPlayer() == null).forEach(TourneyPlayer::initPlayer);
   }
 }

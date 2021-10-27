@@ -10,8 +10,8 @@ public class TourneyKoMatch extends TourneyMatch {
     this.rematch = null;
   }
 
-  public TourneyKoMatch(TourneyKoMatch rematch) {
-    super(null);
+  public TourneyKoMatch( List<TourneyTeam> teams, TourneyKoMatch rematch) {
+    super(teams);
     this.rematch = rematch;
   }
 

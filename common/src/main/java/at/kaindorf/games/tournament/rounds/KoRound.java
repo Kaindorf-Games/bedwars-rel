@@ -30,8 +30,15 @@ public class KoRound {
       TourneyKoMatch match = new TourneyKoMatch(Arrays.asList(teams.get(4 * i), teams.get(4 * i + 1), teams.get(4 * i + 2), teams.get(4 * i + 3)));
       matchesTodo.add(match);
       if (rematch)
-        matchesTodo.add(new TourneyKoMatch(match));
+        matchesTodo.add(new TourneyKoMatch(teams, match));
     }
+  }
+
+  public void generateFinal(List<TourneyTeam> teams) {
+    TourneyKoMatch match = new TourneyKoMatch(teams);
+    matchesTodo.add(match);
+    if (rematch)
+      matchesTodo.add(new TourneyKoMatch(teams, match));
   }
 
   public void matchPlayed(TourneyKoMatch match) {
@@ -39,26 +46,26 @@ public class KoRound {
     matchesDone.add(match);
   }
 
-  public boolean isKoRoundFinished() {
+  public boolean isFinished() {
     return matchesTodo.size() == 0;
   }
 
   public List<TourneyTeam> getWinnersOfCurrentKoRound(int qualifiedForNextKoRound) {
-    if (!isKoRoundFinished()) {
+    if (!isFinished()) {
       return null;
     }
     List<Pair<Integer, TourneyTeam>> teams = new LinkedList<>();
 
-    List<TourneyKoMatch> firstRoundMatches = matchesDone.stream().filter(m -> m.getTeams() != null).collect(Collectors.toList());
-    for (TourneyKoMatch match : firstRoundMatches) {
+    List<TourneyKoMatch> matches = matchesDone.stream().filter(m -> m.getTeams() != null).collect(Collectors.toList());
+    for (TourneyKoMatch match : matches) {
       match.getTeams().forEach(t -> {
         int points = calculatePointsForMatchAndTeam(match, t);
-        if (rematch) {
-          TourneyKoMatch rematch = matchesDone.stream().filter(match1 -> match1.getRematch().equals(match)).findFirst().get();
+        if (rematch && match.getRematch() != null) {
+          TourneyKoMatch rematch = matchesDone.stream().filter(match1 -> match.getRematch() == match1).findFirst().get();
           points += calculatePointsForMatchAndTeam(rematch, t);
         }
 
-        teams.add(new Pair<>(points*-1, t));
+        teams.add(new Pair<>(points * -1, t));
       });
     }
     return teams.stream().sorted(Comparator.comparingInt(Pair::getFirst)).limit(qualifiedForNextKoRound).map(Pair::getSecond).collect(Collectors.toList());
