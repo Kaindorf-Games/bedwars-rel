@@ -3,7 +3,6 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.models.TourneyGroup;
-import at.kaindorf.games.tournament.models.TourneyGroupMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.rounds.GroupStage;
@@ -146,14 +145,6 @@ public class Tournament {
   public boolean generateGroupMatches() {
     groupStage = new GroupStage();
     return groupStage.readGroupStageFromFile();
-  }
-
-  private TourneyTeam findTeam(TourneyGroup g, TourneyTeam t) {
-    return g.getTeams().stream().filter(te -> te.getName().equals(t.getName())).findFirst().orElse(null);
-  }
-
-  private List<TourneyTeam> getQualifiedTeamsForKoRound(int numberOfQualifiedTeamsPerGroup) {
-    return groupStage.getQualifiedTeamsForKoRound(numberOfQualifiedTeamsPerGroup);
   }
 
   public void generateKoMatches(List<TourneyTeam> teams, int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {

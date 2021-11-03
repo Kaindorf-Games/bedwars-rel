@@ -3,7 +3,6 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
-import at.kaindorf.games.tournament.models.TourneyKoMatch;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
@@ -11,13 +10,10 @@ import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class GameLoop extends BukkitRunnable {
@@ -62,51 +58,6 @@ public class GameLoop extends BukkitRunnable {
         tryToStartGames(koRound.getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
       }
     }
-
-   /* Tournament.getInstance().identifyPlayers();
-    GroupStage groupStage = Tournament.getInstance().getGroupStage();
-    // Group Stage Loop
-    while (!groupStage.isFinished() && isRunning) {
-      Bukkit.getLogger().info("-------");
-      getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
-      groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).forEach(m -> Bukkit.getLogger().info(m.toString()));
-
-      tryToStartGames(groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
-
-      sleep();
-    }
-    List<TourneyTeam> teams = groupStage.getQualifiedTeamsForKoRound(qualifiedTeams);
-    Tournament.getInstance().generateKoMatches(teams, 2, rematchKo, rematchFinal);
-
-
-    // Ko Stage Loop
-    KoStage koStage = Tournament.getInstance().getKoStage();
-    while (!koStage.isFinished() && isRunning) {
-      KoRound koRound = koStage.getKoRounds().get(koStage.getCurrentKoRound());
-
-      while (koRound.isFinished()  && isRunning) {
-        tryToStartGames(koRound.getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
-
-        sleep();
-      }
-      koStage.nextKoRound();
-    }*/
-  }
-
-  private void sleep() {
-    try {
-      // look if players joint after tournament start
-      long elapsedTime = identifyPlayers();
-      Thread.sleep((5000 - elapsedTime <= 0) ? 0 : 5000 - elapsedTime);
-    } catch (InterruptedException e) {
-      Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
-    }
-  }
-
-  private long identifyPlayers() {
-    long start = System.currentTimeMillis();
-    Tournament.getInstance().identifyPlayers();
-    return System.currentTimeMillis() - start;
   }
 
   private void tryToStartGames(List<TourneyMatch> matches, List<Game> waitingGames) {

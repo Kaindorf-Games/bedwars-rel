@@ -1,14 +1,14 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.Tournament;
-import at.kaindorf.games.tournament.models.TourneyKoMatch;
-import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import lombok.Data;
 import org.bukkit.Bukkit;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class KoStage {
