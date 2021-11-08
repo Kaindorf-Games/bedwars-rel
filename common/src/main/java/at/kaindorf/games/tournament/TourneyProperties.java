@@ -27,6 +27,8 @@ public class TourneyProperties {
   public static File propertiesFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tourneyProps.yml");
   public static File groupStageFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/groupStage.yml");
 
+  public static File logFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/log.txt");
+
   public static Object get(String key) {
     return values.get(key);
   }

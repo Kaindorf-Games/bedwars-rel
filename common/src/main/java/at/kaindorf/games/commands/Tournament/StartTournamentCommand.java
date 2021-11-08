@@ -7,6 +7,7 @@ import at.kaindorf.games.events.BedwarsGameStartEvent;
 import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.tournament.GameLoop;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.TourneyProperties;
 import at.kaindorf.games.tournament.models.TourneyGroupMatch;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.Bukkit;
@@ -48,6 +49,11 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     boolean res = Tournament.getInstance().generateGroupMatches();
     if(!res) {
       sender.sendMessage(ChatColor.RED + "groupStage.yml is missing");
+    }
+
+    // delete existing log File
+    if(TourneyProperties.logFile.exists()) {
+      TourneyProperties.logFile.delete();
     }
 
     sender.sendMessage(ChatColor.GREEN+"Tournament started");

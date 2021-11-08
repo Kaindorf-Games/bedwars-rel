@@ -9,6 +9,7 @@ import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.SoundMachine;
+import at.kaindorf.games.utils.TournamentLogger;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
 import at.kaindorf.games.BedwarsRel;
@@ -113,14 +114,12 @@ public abstract class GameCycle {
     boolean teamIsDead = deathTeam.isDead(this.getGame());
 
     // Add Final Kill to TourneyTeamStatistics
-    Bukkit.getLogger().info("TeamIsDead = "+teamIsDead);
     Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
     if(teamIsDead && killer != null && game.getMatch() != null) {
-
       TourneyTeam team = Tournament.getInstance().getTeamOfPlayer(killer);
       Optional<TourneyTeamStatistics> optional = team.getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
       optional.ifPresent(TourneyTeamStatistics::addFinalKill);
-
+      TournamentLogger.getInstance().logFinalKill(killer.getDisplayName(), player.getDisplayName());
     }
 
     if (BedwarsRel.getInstance().statisticsEnabled()) {

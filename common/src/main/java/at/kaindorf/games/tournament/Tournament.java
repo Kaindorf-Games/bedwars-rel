@@ -7,10 +7,7 @@ import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoStage;
-import at.kaindorf.games.utils.Loader;
-import at.kaindorf.games.utils.Pair;
-import at.kaindorf.games.utils.Saver;
-import at.kaindorf.games.utils.UsernameFetcher;
+import at.kaindorf.games.utils.*;
 import lombok.Data;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
@@ -211,5 +208,9 @@ public class Tournament {
 
   public Optional<TourneyTeam> getTourneyTeamOfPlayer(Player player) {
     return teams.stream().filter(t -> t.getPlayers().stream().map(TourneyPlayer::getPlayer).anyMatch(p -> p == player)).findFirst();
+  }
+
+  public TournamentLogger logger() {
+    return TournamentLogger.getInstance();
   }
 }

@@ -7,6 +7,7 @@ import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
 import at.kaindorf.games.utils.ChatWriter;
+import at.kaindorf.games.utils.TournamentLogger;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
 import at.kaindorf.games.BedwarsRel;
@@ -20,6 +21,7 @@ import at.kaindorf.games.events.BedwarsTargetBlockDestroyedEvent;
 import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.villager.MerchantCategory;
 import at.kaindorf.games.villager.MerchantCategoryComparator;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -161,7 +163,7 @@ public class Game {
   }
 
   public static String getPlayerWithTeamString(Player player, Team team, ChatColor before,
-      String playerAdding) {
+                                               String playerAdding) {
     if (BedwarsRel.getInstance().getBooleanConfig("teamname-in-chat", true)) {
       return player.getDisplayName() + before + playerAdding + before + " (" + team.getChatColor()
           + team.getDisplayName() + before + ")";
@@ -763,11 +765,13 @@ public class Game {
     }
 
     // add destroyed Bed to teamstatistics
-    Bukkit.getLogger().info("Bed destroyed");
-    Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
-    if(tourneyTeam.isPresent()) {
-      Optional<TourneyTeamStatistics> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
-      statistics.ifPresent(TourneyTeamStatistics::addDestroyedBed);
+    if (this.getMatch() != null) {
+      Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
+      if (tourneyTeam.isPresent()) {
+        Optional<TourneyTeamStatistics> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
+        statistics.ifPresent(TourneyTeamStatistics::addDestroyedBed);
+        TournamentLogger.getInstance().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
+      }
     }
 
     Team bedDestroyTeam = null;

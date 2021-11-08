@@ -4,6 +4,7 @@ import at.kaindorf.games.events.BedwarsGameEndEvent;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.utils.ChatWriter;
+import at.kaindorf.games.utils.TournamentLogger;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
 import at.kaindorf.games.BedwarsRel;
@@ -135,12 +136,12 @@ public class SingleGameCycle extends GameCycle {
   public void onGameOver(GameOverTask task) {
     // set winning team of the round
     TourneyMatch match = task.getCycle().getGame().getMatch();
-    if (match != null && task.getWinner() != null) {
-      Bukkit.getLogger().info("We have a winner");
+    if (match != null && task.getWinner() != null && task.getCounter() == task.getStartCount()) {
       Optional<TourneyTeam> winner = Tournament.getInstance().getTourneyTeamOfPlayer(task.getWinner().getPlayers().get(0));
       if (winner.isPresent()) {
         Optional<TourneyTeamStatistics> statistics = winner.get().getStatistics().stream().filter(st -> st.getMatch() == match).findFirst();
         statistics.ifPresent(TourneyTeamStatistics::setWin);
+        TournamentLogger.getInstance().logMatchWin(task.getWinner().getDisplayName());
       }
     }
 
