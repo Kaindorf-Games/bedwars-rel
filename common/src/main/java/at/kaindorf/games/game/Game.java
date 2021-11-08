@@ -2,7 +2,10 @@ package at.kaindorf.games.game;
 
 import at.kaindorf.games.shop.NewItemShop;
 import at.kaindorf.games.shop.Specials.SpecialItem;
+import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyMatch;
+import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -21,13 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -762,6 +760,14 @@ public class Game {
     Team team = this.getPlayerTeam(p);
     if (team == null) {
       return false;
+    }
+
+    // add destroyed Bed to teamstatistics
+    Bukkit.getLogger().info("Bed destroyed");
+    Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
+    if(tourneyTeam.isPresent()) {
+      Optional<TourneyTeamStatistics> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
+      statistics.ifPresent(TourneyTeamStatistics::addDestroyedBed);
     }
 
     Team bedDestroyTeam = null;

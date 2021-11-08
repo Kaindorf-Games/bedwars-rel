@@ -4,6 +4,9 @@ import at.kaindorf.games.events.BedwarsGameOverEvent;
 import at.kaindorf.games.events.BedwarsPlayerKilledEvent;
 import at.kaindorf.games.shop.Specials.RescuePlatform;
 import at.kaindorf.games.shop.Specials.SpecialItem;
+import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.SoundMachine;
 import at.kaindorf.games.utils.Utils;
@@ -13,12 +16,9 @@ import at.kaindorf.games.statistics.PlayerStatistic;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -110,12 +110,24 @@ public abstract class GameCycle {
     }
 
     Team deathTeam = this.getGame().getPlayerTeam(player);
+    boolean teamIsDead = deathTeam.isDead(this.getGame());
+
+    // Add Final Kill to TourneyTeamStatistics
+    Bukkit.getLogger().info("TeamIsDead = "+teamIsDead);
+    Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
+    if(teamIsDead && killer != null && game.getMatch() != null) {
+
+      TourneyTeam team = Tournament.getInstance().getTeamOfPlayer(killer);
+      Optional<TourneyTeamStatistics> optional = team.getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
+      optional.ifPresent(TourneyTeamStatistics::addFinalKill);
+
+    }
+
     if (BedwarsRel.getInstance().statisticsEnabled()) {
       diePlayer = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(player);
 
       boolean onlyOnBedDestroy =
           BedwarsRel.getInstance().getBooleanConfig("statistics.bed-destroyed-kills", false);
-      boolean teamIsDead = deathTeam.isDead(this.getGame());
 
       if ((onlyOnBedDestroy && teamIsDead) || !onlyOnBedDestroy) {
         diePlayer.setCurrentDeaths(diePlayer.getCurrentDeaths() + 1);

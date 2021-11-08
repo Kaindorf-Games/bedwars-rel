@@ -71,7 +71,7 @@ public class GroupStage {
         int points = 0;
         for (TourneyTeamStatistics statistics : t.getStatistics()) {
           points += statistics.getDestroyedBeds() * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForBed")));
-          points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForFinalKills")));
+          points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForFinalKill")));
           points += (statistics.isWin() ? 1 : 0) * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForWin")));
         }
         teams.add(new Pair<>(t, -1 * points));

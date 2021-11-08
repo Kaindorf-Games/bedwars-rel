@@ -162,6 +162,12 @@ public class Tournament {
   }
 
   public void announceWinner(TourneyTeam team) {
+    for(TourneyTeam t : teams) {
+      int sum = t.getStatistics().stream().map(st -> st.getDestroyedBeds() * Integer.parseInt((String) TourneyProperties.get("pointsForBed")) +
+          st.getFinalKills() * Integer.parseInt((String) TourneyProperties.get("pointsForFinalKill")) +
+          (st.isWin() ? 1:0) * Integer.parseInt((String) TourneyProperties.get("pointsForWin"))).reduce(Integer::sum).get();
+      Bukkit.getLogger().info(t.getName() + " = "+sum);
+    }
     BedwarsRel.getInstance().getGameLoopTask().cancel();
     BedwarsRel.getInstance().setGameLoopTask(null);
 
@@ -197,5 +203,13 @@ public class Tournament {
 
   public void identifyPlayers() {
     players.stream().filter(p -> p.getPlayer() == null).forEach(TourneyPlayer::initPlayer);
+  }
+
+  public TourneyTeam getTeamOfPlayer(Player player) {
+    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p ->p.getPlayer().equals(player))).findFirst().orElse(null);
+  }
+
+  public Optional<TourneyTeam> getTourneyTeamOfPlayer(Player player) {
+    return teams.stream().filter(t -> t.getPlayers().stream().map(TourneyPlayer::getPlayer).anyMatch(p -> p == player)).findFirst();
   }
 }

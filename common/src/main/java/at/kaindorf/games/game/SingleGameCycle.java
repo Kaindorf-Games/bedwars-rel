@@ -2,9 +2,7 @@ package at.kaindorf.games.game;
 
 import at.kaindorf.games.events.BedwarsGameEndEvent;
 import at.kaindorf.games.tournament.Tournament;
-import at.kaindorf.games.tournament.models.TourneyGroupMatch;
-import at.kaindorf.games.tournament.models.TourneyKoMatch;
-import at.kaindorf.games.tournament.models.TourneyMatch;
+import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -13,6 +11,9 @@ import at.kaindorf.games.statistics.PlayerStatistic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -109,14 +110,14 @@ public class SingleGameCycle extends GameCycle {
     this.getGame().updateScoreboard();
 
     /*check if game was in Tournament*/
-    if(this.getGame().getMatch() != null) {
+    if (this.getGame().getMatch() != null) {
       TourneyMatch match = this.getGame().getMatch();
       this.getGame().setMatch(null);
 
       // move match to done
-      if(match instanceof TourneyGroupMatch) {
+      if (match instanceof TourneyGroupMatch) {
         Tournament.getInstance().getGroupStage().matchPlayed((TourneyGroupMatch) match);
-      } else if(match instanceof TourneyKoMatch) {
+      } else if (match instanceof TourneyKoMatch) {
         Tournament.getInstance().getKoStage().currentKoRound().matchPlayed((TourneyKoMatch) match);
       }
 
@@ -132,6 +133,17 @@ public class SingleGameCycle extends GameCycle {
 
   @Override
   public void onGameOver(GameOverTask task) {
+    // set winning team of the round
+    TourneyMatch match = task.getCycle().getGame().getMatch();
+    if (match != null && task.getWinner() != null) {
+      Bukkit.getLogger().info("We have a winner");
+      Optional<TourneyTeam> winner = Tournament.getInstance().getTourneyTeamOfPlayer(task.getWinner().getPlayers().get(0));
+      if (winner.isPresent()) {
+        Optional<TourneyTeamStatistics> statistics = winner.get().getStatistics().stream().filter(st -> st.getMatch() == match).findFirst();
+        statistics.ifPresent(TourneyTeamStatistics::setWin);
+      }
+    }
+
     if (task.getCounter() == task.getStartCount() && task.getWinner() != null) {
       for (Player aPlayer : this.getGame().getPlayers()) {
         if (aPlayer.isOnline()) {
