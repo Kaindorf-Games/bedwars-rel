@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -119,7 +118,7 @@ public abstract class GameCycle {
       TourneyTeam team = Tournament.getInstance().getTeamOfPlayer(killer);
       Optional<TourneyTeamStatistics> optional = team.getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
       optional.ifPresent(TourneyTeamStatistics::addFinalKill);
-      TournamentLogger.getInstance().logFinalKill(killer.getDisplayName(), player.getDisplayName());
+      TournamentLogger.info().logFinalKill(killer.getDisplayName(), player.getDisplayName());
     }
 
     if (BedwarsRel.getInstance().statisticsEnabled()) {

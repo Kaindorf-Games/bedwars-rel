@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -141,7 +140,7 @@ public class SingleGameCycle extends GameCycle {
       if (winner.isPresent()) {
         Optional<TourneyTeamStatistics> statistics = winner.get().getStatistics().stream().filter(st -> st.getMatch() == match).findFirst();
         statistics.ifPresent(TourneyTeamStatistics::setWin);
-        TournamentLogger.getInstance().logMatchWin(task.getWinner().getDisplayName());
+        TournamentLogger.info().logMatchWin(task.getWinner().getDisplayName());
       }
     }
 

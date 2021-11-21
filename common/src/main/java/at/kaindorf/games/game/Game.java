@@ -770,7 +770,7 @@ public class Game {
       if (tourneyTeam.isPresent()) {
         Optional<TourneyTeamStatistics> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
         statistics.ifPresent(TourneyTeamStatistics::addDestroyedBed);
-        TournamentLogger.getInstance().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
+        TournamentLogger.info().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
       }
     }
 

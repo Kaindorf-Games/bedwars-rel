@@ -1,6 +1,7 @@
 package at.kaindorf.games.utils;
 
 import at.kaindorf.games.tournament.TourneyProperties;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 
@@ -10,12 +11,29 @@ import java.io.IOException;
 public class TournamentLogger {
 
   private static TournamentLogger logger;
+  @Setter
+  private String mode;
 
-  public static TournamentLogger getInstance() {
+  public static TournamentLogger info() {
+    getInstance("INFO");
+    return logger;
+  }
+
+  public static TournamentLogger error() {
+    getInstance("ERROR");
+    return logger;
+  }
+
+  public static TournamentLogger warning() {
+    getInstance("WARNING");
+    return logger;
+  }
+
+  private static void getInstance(String mode) {
     if (logger == null) {
       logger = new TournamentLogger();
     }
-    return logger;
+    logger.setMode(mode);
   }
 
   private StringBuilder sb;
@@ -29,27 +47,33 @@ public class TournamentLogger {
       }
     }
     sb = new StringBuilder();
-
   }
 
   @SneakyThrows
   public void logFinalKill(String killer, String death) {
     Bukkit.getLogger().info(killer + " final killed " + death);
-    sb.append(killer + " final killed " + death + "\n");
+    sb.append(mode + ": " + killer + " final killed " + death + "\n");
     write();
   }
 
   @SneakyThrows
   public void logBedDestroyed(String destroyedByPlayer, String destroyedByTeam) {
     Bukkit.getLogger().info("Bed was destroyed by " + destroyedByPlayer + "(" + destroyedByTeam + ")");
-    sb.append("Bed was destroyed by " + destroyedByPlayer + "(" + destroyedByTeam + ")" + "\n");
+    sb.append(mode + ": Bed was destroyed by " + destroyedByPlayer + "(" + destroyedByTeam + ")" + "\n");
     write();
   }
 
   @SneakyThrows
   public void logMatchWin(String team) {
     Bukkit.getLogger().info(team + " has won");
-    sb.append(team + " has won" + "\n");
+    sb.append(mode + ": " + team + " has won" + "\n");
+    write();
+  }
+
+  @SneakyThrows
+  public void logTournamentStop() {
+    Bukkit.getLogger().info("Tournament has been stopped");
+    sb.append(mode+": the Tournament has been stopped");
     write();
   }
 
