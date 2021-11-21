@@ -1,0 +1,18 @@
+{
+  "teams": [
+    {
+      "group": "1",
+      "teamName": "Team1",
+      "players": [
+        "player 1 UID"
+      ]
+    },
+    {
+      "group": "1",
+      "teamName": "Team2",
+      "players": [
+        "player 2 UID"
+      ]
+	}
+  ]
+}
