@@ -8,10 +8,12 @@ import java.util.UUID;
 
 @Data
 public class TourneyPlayer {
+  private int id;
   private String uuid, username;
   private TourneyTeam team;
   private Player player;
   private int kills, destroyedBeds;
+  private static int currentId;
 
   public TourneyPlayer(String uuid, String username) {
     this.uuid = uuid;
@@ -19,6 +21,8 @@ public class TourneyPlayer {
 //    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = 0;
     this.destroyedBeds = 0;
+
+    this.id = currentId++;
   }
 
   public TourneyPlayer(String uuid, String username, int kills, int destroyedBeds) {
@@ -27,6 +31,8 @@ public class TourneyPlayer {
 //    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = kills;
     this.destroyedBeds = destroyedBeds;
+
+    this.id = currentId++;
   }
 
   public void initPlayer() {

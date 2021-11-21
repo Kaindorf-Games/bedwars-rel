@@ -7,11 +7,9 @@ import java.util.List;
 public class TourneyGroupMatch extends TourneyMatch {
 
   public TourneyGroupMatch(List<TourneyTeam> teams) {
-    super(teams);
+    super(teams, currentId++);
   }
-
-
-
+  
   public TourneyTeamStatistics getMatchStatistics(TourneyTeam team) {
     return team.getStatistics().stream().filter(stat -> stat.getMatch().equals(this)).findFirst().orElse(null);
   }

@@ -10,6 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 public class TourneyMatch {
   protected List<TourneyTeam> teams;
+  protected int id;
+
+  protected static int currentId = 0;
 
   @Override
   public String toString() {

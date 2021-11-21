@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TourneyTeamStatistics {
+  private int id;
   private TourneyMatch match;
   private int finalKills, destroyedBeds;
   private boolean win;
+  public static int currentId = 0;
 
   public void setWin() {
     this.win = true;
