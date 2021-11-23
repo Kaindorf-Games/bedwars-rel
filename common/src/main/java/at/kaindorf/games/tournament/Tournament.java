@@ -28,6 +28,10 @@ public class Tournament {
   private KoStage koStage;
   private GroupStage groupStage;
 
+  private boolean softStop, hardStop;
+  private int qualifiedForNextRound;
+  private boolean rematchKo, rematchFinal;
+
   public static Tournament getInstance() {
     if (instance == null) {
       instance = new Tournament();
@@ -159,12 +163,6 @@ public class Tournament {
   }
 
   public void announceWinner(TourneyTeam team) {
-    for(TourneyTeam t : teams) {
-      int sum = t.getStatistics().stream().map(st -> st.getDestroyedBeds() * Integer.parseInt((String) TourneyProperties.get("pointsForBed")) +
-          st.getFinalKills() * Integer.parseInt((String) TourneyProperties.get("pointsForFinalKill")) +
-          (st.isWin() ? 1:0) * Integer.parseInt((String) TourneyProperties.get("pointsForWin"))).reduce(Integer::sum).get();
-      Bukkit.getLogger().info(t.getName() + " = "+sum);
-    }
     BedwarsRel.getInstance().getGameLoopTask().cancel();
     BedwarsRel.getInstance().setGameLoopTask(null);
 

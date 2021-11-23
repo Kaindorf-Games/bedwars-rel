@@ -781,7 +781,6 @@ public class BedwarsRel extends JavaPlugin {
     }
 
     // Tournament mode
-
     loadTournamentProps();
     Tournament.getInstance();
   }
@@ -856,6 +855,7 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new ShowGroupsCommand(this));
     this.tourneyCommands.add(new LoadTourneyConfigCommand(this));
     this.tourneyCommands.add(new StartTournamentCommand(this));
+    this.tourneyCommands.add(new StopTournamentCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 
