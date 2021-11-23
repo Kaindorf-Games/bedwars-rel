@@ -73,6 +73,6 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getPermission() {
-    return "player";
+    return "manage";
   }
 }

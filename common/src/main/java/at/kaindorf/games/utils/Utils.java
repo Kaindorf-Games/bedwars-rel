@@ -3,6 +3,7 @@ package at.kaindorf.games.utils;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.Team;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -20,10 +21,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
-import at.kaindorf.games.tournament.models.TourneyGroup;
-import at.kaindorf.games.tournament.models.TourneyPlayer;
-import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.models.*;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -201,7 +201,7 @@ public final class Utils {
   }
 
   public static Class<?> getGenericTypeOfParameter(Class<?> clazz, String method,
-      int parameterIndex) {
+                                                   int parameterIndex) {
     try {
       Method m = clazz.getMethod(method, new Class<?>[]{Set.class, int.class});
       ParameterizedType type = (ParameterizedType) m.getGenericParameterTypes()[parameterIndex];
@@ -787,4 +787,78 @@ public final class Utils {
     map.put("destroyedBeds", player.getDestroyedBeds());
     return map;
   }
+
+  public static Map<String, Object> tourneyGroupMatchToDoSerialize(TourneyGroupMatch match) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", match.getId());
+    map.put("teams", match.getTeams().stream().map(TourneyTeam::getId).collect(Collectors.toList()));
+    map.put("group", match.getGroup().getId());
+    return map;
+  }
+
+  public static Map<String, Object> tourneyKoMatchToDoSerialize(TourneyKoMatch match) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", match.getId());
+    map.put("teams", match.getTeams().stream().map(TourneyTeam::getId).collect(Collectors.toList()));
+    map.put("rematchId", match.getRematch().getId());
+    return map;
+  }
+
+  public static Map<String, Object> tourneyGroupMatchDoneSerialize(TourneyGroupMatch match) {
+    Map<String, Object> map = tourneyGroupMatchToDoSerialize(match);
+
+    for (TourneyTeam t : match.getTeams()) {
+      map.putAll(tourneyTeamStatisticsSerialize(t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false))));
+    }
+
+    return map;
+  }
+
+  public static Map<String, Object> tourneyKoMatchDoneSerialize(TourneyKoMatch match) {
+    Map<String, Object> map = tourneyKoMatchToDoSerialize(match);
+
+    for (TourneyTeam t : match.getTeams()) {
+      map.put("statistics",tourneyTeamStatisticsSerialize(t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false))));
+    }
+
+    return map;
+  }
+
+  public static Map<String, Object> tourneyTeamStatisticsSerialize(TourneyTeamStatistics statistics) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", statistics.getId());
+    map.put("destroyedBeds", statistics.getDestroyedBeds());
+    map.put("finalKills", statistics.getFinalKills());
+    map.put("win", statistics.isWin());
+    return map;
+  }
+
+  public static Map<String, Object> tourneyTeamSerialize(TourneyTeam team) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", team.getId());
+    map.put("name", team.getName());
+
+    for (TourneyPlayer player : team.getPlayers()) {
+      map.put("player"+player.getId(),tourneyPlayerSerialize(player));
+    }
+    return map;
+  }
+
+  private static Map<String, Object> tourneyPlayerSerialize(TourneyPlayer player) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", player.getId());
+    map.put("uuid", player.getUuid());
+    map.put("kills", player.getKills());
+    map.put("destroyedBeds", player.getDestroyedBeds());
+    return map;
+  }
+
+  public static Map<String, Object> tourneyGroupSerialize2(TourneyGroup group) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", group.getId());
+    map.put("name", group.getName());
+
+    return map;
+  }
+
 }

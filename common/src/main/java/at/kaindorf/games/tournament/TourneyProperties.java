@@ -1,7 +1,6 @@
 package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.BedwarsRel;
-import at.kaindorf.games.utils.Utils;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -26,6 +25,7 @@ public class TourneyProperties {
   public static File teamsFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/teams.yml");
   public static File propertiesFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tourneyProps.yml");
   public static File groupStageFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/groupStage.yml");
+  public static File currentStateFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/currentState.yml");
 
   public static File logFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/log.txt");
 

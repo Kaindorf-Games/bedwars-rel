@@ -22,6 +22,7 @@ public class GameLoop extends BukkitRunnable {
   private final int qualifiedTeams;
   private final boolean rematchKo, rematchFinal;
   private final List<Game> games;
+  private Tournament tournament;
 
   public GameLoop(JavaPlugin plugin, int qualifiedTeams, boolean rematchKo, boolean rematchFinal) {
     this.plugin = plugin;
@@ -30,30 +31,40 @@ public class GameLoop extends BukkitRunnable {
     this.rematchFinal = rematchFinal;
 
     games = BedwarsRel.getInstance().getGameManager().getGames();
+    tournament = Tournament.getInstance();
   }
 
   @Override
   public void run() {
-    Bukkit.getLogger().info("start Tournament");
-    Tournament.getInstance().identifyPlayers();
-    GroupStage groupStage = Tournament.getInstance().getGroupStage();
-    KoStage koStage = Tournament.getInstance().getKoStage();
+    if (tournament.isHardStop()) {
+      Bukkit.getLogger().info("Hard Stop");
+      stopAllGames();
+      tournament.cancel();
+    } else if (tournament.isSoftStop() && !areGamesRunning()) {
+      tournament.cancel();
+    } else if (tournament.isSoftStop()) {
+      return;
+    }
+
+    tournament.identifyPlayers();
+    GroupStage groupStage = tournament.getGroupStage();
+    KoStage koStage = tournament.getKoStage();
 
     Bukkit.getLogger().info("-------");
     getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
 //    groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).forEach(m -> Bukkit.getLogger().info(m.toString()));
 
-    if(!groupStage.isFinished()) {
+    if (!groupStage.isFinished()) {
       Bukkit.getLogger().info("Group Stage");
       tryToStartGames(groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
-    } else if(koStage == null) {
+    } else if (koStage == null) {
       Bukkit.getLogger().info("transition");
       List<TourneyTeam> teams = groupStage.getQualifiedTeamsForKoRound(qualifiedTeams);
-      Tournament.getInstance().generateKoMatches(teams, 2, rematchKo, rematchFinal);
-    } else if(!koStage.isFinished()) {
+      tournament.generateKoMatches(teams, 2, rematchKo, rematchFinal);
+    } else if (!koStage.isFinished()) {
       Bukkit.getLogger().info("Ko Stage");
       KoRound koRound = koStage.currentKoRound();
-      if(koRound.isFinished()) {
+      if (koRound.isFinished()) {
         koStage.nextKoRound();
       } else {
         tryToStartGames(koRound.getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
@@ -83,6 +94,8 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private void throwPlayersIntoTheGame(List<TourneyPlayer> players, Game game) {
+    game.kickAllPlayers();
+
     for (TourneyPlayer tourneyPlayer : players) {
       if (tourneyPlayer.getPlayer() != null) {
         game.playerJoins(tourneyPlayer.getPlayer());
@@ -110,5 +123,13 @@ public class GameLoop extends BukkitRunnable {
   private List<TourneyPlayer> connectPlayerLists(List<TourneyPlayer> p1, List<TourneyPlayer> p2) {
     p1.addAll(p2);
     return p1;
+  }
+
+  private boolean areGamesRunning() {
+    return games.stream().anyMatch(g -> g.getState() == GameState.RUNNING);
+  }
+
+  private void stopAllGames() {
+    games.forEach(g->g.stop());
   }
 }

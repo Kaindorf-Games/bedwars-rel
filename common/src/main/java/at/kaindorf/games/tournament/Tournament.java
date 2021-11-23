@@ -208,7 +208,24 @@ public class Tournament {
     return teams.stream().filter(t -> t.getPlayers().stream().map(TourneyPlayer::getPlayer).anyMatch(p -> p == player)).findFirst();
   }
 
-  public TournamentLogger logger() {
-    return TournamentLogger.getInstance();
+  private void saveCurrentState() {
+    if(!groupStage.isFinished()) {
+      Saver.saveCurrentState(CurrentState.GROUP_STAGE,
+          groupStage.getMatchesToDo().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          groupStage.getMatchesDone().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          qualifiedTeams, rematchKo, rematchFinal, teams, groups);
+    } else if(!koStage.isFinished()) {
+      Saver.saveCurrentState(CurrentState.KO_STAGE,
+          koStage.currentKoRound().getMatchesTodo().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          koStage.currentKoRound().getMatchesDone().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          qualifiedTeams, rematchKo, rematchFinal, teams, null);
+    }
+  }
+
+  public void cancel() {
+    saveCurrentState();
+
+    BedwarsRel.getInstance().getGameLoopTask().cancel();
+    BedwarsRel.getInstance().setGameLoopTask(null);
   }
 }
