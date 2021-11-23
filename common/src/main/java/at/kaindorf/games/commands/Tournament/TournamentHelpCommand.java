@@ -24,7 +24,7 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
     ArrayList<BaseCommand> commands = BedwarsRel.getInstance().getTourneyCommands();
     String msg = "";
     // generate the messages for the two main permissions
-    if(sender.hasPermission("tourney.manage")) {
+    if (sender.hasPermission("tourney.manage")) {
       msg = generateHelpMessage(commands);
     } else if (sender.hasPermission("tourney.player")) {
       msg = generateHelpMessage(commands.stream().filter(c -> c.getPermission().equals("player")).collect(Collectors.toList()));
@@ -63,9 +63,10 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
           command.getCommand().equalsIgnoreCase("showteams") ||
           command.getCommand().equalsIgnoreCase("showgroups")) {
         arguments += " {page?}";
-      }
-      else if(command.getCommand().equalsIgnoreCase("clear")) {
+      } else if (command.getCommand().equalsIgnoreCase("clear")) {
         arguments += " {saves|config}";
+      } else if (command.getCommand().equalsIgnoreCase("stop")) {
+        arguments += "{soft|hard}";
       }
 
       sb.append(ChatColor.YELLOW + "/" + "tourney"
