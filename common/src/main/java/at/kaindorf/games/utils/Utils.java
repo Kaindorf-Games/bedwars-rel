@@ -800,7 +800,9 @@ public final class Utils {
     Map<String, Object> map = new HashMap<>();
     map.put("id", match.getId());
     map.put("teams", match.getTeams().stream().map(TourneyTeam::getId).collect(Collectors.toList()));
-    map.put("rematchId", match.getRematch().getId());
+    if(match.getRematch() != null) {
+      map.put("rematchId", match.getRematch().getId());
+    }
     return map;
   }
 
