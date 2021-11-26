@@ -40,9 +40,13 @@ public class GameLoop extends BukkitRunnable {
       Bukkit.getLogger().info("Hard Stop");
       stopAllGames();
       tournament.cancel();
+      return;
     } else if (tournament.isSoftStop() && !areGamesRunning()) {
+      Bukkit.getLogger().info("Soft Stop do");
       tournament.cancel();
+      return;
     } else if (tournament.isSoftStop()) {
+      Bukkit.getLogger().info("Soft Stop prepare");
       return;
     }
 

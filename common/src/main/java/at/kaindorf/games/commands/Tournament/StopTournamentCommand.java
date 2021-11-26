@@ -38,6 +38,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
   private boolean softStop(CommandSender sender) {
 
     Tournament.getInstance().setSoftStop(true);
+    Tournament.getInstance().setHardStop(false);
 
     sender.sendMessage(ChatColor.GREEN+"The Tournament will stop and will not start new matches");
     return true;
@@ -46,6 +47,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
   private boolean hardStop(CommandSender sender) {
 
     Tournament.getInstance().setHardStop(true);
+    Tournament.getInstance().setSoftStop(false);
 
     sender.sendMessage(ChatColor.GREEN+"The Tournament will immediately stop and terminate all running matches");
     return true;
