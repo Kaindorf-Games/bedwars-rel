@@ -774,7 +774,6 @@ public final class Utils {
     Map<String, Object> map = new HashMap<>();
     map.put("name", team.getName());
     map.put("group", group);
-//    map.put("statistics", team.getStatistics());
 
     return map;
   }
@@ -800,7 +799,7 @@ public final class Utils {
     Map<String, Object> map = new HashMap<>();
     map.put("id", match.getId());
     map.put("teams", match.getTeams().stream().map(TourneyTeam::getId).collect(Collectors.toList()));
-    if(match.getRematch() != null) {
+    if (match.getRematch() != null) {
       map.put("rematchId", match.getRematch().getId());
     }
     return map;
@@ -809,9 +808,7 @@ public final class Utils {
   public static Map<String, Object> tourneyGroupMatchDoneSerialize(TourneyGroupMatch match) {
     Map<String, Object> map = tourneyGroupMatchToDoSerialize(match);
 
-    for (TourneyTeam t : match.getTeams()) {
-      map.putAll(tourneyTeamStatisticsSerialize(t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false))));
-    }
+    map.put("teamStats", tourneyTeamStatisticsSerialize(match));
 
     return map;
   }
@@ -819,20 +816,29 @@ public final class Utils {
   public static Map<String, Object> tourneyKoMatchDoneSerialize(TourneyKoMatch match) {
     Map<String, Object> map = tourneyKoMatchToDoSerialize(match);
 
-    for (TourneyTeam t : match.getTeams()) {
-      map.put("statistics",tourneyTeamStatisticsSerialize(t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false))));
-    }
+    map.put("teamStats", tourneyTeamStatisticsSerialize(match));
 
     return map;
   }
 
-  public static Map<String, Object> tourneyTeamStatisticsSerialize(TourneyTeamStatistics statistics) {
-    Map<String, Object> map = new HashMap<>();
-    map.put("id", statistics.getId());
-    map.put("destroyedBeds", statistics.getDestroyedBeds());
-    map.put("finalKills", statistics.getFinalKills());
-    map.put("win", statistics.isWin());
-    return map;
+
+  public static Map<String, Object> tourneyTeamStatisticsSerialize(TourneyMatch match) {
+
+    Map<String, Object> teamStats = new HashMap<>();
+
+    for (TourneyTeam t : match.getTeams()) {
+      TourneyTeamStatistics statistics = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false));
+
+      Map<String, Object> map = new HashMap<>();
+      map.put("id", statistics.getId());
+      map.put("destroyedBeds", statistics.getDestroyedBeds());
+      map.put("finalKills", statistics.getFinalKills());
+      map.put("win", statistics.isWin());
+
+      teamStats.put("team" + t.getId(), map);
+    }
+
+    return teamStats;
   }
 
   public static Map<String, Object> tourneyTeamSerialize(TourneyTeam team) {
@@ -840,9 +846,12 @@ public final class Utils {
     map.put("id", team.getId());
     map.put("name", team.getName());
 
+    Map<String, Object> players = new HashMap<>();
     for (TourneyPlayer player : team.getPlayers()) {
-      map.put("player"+player.getId(),tourneyPlayerSerialize(player));
+      players.put("player" + player.getId(), tourneyPlayerSerialize(player));
     }
+    map.put("players", players);
+
     return map;
   }
 
@@ -859,6 +868,12 @@ public final class Utils {
     Map<String, Object> map = new HashMap<>();
     map.put("id", group.getId());
     map.put("name", group.getName());
+
+    Map<String, Object> teams = new HashMap<>();
+    for (TourneyTeam team : group.getTeams()) {
+      teams.put("team" + team.getId(), tourneyTeamSerialize(team));
+    }
+    map.put("teams", teams);
 
     return map;
   }

@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Saver {
 
@@ -67,14 +68,14 @@ public class Saver {
     yml.set("config.rematchKo", rematchKo);
     yml.set("config.qualifiedTeams", qualifiedTeams);
 
-    if(currentState == CurrentState.GROUP_STAGE) {
-      for(TourneyGroup group:groups) {
-        yml.set("groups.group"+group.getId(), Utils.tourneyGroupSerialize2(group));
+    if (currentState == CurrentState.GROUP_STAGE) {
+      for (TourneyGroup group : groups) {
+        yml.set("groups.group" + group.getId(), Utils.tourneyGroupSerialize2(group));
       }
-    }
-
-    for(TourneyTeam team:teams) {
-      yml.set("teams.team"+team.getId(),Utils.tourneyTeamSerialize(team));
+    } else {
+      for (TourneyTeam team : teams) {
+        yml.set("teams.team" + team.getId(), Utils.tourneyTeamSerialize(team));
+      }
     }
 
     for (TourneyMatch match : matchesToDO) {
