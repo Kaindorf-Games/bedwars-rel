@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,19 +35,26 @@ public class GameLoop extends BukkitRunnable {
     tournament = Tournament.getInstance();
   }
 
-  @Override
-  public void run() {
+  private boolean checkIfTournamentIsStopped() {
     if (tournament.isHardStop()) {
       Bukkit.getLogger().info("Hard Stop");
       stopAllGames();
       tournament.cancel();
-      return;
+      return true;
     } else if (tournament.isSoftStop() && !areGamesRunning()) {
       Bukkit.getLogger().info("Soft Stop do");
       tournament.cancel();
-      return;
+      return true;
     } else if (tournament.isSoftStop()) {
       Bukkit.getLogger().info("Soft Stop prepare");
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public void run() {
+    if(checkIfTournamentIsStopped()) {
       return;
     }
 
@@ -125,8 +133,10 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private List<TourneyPlayer> connectPlayerLists(List<TourneyPlayer> p1, List<TourneyPlayer> p2) {
-    p1.addAll(p2);
-    return p1;
+    List<TourneyPlayer> players = new LinkedList<>();
+    players.addAll(p1);
+    players.addAll(p2);
+    return players;
   }
 
   private boolean areGamesRunning() {
