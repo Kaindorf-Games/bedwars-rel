@@ -1,10 +1,7 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.TourneyProperties;
-import at.kaindorf.games.tournament.models.TourneyKoMatch;
-import at.kaindorf.games.tournament.models.TourneyMatch;
-import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
+import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.utils.Pair;
 import lombok.Data;
 
@@ -81,5 +78,24 @@ public class KoRound {
       return points;
     }
     return 0;
+  }
+
+  public void addToDoMatch(TourneyKoMatch match) {
+    matchesTodo.add(match);
+  }
+
+  public void addDoneMatch(TourneyKoMatch match) {
+    matchesDone.add(match);
+  }
+
+  public TourneyKoMatch getMatchPerId(int id) {
+    Optional<TourneyKoMatch> match = matchesTodo.stream().filter(m -> m.getId() == id).findFirst();
+    if(match.isPresent()) {
+      return match.get();
+    }
+
+    match = matchesDone.stream().filter(m->m.getId() == id).findFirst();
+    return match.orElse(null);
+
   }
 }

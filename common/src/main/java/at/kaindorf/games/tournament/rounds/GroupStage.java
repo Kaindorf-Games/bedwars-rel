@@ -82,4 +82,12 @@ public class GroupStage {
 
     return qualifiedTeams;
   }
+
+  public void addToDoMatch(TourneyGroupMatch match) {
+    matchesToDo.add(match);
+  }
+
+  public void addDoneMatch(TourneyGroupMatch match) {
+    matchesDone.add(match);
+  }
 }

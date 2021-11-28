@@ -1,13 +1,16 @@
 package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
-import at.kaindorf.games.tournament.models.TourneyGroup;
-import at.kaindorf.games.tournament.models.TourneyPlayer;
-import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
+import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
-import at.kaindorf.games.utils.*;
+import at.kaindorf.games.utils.Loader;
+import at.kaindorf.games.utils.Pair;
+import at.kaindorf.games.utils.Saver;
+import at.kaindorf.games.utils.UsernameFetcher;
 import lombok.Data;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
@@ -20,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @Data
 public class Tournament {
@@ -29,7 +33,7 @@ public class Tournament {
   private GroupStage groupStage;
 
   private boolean softStop, hardStop;
-  private int qualifiedForNextRound;
+  private int qualifiedTeams;
   private boolean rematchKo, rematchFinal;
 
   public static Tournament getInstance() {
@@ -83,6 +87,13 @@ public class Tournament {
     }
   }
 
+  public void addGroup(int id, String name) throws TournamentEntityExistsException {
+    Optional<TourneyGroup> optional = groups.stream().filter(g -> g.getName().equals(name)).findFirst();
+    if (!optional.isPresent()) {
+      groups.add(new TourneyGroup(id, name));
+    }
+  }
+
   public void addTeam(String name, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
@@ -91,6 +102,18 @@ public class Tournament {
     TourneyTeam team = new TourneyTeam(name);
     teams.add(team);
     this.getGroup(groupName).addTeam(team);
+  }
+
+  public void addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
+    Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
+    if (optional.isPresent()) {
+      throw new TournamentEntityExistsException("Team " + name + " exists already");
+    }
+    TourneyTeam team = new TourneyTeam(id, name);
+    teams.add(team);
+    if (!groupName.isEmpty()) {
+      this.getGroup(groupName).addTeam(team);
+    }
   }
 
   public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException {
@@ -104,6 +127,17 @@ public class Tournament {
     }
     String username = UsernameFetcher.getUsernameFromUUID(uuid);
     TourneyPlayer player = new TourneyPlayer(uuid, username, kills, destroyedBeds);
+    players.add(player);
+    this.getTeam(teamName).addPlayer(player);
+  }
+
+  public void addPlayer(int id, String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
+    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
+    if (optional.isPresent()) {
+      throw new TournamentEntityExistsException("Player " + uuid + " exists already");
+    }
+    String username = UsernameFetcher.getUsernameFromUUID(uuid);
+    TourneyPlayer player = new TourneyPlayer(id, uuid, username, kills, destroyedBeds);
     players.add(player);
     this.getTeam(teamName).addPlayer(player);
   }
@@ -157,7 +191,7 @@ public class Tournament {
   public void clearRunningTournament() {
     this.koStage = null;
     this.groupStage = null;
-    if(BedwarsRel.getInstance().getGameLoopTask() != null) {
+    if (BedwarsRel.getInstance().getGameLoopTask() != null) {
       BedwarsRel.getInstance().setGameLoopTask(null);
     }
   }
@@ -184,7 +218,7 @@ public class Tournament {
             BedwarsRel
                 .getInstance().getConfig().getDouble("titles.win.title-fade-out", 2.0);
 
-        showTitle.invoke(null, p, ChatColor.GOLD+team.getName() + " has won", titleFadeIn, titleStay, titleFadeOut);
+        showTitle.invoke(null, p, ChatColor.GOLD + team.getName() + " has won", titleFadeIn, titleStay, titleFadeOut);
       }
     } catch (Exception e) {
       Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
@@ -201,7 +235,7 @@ public class Tournament {
   }
 
   public TourneyTeam getTeamOfPlayer(Player player) {
-    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p ->p.getPlayer().equals(player))).findFirst().orElse(null);
+    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p -> p.getPlayer().equals(player))).findFirst().orElse(null);
   }
 
   public Optional<TourneyTeam> getTourneyTeamOfPlayer(Player player) {
@@ -209,15 +243,15 @@ public class Tournament {
   }
 
   private void saveCurrentState() {
-    if(!groupStage.isFinished()) {
+    if (!groupStage.isFinished()) {
       Saver.saveCurrentState(CurrentState.GROUP_STAGE,
-          groupStage.getMatchesToDo().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
-          groupStage.getMatchesDone().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          groupStage.getMatchesToDo().stream().map(t -> (TourneyMatch) t).collect(Collectors.toList()),
+          groupStage.getMatchesDone().stream().map(t -> (TourneyMatch) t).collect(Collectors.toList()),
           qualifiedTeams, rematchKo, rematchFinal, teams, groups);
-    } else if(!koStage.isFinished()) {
+    } else if (!koStage.isFinished()) {
       Saver.saveCurrentState(CurrentState.KO_STAGE,
-          koStage.currentKoRound().getMatchesTodo().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
-          koStage.currentKoRound().getMatchesDone().stream().map(t->(TourneyMatch)t).collect(Collectors.toList()),
+          koStage.currentKoRound().getMatchesTodo().stream().map(t -> (TourneyMatch) t).collect(Collectors.toList()),
+          koStage.currentKoRound().getMatchesDone().stream().map(t -> (TourneyMatch) t).collect(Collectors.toList()),
           qualifiedTeams, rematchKo, rematchFinal, teams, null);
     }
   }
@@ -227,5 +261,27 @@ public class Tournament {
 
     BedwarsRel.getInstance().getGameLoopTask().cancel();
     BedwarsRel.getInstance().setGameLoopTask(null);
+  }
+
+  public void continueStoopedTournament() {
+    clear();
+    CurrentState state = Loader.loadTournamentState();
+
+    TournamentStartEvent event = new TournamentStartEvent(qualifiedTeams, rematchKo, rematchFinal);
+    BedwarsRel.getInstance().getServer().getPluginManager().callEvent(event);
+  }
+
+  public List<TourneyTeam> getTeamsPerId(List<Integer> ids) {
+    List<TourneyTeam> teams = new ArrayList<>();
+
+    for (int id : ids) {
+      teams.add(getTeamPerId(id));
+    }
+
+    return teams;
+  }
+
+  public TourneyTeam getTeamPerId(int id) {
+    return this.teams.stream().filter(t -> t.getId() == id).findFirst().get();
   }
 }

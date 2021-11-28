@@ -18,6 +18,16 @@ public class TourneyGroup {
     this.id = currentId++;
   }
 
+  public TourneyGroup(int id, String name) {
+    this.name = name;
+    this.id = id;
+    this.teams = new ArrayList<>();
+
+    if(this.id > currentId) {
+      currentId = this.id;
+    }
+  }
+
   public void addTeam(TourneyTeam team) {
     teams.add(team);
   }

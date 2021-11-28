@@ -24,6 +24,18 @@ public class TourneyTeam {
     this.id = currentId++;
   }
 
+  public TourneyTeam(int id, String name) {
+    this.name = name;
+    this.players = new LinkedList<>();
+    this.statistics = new LinkedList<>();
+    game = null;
+    this.id = id;
+
+    if(this.id > currentId) {
+      currentId = this.id;
+    }
+  }
+
   public void addPlayer(TourneyPlayer player) {
     this.players.add(player);
   }

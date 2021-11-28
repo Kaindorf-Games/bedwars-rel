@@ -18,7 +18,6 @@ public class TourneyPlayer {
   public TourneyPlayer(String uuid, String username) {
     this.uuid = uuid;
     this.username = username;
-//    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = 0;
     this.destroyedBeds = 0;
 
@@ -28,11 +27,22 @@ public class TourneyPlayer {
   public TourneyPlayer(String uuid, String username, int kills, int destroyedBeds) {
     this.uuid = uuid;
     this.username = username;
-//    this.player = Bukkit.getServer().getPlayer(name).getPlayer();
     this.kills = kills;
     this.destroyedBeds = destroyedBeds;
 
     this.id = currentId++;
+  }
+
+  public TourneyPlayer(int id, String uuid, String username, int kills, int destroyedBeds) {
+    this.uuid = uuid;
+    this.username = username;
+    this.kills = kills;
+    this.destroyedBeds = destroyedBeds;
+
+    this.id = id;
+    if(currentId < id) {
+      currentId = id;
+    }
   }
 
   public void initPlayer() {

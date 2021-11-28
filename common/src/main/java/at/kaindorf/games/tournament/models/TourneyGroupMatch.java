@@ -9,7 +9,11 @@ public class TourneyGroupMatch extends TourneyMatch {
   public TourneyGroupMatch(List<TourneyTeam> teams) {
     super(teams, currentId++);
   }
-  
+
+  public TourneyGroupMatch(int id, List<TourneyTeam> teams) {
+    super(teams, id);
+  }
+
   public TourneyTeamStatistics getMatchStatistics(TourneyTeam team) {
     return team.getStatistics().stream().filter(stat -> stat.getMatch().equals(this)).findFirst().orElse(null);
   }
@@ -19,5 +23,10 @@ public class TourneyGroupMatch extends TourneyMatch {
       return Tournament.getInstance().getGroups().stream().filter(g -> g.getTeams().stream().anyMatch(t -> t.getName().equals(teams.get(0).getName()))).findFirst().orElse(new TourneyGroup("Undefined"));
     }
     return new TourneyGroup("Undefined");
+  }
+
+  @Override
+  public String toString() {
+    return "GroupStage: " + teams.stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + " " + t2).get();
   }
 }

@@ -1,11 +1,9 @@
 package at.kaindorf.games.tournament.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class TourneyTeamStatistics {
   private int id;
@@ -13,6 +11,18 @@ public class TourneyTeamStatistics {
   private int finalKills, destroyedBeds;
   private boolean win;
   public static int currentId = 0;
+
+  public TourneyTeamStatistics(int id, TourneyMatch match, int finalKills, int destroyedBeds, boolean win) {
+    this.id = id;
+    this.match = match;
+    this.finalKills = finalKills;
+    this.destroyedBeds = destroyedBeds;
+    this.win = win;
+
+    if(id > currentId) {
+      currentId = id;
+    }
+  }
 
   public void setWin() {
     this.win = true;
