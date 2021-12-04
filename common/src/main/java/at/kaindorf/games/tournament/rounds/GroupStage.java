@@ -9,7 +9,6 @@ import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
 import at.kaindorf.games.utils.Pair;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.BufferedReader;
@@ -43,7 +42,6 @@ public class GroupStage {
       List<TourneyTeam> teams = teamNames.stream().map(tn -> Tournament.getInstance().getTeams().stream().filter(t -> t.getName().equals(tn)).findFirst().orElse(null)).collect(Collectors.toList());
       matchesToDo.add(new TourneyGroupMatch(teams));
     }
-    matchesToDo.stream().map(TourneyGroupMatch::toString).forEach(Bukkit.getLogger()::info);
     return true;
   }
 

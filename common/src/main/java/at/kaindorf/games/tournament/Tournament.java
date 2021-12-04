@@ -5,7 +5,6 @@ import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
-import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.utils.Loader;
 import at.kaindorf.games.utils.Pair;
@@ -232,10 +231,6 @@ public class Tournament {
 
   public void identifyPlayers() {
     players.stream().filter(p -> p.getPlayer() == null).forEach(TourneyPlayer::initPlayer);
-  }
-
-  public TourneyTeam getTeamOfPlayer(Player player) {
-    return teams.stream().filter(t -> t.getPlayers().stream().anyMatch(p -> p.getPlayer().equals(player))).findFirst().orElse(null);
   }
 
   public Optional<TourneyTeam> getTourneyTeamOfPlayer(Player player) {

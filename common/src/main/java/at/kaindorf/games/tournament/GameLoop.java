@@ -54,7 +54,7 @@ public class GameLoop extends BukkitRunnable {
 
   @Override
   public void run() {
-    if(checkIfTournamentIsStopped()) {
+    if (checkIfTournamentIsStopped()) {
       return;
     }
 
@@ -89,8 +89,7 @@ public class GameLoop extends BukkitRunnable {
     while (waitingGames.size() > 0 && index < matches.size()) {
       TourneyMatch match = matches.get(index);
 
-
-      if (areTeamsPlaying(match.getTeams())) {
+      if (!areTeamsReady(match.getTeams())) {
         index++;
         continue;
       }
@@ -119,13 +118,13 @@ public class GameLoop extends BukkitRunnable {
     return games.stream().filter(g -> g.getState() == GameState.WAITING).collect(Collectors.toList());
   }
 
-  private boolean areTeamsPlaying(List<TourneyTeam> teams) {
+  private boolean areTeamsReady(List<TourneyTeam> teams) {
     for (TourneyTeam team : teams) {
-      if (team.inGame()) {
-        return true;
+      if (!team.isReady()) {
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   private void setTeamsPlaying(List<TourneyTeam> teams, Game game) {
@@ -144,6 +143,7 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private void stopAllGames() {
-    games.forEach(g->g.stop());
+    games.forEach(Game::stop);
+    games.forEach(g -> g.setState(GameState.WAITING));
   }
 }

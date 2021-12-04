@@ -1,9 +1,11 @@
 package at.kaindorf.games.game;
 
+import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.BedwarsGameOverEvent;
 import at.kaindorf.games.events.BedwarsPlayerKilledEvent;
 import at.kaindorf.games.shop.Specials.RescuePlatform;
 import at.kaindorf.games.shop.Specials.SpecialItem;
+import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
@@ -12,17 +14,14 @@ import at.kaindorf.games.utils.SoundMachine;
 import at.kaindorf.games.utils.TournamentLogger;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
-import at.kaindorf.games.BedwarsRel;
-import at.kaindorf.games.statistics.PlayerStatistic;
-
-import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.util.*;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public abstract class GameCycle {
 
@@ -115,10 +114,12 @@ public abstract class GameCycle {
     // Add Final Kill to TourneyTeamStatistics
     Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(killer);
     if(teamIsDead && killer != null && game.getMatch() != null) {
-      TourneyTeam team = Tournament.getInstance().getTeamOfPlayer(killer);
-      Optional<TourneyTeamStatistics> optional = team.getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
-      optional.ifPresent(TourneyTeamStatistics::addFinalKill);
-      TournamentLogger.info().logFinalKill(killer.getDisplayName(), player.getDisplayName());
+      Optional<TourneyTeam> team = Tournament.getInstance().getTourneyTeamOfPlayer(killer);
+      if(team.isPresent()) {
+        Optional<TourneyTeamStatistics> optional = team.get().getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
+        optional.ifPresent(TourneyTeamStatistics::addFinalKill);
+        TournamentLogger.info().logFinalKill(killer.getDisplayName(), player.getDisplayName());
+      }
     }
 
     if (BedwarsRel.getInstance().statisticsEnabled()) {

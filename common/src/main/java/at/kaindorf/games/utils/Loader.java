@@ -16,7 +16,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Loader {
 
@@ -127,16 +129,18 @@ public class Loader {
       KoRound koRound = new KoRound(null, rematchKoRound);
 
       // load MatchesDone
-      for (String key : yaml.getConfigurationSection("matchesDone").getKeys(false)) {
-        ConfigurationSection matchSection = yaml.getConfigurationSection("matchesDone." + key);
-        if (state == CurrentState.GROUP_STAGE) {
-          TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")));
-          addTeamStatisticToTeam(matchSection, match);
-          groupStage.addDoneMatch(match);
-        } else {
-          TourneyKoMatch match = new TourneyKoMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")),matchSection.getInt("rematchId",-1));
-          addTeamStatisticToTeam(matchSection, match);
-          koRound.addDoneMatch(match);
+      if(yaml.isConfigurationSection("matchesDone")) {
+        for (String key : yaml.getConfigurationSection("matchesDone").getKeys(false)) {
+          ConfigurationSection matchSection = yaml.getConfigurationSection("matchesDone." + key);
+          if (state == CurrentState.GROUP_STAGE) {
+            TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")));
+            addTeamStatisticToTeam(matchSection, match);
+            groupStage.addDoneMatch(match);
+          } else {
+            TourneyKoMatch match = new TourneyKoMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")), matchSection.getInt("rematchId", -1));
+            addTeamStatisticToTeam(matchSection, match);
+            koRound.addDoneMatch(match);
+          }
         }
       }
 
