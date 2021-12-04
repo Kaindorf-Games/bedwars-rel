@@ -438,7 +438,7 @@ statistics:
   # statistics enable
   # type: boolean
   # Set to true to enable statistics. Otherwise set to false
-  enabled: false
+  enabled: true
   
   # Show on game end
   # type: boolean
