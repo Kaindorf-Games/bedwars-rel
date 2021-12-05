@@ -787,11 +787,7 @@ public class BedwarsRel extends JavaPlugin {
 
   @SneakyThrows
   public void loadTournamentProps() {
-    if (!TourneyProperties.propertiesFile.exists()) {
-      TourneyProperties.createPropertiesFile();
-      return;
-    }
-    TourneyProperties.loadPropertiesFile();
+    TourneyProperties.readTourneyProperties();
   }
 
   private void registerBugsnag() {
@@ -850,10 +846,10 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new TournamentHelpCommand(this));
     this.tourneyCommands.add(new AddTournamentTeamsCommand(this));
     this.tourneyCommands.add(new ClearTournamentCommand(this));
-    this.tourneyCommands.add(new SaveTourneyConfigCommand(this));
+    this.tourneyCommands.add(new SaveTourneyEntitiesCommand(this));
     this.tourneyCommands.add(new ShowTeamsCommand(this));
     this.tourneyCommands.add(new ShowGroupsCommand(this));
-    this.tourneyCommands.add(new LoadTourneyConfigCommand(this));
+    this.tourneyCommands.add(new LoadTourneyEntitiesCommand(this));
     this.tourneyCommands.add(new StartTournamentCommand(this));
     this.tourneyCommands.add(new StopTournamentCommand(this));
     this.tourneyCommands.add(new ContinueStoppedTournament(this));

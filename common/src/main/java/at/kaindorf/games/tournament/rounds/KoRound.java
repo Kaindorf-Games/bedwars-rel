@@ -72,9 +72,9 @@ public class KoRound {
     Optional<TourneyTeamStatistics> optional = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst();
     if (optional.isPresent()) {
       TourneyTeamStatistics statistics = optional.get();
-      int points = statistics.getDestroyedBeds() * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForBed")));
-      points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForFinalKill")));
-      points += (statistics.isWin() ? 1 : 0) * Integer.parseInt(String.valueOf(TourneyProperties.get("pointsForWin")));
+      int points = statistics.getDestroyedBeds() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForBed));
+      points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
+      points += (statistics.isWin() ? 1 : 0) * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
       return points;
     }
     return 0;

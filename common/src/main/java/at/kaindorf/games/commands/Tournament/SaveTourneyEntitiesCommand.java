@@ -8,11 +8,12 @@ import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class LoadTourneyConfigCommand extends BaseCommand implements ICommand {
+public class SaveTourneyEntitiesCommand extends BaseCommand implements ICommand {
 
-  public LoadTourneyConfigCommand(BedwarsRel plugin) {
+  public SaveTourneyEntitiesCommand(BedwarsRel plugin) {
     super(plugin);
   }
 
@@ -23,9 +24,8 @@ public class LoadTourneyConfigCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    Tournament.getInstance().clear();
-    Tournament.getInstance().loadSaves();
-    sender.sendMessage(ChatColor.GREEN + "Loaded Tournament Config");
+    Tournament.getInstance().save();
+    sender.sendMessage(ChatColor.GREEN+"Entities are saved");
     return true;
   }
 
@@ -36,17 +36,17 @@ public class LoadTourneyConfigCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getCommand() {
-    return "load";
+    return "save";
   }
 
   @Override
   public String getDescription() {
-    return "Loads all the configuration from yml files";
+    return "Saves all the Entities to yml files";
   }
 
   @Override
   public String getName() {
-    return "load the Tournament Configuration";
+    return "save Tournament Entities";
   }
 
   @Override

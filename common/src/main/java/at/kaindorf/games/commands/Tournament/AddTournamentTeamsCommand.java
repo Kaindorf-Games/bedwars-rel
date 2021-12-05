@@ -46,7 +46,7 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatColor.RED + "File has to be .json");
       return false;
     }
-    File teamFile = new File(getPlugin().getDataFolder(), fileName);
+    File teamFile = new File(getPlugin().getDataFolder()+"/tournament/", fileName);
 
     if (!teamFile.exists()) {
       sender.sendMessage(ChatColor.RED + "File not found");

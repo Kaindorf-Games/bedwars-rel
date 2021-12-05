@@ -281,5 +281,10 @@ public class ConfigUpdater {
       }
     }
     // </1.3.5>
+
+    // Tournament mode
+    BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForFinalKill", 1);
+    BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForBed", 2);
+    BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForWin", 5);
   }
 }

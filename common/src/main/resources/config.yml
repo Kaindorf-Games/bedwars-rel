@@ -962,3 +962,8 @@ player-settings:
   # Set the default shop on game start.
   # Player can change that in shop, this is just a default
   old-shop-as-default: false
+
+tourney:
+  pointsForFinalKill: 1
+  pointsForWin: 5
+  pointsForBed: 2
