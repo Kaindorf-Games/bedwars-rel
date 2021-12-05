@@ -8,7 +8,7 @@ import at.kaindorf.games.shop.Specials.SpecialItem;
 import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
+import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.SoundMachine;
 import at.kaindorf.games.utils.TournamentLogger;
@@ -116,8 +116,8 @@ public abstract class GameCycle {
     if(teamIsDead && killer != null && game.getMatch() != null) {
       Optional<TourneyTeam> team = Tournament.getInstance().getTourneyTeamOfPlayer(killer);
       if(team.isPresent()) {
-        Optional<TourneyTeamStatistics> optional = team.get().getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
-        optional.ifPresent(TourneyTeamStatistics::addFinalKill);
+        Optional<TourneyGameStatistic> optional = team.get().getStatistics().stream().filter(t -> t.getMatch().equals(game.getMatch())).findFirst();
+        optional.ifPresent(TourneyGameStatistic::addFinalKill);
         TournamentLogger.info().logFinalKill(killer.getDisplayName(), player.getDisplayName());
       }
     }

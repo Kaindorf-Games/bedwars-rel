@@ -179,7 +179,7 @@ public class Loader {
     for (String teamKey : matchSection.getConfigurationSection("teamStats").getKeys(false)) {
       ConfigurationSection section = matchSection.getConfigurationSection("teamStats." + teamKey);
 
-      TourneyTeamStatistics statistics = new TourneyTeamStatistics(
+      TourneyGameStatistic statistics = new TourneyGameStatistic(
           section.getInt("id"),
           match,
           section.getInt("finalKills"),

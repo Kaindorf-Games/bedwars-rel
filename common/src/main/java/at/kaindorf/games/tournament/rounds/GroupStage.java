@@ -2,10 +2,7 @@ package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyProperties;
-import at.kaindorf.games.tournament.models.TourneyGroup;
-import at.kaindorf.games.tournament.models.TourneyGroupMatch;
-import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
+import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.utils.Pair;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -66,13 +63,7 @@ public class GroupStage {
     for (TourneyGroup group : Tournament.getInstance().getGroups()) {
       List<Pair<TourneyTeam, Integer>> teams = new LinkedList<>();
       for (TourneyTeam t : group.getTeams()) {
-        int points = 0;
-        for (TourneyTeamStatistics statistics : t.getStatistics()) {
-          points += statistics.getDestroyedBeds() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForBed));
-          points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
-          points += (statistics.isWin() ? 1 : 0) * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
-        }
-        teams.add(new Pair<>(t, -1 * points));
+        teams.add(new Pair<>(t, -1*t.calculatePoints(CurrentState.GROUP_STAGE)));
       }
       teams.sort(Comparator.comparingInt(Pair::getSecond));
       qualifiedTeams.addAll(teams.stream().sorted(Comparator.comparingInt(Pair::getSecond)).limit(numberOfQualifiedTeamPerGroup).map(Pair::getFirst).collect(Collectors.toList()));

@@ -827,7 +827,7 @@ public final class Utils {
     Map<String, Object> teamStats = new HashMap<>();
 
     for (TourneyTeam t : match.getTeams()) {
-      TourneyTeamStatistics statistics = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyTeamStatistics(-1, null, 0, 0, false));
+      TourneyGameStatistic statistics = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst().orElse(new TourneyGameStatistic(-1, null, 0, 0, false));
 
       Map<String, Object> map = new HashMap<>();
       map.put("id", statistics.getId());

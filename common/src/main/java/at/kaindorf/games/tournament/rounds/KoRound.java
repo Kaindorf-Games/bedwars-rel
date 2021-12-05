@@ -69,12 +69,12 @@ public class KoRound {
   }
 
   private int calculatePointsForMatchAndTeam(TourneyMatch match, TourneyTeam t) {
-    Optional<TourneyTeamStatistics> optional = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst();
+    Optional<TourneyGameStatistic> optional = t.getStatistics().stream().filter(st -> st.getMatch().equals(match)).findFirst();
     if (optional.isPresent()) {
-      TourneyTeamStatistics statistics = optional.get();
-      int points = statistics.getDestroyedBeds() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForBed));
-      points += statistics.getFinalKills() * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
-      points += (statistics.isWin() ? 1 : 0) * Integer.parseInt(String.valueOf(TourneyProperties.pointsForFinalKill));
+      TourneyGameStatistic statistics = optional.get();
+      int points = statistics.getFinalKills() * TourneyProperties.pointsForFinalKill;
+      points += statistics.getDestroyedBeds() * TourneyProperties.pointsForBed;
+      points += (statistics.isWin() ? 1 : 0) * TourneyProperties.pointsForBed;
       return points;
     }
     return 0;
@@ -90,11 +90,11 @@ public class KoRound {
 
   public TourneyKoMatch getMatchPerId(int id) {
     Optional<TourneyKoMatch> match = matchesTodo.stream().filter(m -> m.getId() == id).findFirst();
-    if(match.isPresent()) {
+    if (match.isPresent()) {
       return match.get();
     }
 
-    match = matchesDone.stream().filter(m->m.getId() == id).findFirst();
+    match = matchesDone.stream().filter(m -> m.getId() == id).findFirst();
     return match.orElse(null);
 
   }

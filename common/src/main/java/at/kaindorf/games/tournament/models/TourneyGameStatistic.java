@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TourneyTeamStatistics {
+public class TourneyGameStatistic {
   private int id;
   private TourneyMatch match;
   private int finalKills, destroyedBeds;
   private boolean win;
   public static int currentId = 0;
 
-  public TourneyTeamStatistics(int id, TourneyMatch match, int finalKills, int destroyedBeds, boolean win) {
+  public TourneyGameStatistic(int id, TourneyMatch match, int finalKills, int destroyedBeds, boolean win) {
     this.id = id;
     this.match = match;
     this.finalKills = finalKills;

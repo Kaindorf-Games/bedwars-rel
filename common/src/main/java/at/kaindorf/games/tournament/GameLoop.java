@@ -6,7 +6,7 @@ import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
+import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
@@ -99,7 +99,7 @@ public class GameLoop extends BukkitRunnable {
       setTeamsPlaying(match.getTeams(), game);
       throwPlayersIntoTheGame(match.getTeams().stream().map(TourneyTeam::getPlayers).reduce(this::connectPlayerLists).get(), game);
       // add team statistics to the teams
-      match.getTeams().forEach(team -> team.addStatistic(new TourneyTeamStatistics(TourneyTeamStatistics.currentId++, match, 0, 0, false)));
+      match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false)));
       index++;
     }
   }

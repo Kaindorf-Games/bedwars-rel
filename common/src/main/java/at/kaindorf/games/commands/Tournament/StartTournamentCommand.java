@@ -24,6 +24,11 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       return false;
     }
 
+    if(Tournament.getInstance().getTeams().size() == 0) {
+      sender.sendMessage(ChatColor.YELLOW +"You have to add teams first");
+      return true;
+    }
+
     if(Tournament.getInstance().isTournamentRunning()) {
       sender.sendMessage(ChatColor.YELLOW +"Tournament has already started");
       return true;
@@ -75,6 +80,9 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     // set stop to false
     Tournament.getInstance().setHardStop(false);
     Tournament.getInstance().setSoftStop(false);
+
+    // reset remove All statistics
+    Tournament.getInstance().getTeams().forEach(t -> t.getStatistics().clear());
   }
 
   @Override

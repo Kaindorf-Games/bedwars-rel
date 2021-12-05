@@ -5,7 +5,7 @@ import at.kaindorf.games.shop.Specials.SpecialItem;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamStatistics;
+import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.TournamentLogger;
 import at.kaindorf.games.utils.Utils;
@@ -768,8 +768,8 @@ public class Game {
     if (this.getMatch() != null) {
       Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
       if (tourneyTeam.isPresent()) {
-        Optional<TourneyTeamStatistics> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
-        statistics.ifPresent(TourneyTeamStatistics::addDestroyedBed);
+        Optional<TourneyGameStatistic> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
+        statistics.ifPresent(TourneyGameStatistic::addDestroyedBed);
         TournamentLogger.info().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
       }
     }

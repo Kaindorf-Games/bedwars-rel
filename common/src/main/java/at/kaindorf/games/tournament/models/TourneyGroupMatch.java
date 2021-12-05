@@ -14,7 +14,7 @@ public class TourneyGroupMatch extends TourneyMatch {
     super(teams, id);
   }
 
-  public TourneyTeamStatistics getMatchStatistics(TourneyTeam team) {
+  public TourneyGameStatistic getMatchStatistics(TourneyTeam team) {
     return team.getStatistics().stream().filter(stat -> stat.getMatch().equals(this)).findFirst().orElse(null);
   }
 

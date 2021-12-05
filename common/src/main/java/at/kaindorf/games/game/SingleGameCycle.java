@@ -138,8 +138,8 @@ public class SingleGameCycle extends GameCycle {
     if (match != null && task.getWinner() != null && task.getCounter() == task.getStartCount()) {
       Optional<TourneyTeam> winner = Tournament.getInstance().getTourneyTeamOfPlayer(task.getWinner().getPlayers().get(0));
       if (winner.isPresent()) {
-        Optional<TourneyTeamStatistics> statistics = winner.get().getStatistics().stream().filter(st -> st.getMatch() == match).findFirst();
-        statistics.ifPresent(TourneyTeamStatistics::setWin);
+        Optional<TourneyGameStatistic> statistics = winner.get().getStatistics().stream().filter(st -> st.getMatch() == match).findFirst();
+        statistics.ifPresent(TourneyGameStatistic::setWin);
         TournamentLogger.info().logMatchWin(task.getWinner().getDisplayName());
       }
     }

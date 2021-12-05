@@ -4,7 +4,9 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.CurrentState;
 import at.kaindorf.games.tournament.models.TourneyGroup;
+import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,17 +33,9 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
       page = Integer.parseInt(args.get(0));
     }
 
-    List<TourneyGroup> groups = Tournament.getInstance().getGroups();
-    StringBuilder sb = new StringBuilder();
+    String output = buildChatOutput();
 
-    for (TourneyGroup group : groups) {
-      sb.append(ChatColor.YELLOW + ""+group.getName()+"\n");
-      group.getTeams().forEach(t -> {
-        sb.append(ChatColor.YELLOW + "  "+t.getName()+"\n");
-      });
-    }
-
-    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(sb.toString(), page);
+    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(output, page);
     for (String line : chatPage.getLines()) {
       sender.sendMessage(line);
     }
@@ -51,6 +45,21 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
 
     return true;
   }
+
+  private String buildChatOutput() {
+    List<TourneyGroup> groups = Tournament.getInstance().getGroups();
+    StringBuilder sb = new StringBuilder();
+
+    for (TourneyGroup group : groups) {
+      sb.append(ChatColor.YELLOW + ""+group.getName()+"\n");
+      group.getTeams().forEach(t -> {
+        sb.append(ChatColor.YELLOW + "  "+t.getName()+" - "+t.calculatePoints(CurrentState.GROUP_STAGE)+" points\n");
+      });
+    }
+
+    return sb.toString();
+  }
+
 
   @Override
   public String[] getArguments() {
