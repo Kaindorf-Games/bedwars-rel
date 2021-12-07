@@ -3,6 +3,7 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
+import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoStage;
@@ -14,13 +15,11 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -198,6 +197,21 @@ public class Tournament {
   public void announceWinner(TourneyTeam team) {
     BedwarsRel.getInstance().getGameLoopTask().cancel();
     BedwarsRel.getInstance().setGameLoopTask(null);
+
+    // add to tournament Win to playerstatistics
+    if(BedwarsRel.getInstance().statisticsEnabled()) {
+      team.getPlayers().forEach(player -> {
+        OfflinePlayer offlinePlayer = BedwarsRel.getInstance().getServer().getOfflinePlayer(UUID.fromString(player.getUuid()));
+        PlayerStatistic winner = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(offlinePlayer);
+
+        winner.setCurrentTournamentWins(winner.getCurrentTournamentWins() +  1);
+        winner.setCurrentScore(winner.getCurrentScore() + BedwarsRel
+            .getInstance().getIntConfig("statistics.scores.tournamentWin", 150));
+
+        BedwarsRel.getInstance().getPlayerStatisticManager().storeStatistic(winner);
+      });
+
+    }
 
     try {
       for (Player p : Bukkit.getServer().getOnlinePlayers()) {

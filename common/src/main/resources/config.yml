@@ -490,6 +490,8 @@ statistics:
     # type: int
     # Sets the score which all team-players gets when they made a new record
     record: 100
+
+    tournamentWin: 150
   
 # database (currently only mysql) configuration
 database:

@@ -23,6 +23,7 @@ public class PlayerStatistic implements ConfigurationSerializable {
   private int currentLoses = 0;
   private int currentScore = 0;
   private int currentWins = 0;
+  private int currentTournamentWins = 0;
   @Setter(AccessLevel.NONE)
   private int deaths = 0;
   @Setter(AccessLevel.NONE)
@@ -39,6 +40,8 @@ public class PlayerStatistic implements ConfigurationSerializable {
   private UUID uuid;
   @Setter(AccessLevel.NONE)
   private int wins = 0;
+  @Setter(AccessLevel.NONE)
+  private int tournamentWins = 0;
 
 
   public PlayerStatistic(UUID uuid) {
@@ -87,6 +90,9 @@ public class PlayerStatistic implements ConfigurationSerializable {
     if (deserialize.containsKey("uuid")) {
       this.uuid = UUID.fromString((String) deserialize.get("uuid"));
     }
+    if(deserialize.containsKey("tournamentWins")) {
+      this.tournamentWins = (int) deserialize.get("tournamentWins");
+    }
   }
 
   public void addCurrentValues() {
@@ -102,6 +108,8 @@ public class PlayerStatistic implements ConfigurationSerializable {
     this.currentScore = 0;
     this.wins = this.wins + this.currentWins;
     this.currentWins = 0;
+    this.tournamentWins = this.tournamentWins + this.currentTournamentWins;
+    this.currentTournamentWins = 0;
 
   }
 
@@ -161,6 +169,7 @@ public class PlayerStatistic implements ConfigurationSerializable {
     playerStatistic.put("score", this.score);
     playerStatistic.put("wins", this.wins);
     playerStatistic.put("name", this.name);
+    playerStatistic.put("tournamentWins", this.tournamentWins);
     return playerStatistic;
   }
 }

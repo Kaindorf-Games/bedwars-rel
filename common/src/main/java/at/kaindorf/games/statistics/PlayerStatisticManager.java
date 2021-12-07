@@ -3,24 +3,17 @@ package at.kaindorf.games.statistics;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.BedwarsSavePlayerStatisticEvent;
 import at.kaindorf.games.utils.ChatWriter;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.sql.*;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class PlayerStatisticManager {
 
@@ -34,15 +27,15 @@ public class PlayerStatisticManager {
   }
 
   public List<String> createStatisticLines(PlayerStatistic playerStatistic, boolean withPrefix,
-      ChatColor nameColor,
-      ChatColor valueColor) {
+                                           ChatColor nameColor,
+                                           ChatColor valueColor) {
     return this.createStatisticLines(playerStatistic, withPrefix, nameColor.toString(),
         valueColor.toString());
   }
 
   public List<String> createStatisticLines(PlayerStatistic playerStatistic, boolean withPrefix,
-      String nameColor,
-      String valueColor) {
+                                           String nameColor,
+                                           String valueColor) {
     List<String> lines = new ArrayList<>();
 
     lines.add(this.getStatisticLine("name", playerStatistic.getName(), null, withPrefix, nameColor,
@@ -77,6 +70,10 @@ public class PlayerStatisticManager {
     lines.add(this.getStatisticLine("destroyedBeds",
         playerStatistic.getDestroyedBeds() + playerStatistic.getCurrentDestroyedBeds(),
         playerStatistic.getCurrentDestroyedBeds(), withPrefix, nameColor,
+        valueColor));
+    lines.add(this.getStatisticLine("tournamentWins",
+        playerStatistic.getTournamentWins() + playerStatistic.getCurrentTournamentWins(),
+        playerStatistic.getCurrentTournamentWins(), withPrefix, nameColor,
         valueColor));
     lines.add(this.getStatisticLine("score",
         playerStatistic.getScore() + playerStatistic.getCurrentScore(),
@@ -119,19 +116,25 @@ public class PlayerStatisticManager {
   }
 
   private String getStatisticLine(String name, Object value1, Object value2, Boolean withPrefix,
-      String nameColor,
-      String valueColor) {
+                                  String nameColor,
+                                  String valueColor) {
     String line;
+    if (name.equals("tournamentWins")) {
+      name = "Tournament Wins";
+    } else {
+      name = BedwarsRel._l("stats." + name);
+    }
+
     if (value2 != null && value2 instanceof Integer && (int) value2 != 0) {
-      line = nameColor + BedwarsRel._l("stats." + name) + ": "
+      line = nameColor + name + ": "
           + valueColor + value1 + " " + nameColor + "(" + this.getComparisonString((int) value2)
           + nameColor + ")";
     } else if (value2 != null && value2 instanceof Double && (double) value2 != 0.00) {
-      line = nameColor + BedwarsRel._l("stats." + name) + ": "
+      line = nameColor + name + ": "
           + valueColor + value1 + " " + nameColor + "(" + this.getComparisonString((double) value2)
           + nameColor + ")";
     } else {
-      line = nameColor + BedwarsRel._l("stats." + name) + ": "
+      line = nameColor + name + ": "
           + valueColor + value1;
     }
     if (withPrefix) {
@@ -237,6 +240,13 @@ public class PlayerStatisticManager {
       return playerStatistic;
     }
 
+    if (playerStatistic.containsKey(uuid)) {
+      return playerStatistic.get(uuid);
+    }
+    Bukkit.getLogger().info("Load Stats: data." + uuid.toString());
+    fileDatabase.getKeys(true).forEach(k -> Bukkit.getLogger().info(k));
+    Bukkit.getLogger().info("Path: "+fileDatabase.getCurrentPath());
+    this.fileDatabase.getConfigurationSection("data." + uuid.toString()).getKeys(false).forEach(k -> Bukkit.getLogger().info(k));
     HashMap<String, Object> deserialize = new HashMap<>();
     deserialize.putAll(
         this.fileDatabase.getConfigurationSection("data." + uuid.toString()).getValues(false));
