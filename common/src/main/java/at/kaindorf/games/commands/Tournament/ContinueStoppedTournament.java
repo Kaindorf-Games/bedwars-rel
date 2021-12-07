@@ -57,4 +57,9 @@ public class ContinueStoppedTournament extends BaseCommand implements ICommand {
   public String getPermission() {
     return "manage";
   }
+
+  @Override
+  public BedwarsRel.Mode blockDuringMode() {
+    return BedwarsRel.Mode.NORMAL;
+  }
 }

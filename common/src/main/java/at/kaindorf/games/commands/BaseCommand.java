@@ -50,4 +50,9 @@ public abstract class BaseCommand implements ICommand {
     return true;
   }
 
+
+  public BedwarsRel.Mode blockDuringMode() {
+    return null;
+  }
+
 }

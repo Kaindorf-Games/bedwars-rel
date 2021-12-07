@@ -29,7 +29,10 @@ public class MyCommandExecutor implements CommandExecutor {
       return execute(sender, args, this.plugin.getBedwarsCommands());
     } else if (cmd.getName().equals("tourney")) {
       return execute(sender, args, this.plugin.getTourneyCommands());
-    }
+    } /*else if (cmd.getName().equals("tourney") && BedwarsRel.getInstance().getMode() == BedwarsRel.Mode.NORMAL) {
+      sender.sendMessage(ChatColor.RED + "You are not allowed to access the tourney command, while bedwars mode is NORMAL!");
+      return true;
+    }*/
     return false;
   }
 
@@ -49,6 +52,11 @@ public class MyCommandExecutor implements CommandExecutor {
               ChatWriter.pluginMessage(ChatColor.RED + BedwarsRel
                   ._l(sender, "errors.argumentslength")));
           return false;
+        }
+
+        if (bCommand.blockDuringMode() == BedwarsRel.getInstance().getMode()) {
+          sender.sendMessage(ChatColor.RED + "You are not allowed to use this command, while Bedwars-mode is "+BedwarsRel.getInstance().getMode()+"!");
+          return true;
         }
 
         BedwarsExecuteCommandEvent commandEvent =

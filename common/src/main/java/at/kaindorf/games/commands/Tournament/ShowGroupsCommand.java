@@ -85,4 +85,9 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
   public String getPermission() {
     return "player";
   }
+
+  @Override
+  public BedwarsRel.Mode blockDuringMode() {
+    return BedwarsRel.Mode.NORMAL;
+  }
 }

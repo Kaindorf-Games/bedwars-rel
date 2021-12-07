@@ -6,6 +6,7 @@ import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.material.Bed;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
@@ -54,6 +55,10 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
   private String generateHelpMessage(List<BaseCommand> commands) {
     StringBuilder sb = new StringBuilder();
     for (BaseCommand command : commands) {
+      if (command.blockDuringMode() == BedwarsRel.getInstance().getMode()) {
+        continue;
+      }
+
       String arguments = "";
       for (String arg : command.getArguments()) {
         arguments += " {" + arg + "}";

@@ -1,61 +1,53 @@
-package at.kaindorf.games.commands.Tournament;
+package at.kaindorf.games.commands.Bedwars;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class SaveTourneyEntitiesCommand extends BaseCommand implements ICommand {
+public class ShowBedwarsModeCommand extends BaseCommand implements ICommand {
 
-  public SaveTourneyEntitiesCommand(BedwarsRel plugin) {
+  public ShowBedwarsModeCommand(BedwarsRel plugin) {
     super(plugin);
   }
 
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
-    if(!sender.hasPermission("tourney."+this.getPermission())) {
+    if (!sender.hasPermission("bw." + this.getPermission())) {
       sender.sendMessage(ChatWriter.wrongPermissionMessage());
       return false;
     }
 
-    Tournament.getInstance().save();
-    sender.sendMessage(ChatColor.GREEN+"Entities are saved");
+    sender.sendMessage(ChatColor.GREEN + "Bedwars Mode: " + BedwarsRel.getInstance().getMode().toString().toLowerCase());
     return true;
   }
 
   @Override
   public String[] getArguments() {
-    return new String[] {};
+    return new String[0];
   }
 
   @Override
   public String getCommand() {
-    return "save";
+    return "showMode";
   }
 
   @Override
   public String getDescription() {
-    return "Saves all the Entities to yml files";
+    return "Show the current Bedwars Mode";
   }
 
   @Override
   public String getName() {
-    return "save Tournament Entities";
+    return "showMode";
   }
 
   @Override
   public String getPermission() {
-    return "manage";
-  }
-
-  @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.NORMAL;
+    return "base";
   }
 }

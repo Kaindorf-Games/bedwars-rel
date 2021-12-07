@@ -5,6 +5,8 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.game.Game;
 
 import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -56,4 +58,8 @@ public class LeaveGameCommand extends BaseCommand {
     return "base";
   }
 
+  @Override
+  public BedwarsRel.Mode blockDuringMode() {
+    return BedwarsRel.Mode.TOURNAMENT;
+  }
 }

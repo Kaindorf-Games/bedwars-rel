@@ -70,7 +70,9 @@ public class HelpCommand extends BaseCommand {
     ArrayList<BaseCommand> kickCommands = BedwarsRel.getInstance().getCommandsByPermission("kick");
 
     for (BaseCommand command : baseCommands) {
-      this.appendCommand(command, sb);
+      if(command.blockDuringMode() != BedwarsRel.getInstance().getMode()) {
+        this.appendCommand(command, sb);
+      }
     }
 
     if (sender.hasPermission("bw.kick")) {

@@ -72,6 +72,8 @@ public class BedwarsRel extends JavaPlugin {
   @Setter
   @Getter
   private BukkitTask gameLoopTask = null;
+  @Getter
+  private Mode mode = Mode.NORMAL;
 
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
@@ -840,6 +842,8 @@ public class BedwarsRel extends JavaPlugin {
     this.bwCommands.add(new DebugPasteCommand(this));
     this.bwCommands.add(new ItemsPasteCommand(this));
     this.bwCommands.add(new AutoConnectCommand(this));
+    this.bwCommands.add(new SwitchBedwarsModeCommand(this));
+    this.bwCommands.add(new ShowBedwarsModeCommand(this));
     this.getCommand("bw").setExecutor(executor);
 
     // Tournament Commands
@@ -967,6 +971,14 @@ public class BedwarsRel extends JavaPlugin {
     }
 
     return false;
+  }
+
+  public void changeModeTo(Mode mode) {
+    this.mode = mode;
+  }
+
+  public enum Mode {
+    TOURNAMENT, NORMAL
   }
 
 }

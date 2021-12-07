@@ -96,4 +96,9 @@ public class JoinGameCommand extends BaseCommand {
     return "base";
   }
 
+  @Override
+  public BedwarsRel.Mode blockDuringMode() {
+    return BedwarsRel.Mode.TOURNAMENT;
+  }
+
 }
