@@ -14,6 +14,7 @@ public class TourneyTeam {
   private List<TourneyGameStatistic> statistics;
   private String name;
   private Game game;
+  private boolean paused = false;
 
   private static int currentId = 0;
 
