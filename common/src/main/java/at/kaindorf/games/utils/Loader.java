@@ -168,8 +168,11 @@ public class Loader {
 
       koStage.addKoRound(koRound);
       koStage.startKoRound();
-      Tournament.getInstance().setGroupStage(groupStage);
-      Tournament.getInstance().setKoStage(koStage);
+      if(state == CurrentState.GROUP_STAGE) {
+        Tournament.getInstance().setGroupStage(groupStage);
+      } else {
+        Tournament.getInstance().setKoStage(koStage);
+      }
       return state;
     }
     return null;

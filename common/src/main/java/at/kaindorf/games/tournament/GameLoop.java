@@ -3,15 +3,14 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
+import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.LinkedList;
@@ -19,14 +18,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameLoop extends BukkitRunnable {
-  private final JavaPlugin plugin;
   private final int qualifiedTeams;
   private final boolean rematchKo, rematchFinal;
   private final List<Game> games;
-  private Tournament tournament;
+  private final Tournament tournament;
+  private int counter = 5;
 
-  public GameLoop(JavaPlugin plugin, int qualifiedTeams, boolean rematchKo, boolean rematchFinal) {
-    this.plugin = plugin;
+  public GameLoop(int qualifiedTeams, boolean rematchKo, boolean rematchFinal) {
     this.qualifiedTeams = qualifiedTeams;
     this.rematchKo = rematchKo;
     this.rematchFinal = rematchFinal;
@@ -36,17 +34,18 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private boolean checkIfTournamentIsStopped() {
-    if (tournament.isHardStop()) {
-      Bukkit.getLogger().info("Hard Stop");
+    if(tournament.getGroupStage().isFinished() && tournament.getKoStage() == null) {
+      return false;
+    }
+    if (tournament.isHardStop() || (tournament.isSoftStop() && !areGamesRunning() && counter == 0)) {
+      Bukkit.getLogger().info("Do the Stop");
       stopAllGames();
       tournament.cancel();
       return true;
-    } else if (tournament.isSoftStop() && !areGamesRunning()) {
-      Bukkit.getLogger().info("Soft Stop do");
-      tournament.cancel();
-      return true;
     } else if (tournament.isSoftStop()) {
-      Bukkit.getLogger().info("Soft Stop prepare");
+      if (!areGamesRunning()) decrementCounter();
+
+      Bukkit.getLogger().info("wait for Soft Stop: " + counter);
       return true;
     }
     return false;
@@ -63,7 +62,7 @@ public class GameLoop extends BukkitRunnable {
     KoStage koStage = tournament.getKoStage();
 
     Bukkit.getLogger().info("-------");
-    getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
+//    getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
 //    groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).forEach(m -> Bukkit.getLogger().info(m.toString()));
 
     if (!groupStage.isFinished()) {
@@ -145,5 +144,9 @@ public class GameLoop extends BukkitRunnable {
   private void stopAllGames() {
     games.forEach(Game::stop);
     games.forEach(g -> g.setState(GameState.WAITING));
+  }
+
+  private void decrementCounter() {
+    counter--;
   }
 }

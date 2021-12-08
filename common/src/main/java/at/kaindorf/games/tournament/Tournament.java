@@ -153,6 +153,9 @@ public class Tournament {
     this.players.clear();
     this.teams.clear();
     this.groups.clear();
+
+    this.hardStop = false;
+    this.softStop = false;
   }
 
   public void show() {
