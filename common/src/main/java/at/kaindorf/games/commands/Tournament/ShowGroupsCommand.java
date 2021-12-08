@@ -51,9 +51,11 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
     StringBuilder sb = new StringBuilder();
 
     for (TourneyGroup group : groups) {
-      sb.append(ChatColor.YELLOW + ""+group.getName()+"\n");
+      sb.append(ChatColor.YELLOW + "" + group.getName() + "\n");
       group.getTeams().forEach(t -> {
-        sb.append(ChatColor.YELLOW + "  "+t.getName()+" - "+t.calculatePoints(CurrentState.GROUP_STAGE)+" points\n");
+        String paused = "";
+        if (t.isPaused()) paused = " (paused)";
+        sb.append(ChatColor.YELLOW + "  " + t.getName() + paused + " - " + t.calculatePoints(CurrentState.GROUP_STAGE) + " points\n");
       });
     }
 
