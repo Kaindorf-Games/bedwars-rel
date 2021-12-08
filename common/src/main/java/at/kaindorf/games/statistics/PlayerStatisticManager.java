@@ -243,10 +243,7 @@ public class PlayerStatisticManager {
     if (playerStatistic.containsKey(uuid)) {
       return playerStatistic.get(uuid);
     }
-    Bukkit.getLogger().info("Load Stats: data." + uuid.toString());
-    fileDatabase.getKeys(true).forEach(k -> Bukkit.getLogger().info(k));
-    Bukkit.getLogger().info("Path: "+fileDatabase.getCurrentPath());
-    this.fileDatabase.getConfigurationSection("data." + uuid.toString()).getKeys(false).forEach(k -> Bukkit.getLogger().info(k));
+
     HashMap<String, Object> deserialize = new HashMap<>();
     deserialize.putAll(
         this.fileDatabase.getConfigurationSection("data." + uuid.toString()).getValues(false));

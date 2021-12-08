@@ -73,7 +73,7 @@ public class BedwarsRel extends JavaPlugin {
   @Getter
   private BukkitTask gameLoopTask = null;
   @Getter
-  private Mode mode = Mode.NORMAL;
+  private Mode mode = Mode.TOURNAMENT;
 
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
@@ -857,6 +857,7 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new StartTournamentCommand(this));
     this.tourneyCommands.add(new StopTournamentCommand(this));
     this.tourneyCommands.add(new ContinueStoppedTournament(this));
+    this.tourneyCommands.add(new TeamPauseCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

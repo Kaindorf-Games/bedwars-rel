@@ -248,7 +248,7 @@ public class Tournament {
   }
 
   public Optional<TourneyTeam> getTourneyTeamOfPlayer(Player player) {
-    return teams.stream().filter(t -> t.getPlayers().stream().map(TourneyPlayer::getPlayer).anyMatch(p -> p == player)).findFirst();
+    return teams.stream().filter(t -> t.getPlayers().stream().map(p -> UUID.fromString(p.getUuid())).anyMatch(p -> p.compareTo(player.getUniqueId()) == 0)).findFirst();
   }
 
   private void saveCurrentState() {
@@ -292,5 +292,9 @@ public class Tournament {
 
   public TourneyTeam getTeamPerId(int id) {
     return this.teams.stream().filter(t -> t.getId() == id).findFirst().get();
+  }
+
+  public Optional<TourneyTeam> getTeamPerName(String name) {
+    return this.teams.stream().filter(t -> t.getName().equals(name)).findFirst();
   }
 }
