@@ -300,4 +300,15 @@ public class Tournament {
   public Optional<TourneyTeam> getTeamPerName(String name) {
     return this.teams.stream().filter(t -> t.getName().equals(name)).findFirst();
   }
+
+  public boolean deleteTourneyTeamByName(String name) {
+    Optional<TourneyTeam> team = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
+
+    if (!team.isPresent()) {
+      return false;
+    }
+
+    this.teams.remove(team.get());
+    return true;
+  }
 }
