@@ -3,6 +3,7 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
+import at.kaindorf.games.game.Team;
 import at.kaindorf.games.tournament.models.TourneyGameStatistic;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
@@ -13,8 +14,7 @@ import at.kaindorf.games.tournament.rounds.KoStage;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameLoop extends BukkitRunnable {
@@ -34,7 +34,7 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private boolean checkIfTournamentIsStopped() {
-    if(tournament.getGroupStage().isFinished() && tournament.getKoStage() == null) {
+    if (tournament.getGroupStage().isFinished() && tournament.getKoStage() == null) {
       return false;
     }
     if (tournament.isHardStop() || (tournament.isSoftStop() && !areGamesRunning() && counter == 0)) {
@@ -96,10 +96,19 @@ public class GameLoop extends BukkitRunnable {
       Game game = waitingGames.remove(0);
       game.setMatch(match);
       setTeamsPlaying(match.getTeams(), game);
+      assignTeamColors(match.getTeams(), game);
       throwPlayersIntoTheGame(match.getTeams().stream().map(TourneyTeam::getPlayers).reduce(this::connectPlayerLists).get(), game);
       // add team statistics to the teams
       match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false)));
       index++;
+    }
+  }
+
+  private void assignTeamColors(List<TourneyTeam> teams, Game game) {
+    List<Team> teamColors = new ArrayList<>(game.getTeams().values());
+
+    for (int i = 0; i < teams.size(); i++) {
+      teams.get(i).setTeamColor(teamColors.get(i).getColor());
     }
   }
 
@@ -109,6 +118,13 @@ public class GameLoop extends BukkitRunnable {
     for (TourneyPlayer tourneyPlayer : players) {
       if (tourneyPlayer.getPlayer() != null) {
         game.playerJoins(tourneyPlayer.getPlayer());
+
+        // throw players into their team
+        Optional<TourneyTeam> teamOfPlayer = Tournament.getInstance().getTourneyTeamOfPlayer(tourneyPlayer.getPlayer());
+        if(teamOfPlayer.isPresent()) {
+          Team team = game.getTeam(teamOfPlayer.get().getTeamColor().name().toLowerCase());
+          game.playerJoinTeam(tourneyPlayer.getPlayer(), team);
+        }
       }
     }
   }

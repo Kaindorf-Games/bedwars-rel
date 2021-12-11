@@ -1,6 +1,7 @@
 package at.kaindorf.games.tournament.models;
 
 import at.kaindorf.games.game.Game;
+import at.kaindorf.games.game.TeamColor;
 import at.kaindorf.games.tournament.TourneyProperties;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class TourneyTeam {
   private String name;
   private Game game;
   private boolean paused = false;
+  private TeamColor teamColor;
 
   private static int currentId = 0;
 
