@@ -32,7 +32,7 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     tourney.clear();
 
     if (!sender.hasPermission("tourney." + this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 

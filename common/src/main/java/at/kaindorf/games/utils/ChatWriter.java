@@ -2,6 +2,8 @@ package at.kaindorf.games.utils;
 
 import at.kaindorf.games.BedwarsRel;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.util.ChatPaginator;
 
 public class ChatWriter {
 
@@ -12,8 +14,18 @@ public class ChatWriter {
         + " " + ChatColor.WHITE + str;
   }
 
-  public static String wrongPermissionMessage() {
-    return ChatColor.RED + "You don't have the required permissions";
+  public static void wrongPermissionMessage(CommandSender sender) {
+    sender.sendMessage(ChatColor.RED + "You don't have the required permissions");
+  }
+
+  public static void paginateOutput(CommandSender sender, String output, int page) {
+    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(output, page);
+    for (String line : chatPage.getLines()) {
+      sender.sendMessage(line);
+    }
+
+    sender.sendMessage(ChatColor.GREEN + "---------- "
+        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
   }
 
 }

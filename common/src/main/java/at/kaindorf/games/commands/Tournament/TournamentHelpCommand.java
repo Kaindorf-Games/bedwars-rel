@@ -30,7 +30,7 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
     } else if (sender.hasPermission("tourney.player")) {
       msg = generateHelpMessage(commands.stream().filter(c -> c.getPermission().equals("player")).collect(Collectors.toList()));
     } else {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 
@@ -41,13 +41,14 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
     }
 
     // send the single lines
-    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(msg, page);
-    for (String l : chatPage.getLines()) {
-      sender.sendMessage(l);
-    }
-
-    sender.sendMessage(ChatColor.GREEN + "---------- "
-        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
+    ChatWriter.paginateOutput(sender, msg, page);
+//    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(msg, page);
+//    for (String l : chatPage.getLines()) {
+//      sender.sendMessage(l);
+//    }
+//
+//    sender.sendMessage(ChatColor.GREEN + "---------- "
+//        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
 
     return true;
   }
@@ -66,7 +67,8 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
       if (command.getCommand().equalsIgnoreCase("help") ||
           command.getCommand().equalsIgnoreCase("showteams") ||
-          command.getCommand().equalsIgnoreCase("showgroups")) {
+          command.getCommand().equalsIgnoreCase("showgroups") ||
+          command.getCommand().equalsIgnoreCase("matches")) {
         arguments += " {page?}";
       } else if (command.getCommand().equalsIgnoreCase("clear")) {
         arguments += " {saves|config}";

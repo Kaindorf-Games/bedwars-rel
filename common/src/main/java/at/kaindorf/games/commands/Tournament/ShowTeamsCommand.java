@@ -22,7 +22,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
     if (!sender.hasPermission("tourney." + this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 
@@ -32,13 +32,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
     }
 
     String output = buildChatOutput();
-    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(output, page);
-    for (String line : chatPage.getLines()) {
-      sender.sendMessage(line);
-    }
-
-    sender.sendMessage(ChatColor.GREEN + "---------- "
-        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
+    ChatWriter.paginateOutput(sender, output, page);
 
     return true;
   }

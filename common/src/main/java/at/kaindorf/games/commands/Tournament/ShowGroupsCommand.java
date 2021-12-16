@@ -24,24 +24,23 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
     if (!sender.hasPermission("tourney." + this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 
     int page = 1;
     if (args.size() > 0) {
-      page = Integer.parseInt(args.get(0));
+      try {
+        page = Integer.parseInt(args.get(0));
+      } catch (NumberFormatException ex) {
+        sender.sendMessage("Not a number");
+        return false;
+      }
     }
 
     String output = buildChatOutput();
 
-    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(output, page);
-    for (String line : chatPage.getLines()) {
-      sender.sendMessage(line);
-    }
-
-    sender.sendMessage(ChatColor.GREEN + "---------- "
-        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
+    ChatWriter.paginateOutput(sender, output, page);
 
     return true;
   }

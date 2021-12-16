@@ -21,7 +21,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
     if (!sender.hasPermission("tourney." + this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 

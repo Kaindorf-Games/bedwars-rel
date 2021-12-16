@@ -18,7 +18,7 @@ public class ShowBedwarsModeCommand extends BaseCommand implements ICommand {
   @Override
   public boolean execute(CommandSender sender, ArrayList<String> args) {
     if (!sender.hasPermission("bw." + this.getPermission())) {
-      sender.sendMessage(ChatWriter.wrongPermissionMessage());
+      ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
 

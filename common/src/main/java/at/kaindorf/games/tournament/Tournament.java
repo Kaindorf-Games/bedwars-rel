@@ -202,12 +202,12 @@ public class Tournament {
     BedwarsRel.getInstance().setGameLoopTask(null);
 
     // add to tournament Win to playerstatistics
-    if(BedwarsRel.getInstance().statisticsEnabled()) {
+    if (BedwarsRel.getInstance().statisticsEnabled()) {
       team.getPlayers().forEach(player -> {
         OfflinePlayer offlinePlayer = BedwarsRel.getInstance().getServer().getOfflinePlayer(UUID.fromString(player.getUuid()));
         PlayerStatistic winner = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(offlinePlayer);
 
-        winner.setCurrentTournamentWins(winner.getCurrentTournamentWins() +  1);
+        winner.setCurrentTournamentWins(winner.getCurrentTournamentWins() + 1);
         winner.setCurrentScore(winner.getCurrentScore() + BedwarsRel
             .getInstance().getIntConfig("statistics.scores.tournamentWin", 150));
 
@@ -239,7 +239,7 @@ public class Tournament {
     } catch (Exception e) {
       Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
     }
-    Bukkit.getLogger().info("We have Winner!!!");
+    Bukkit.getLogger().info("We have a Winner!!! - " + team.getName());
   }
 
   public boolean isTournamentRunning() {

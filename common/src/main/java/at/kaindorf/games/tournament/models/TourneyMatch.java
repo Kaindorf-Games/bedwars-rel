@@ -1,8 +1,6 @@
 package at.kaindorf.games.tournament.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 
@@ -10,6 +8,7 @@ import java.util.List;
 public class TourneyMatch {
   protected List<TourneyTeam> teams;
   protected int id;
+  protected boolean isRunning = false;
 
   protected static int currentId = 0;
 
