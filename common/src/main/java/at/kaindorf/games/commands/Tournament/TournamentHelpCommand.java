@@ -6,8 +6,6 @@ import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.material.Bed;
-import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +40,6 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
     // send the single lines
     ChatWriter.paginateOutput(sender, msg, page);
-//    ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(msg, page);
-//    for (String l : chatPage.getLines()) {
-//      sender.sendMessage(l);
-//    }
-//
-//    sender.sendMessage(ChatColor.GREEN + "---------- "
-//        + "Page " + chatPage.getPageNumber() + " of " + chatPage.getTotalPages() + " ----------");
 
     return true;
   }
