@@ -29,6 +29,8 @@ public class KoRound {
       if (rematch)
         matchesTodo.add(new TourneyKoMatch(teams, match));
     }
+
+    Collections.shuffle(this.matchesTodo);
   }
 
   public void generateFinal(List<TourneyTeam> teams) {

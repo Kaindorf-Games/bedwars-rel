@@ -2,6 +2,7 @@ package at.kaindorf.games.tournament.models;
 
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -18,6 +19,10 @@ public class TourneyMatch {
     if(id > currentId) {
       currentId = id;
     }
+
+    // randomize order of the teams
+    // otherwise teams are mostly in the same bedwars team
+    Collections.shuffle(this.teams);
   }
 
   @Override
