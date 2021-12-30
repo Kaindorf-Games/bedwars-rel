@@ -1051,7 +1051,7 @@ public class Game {
       meta.setDisplayName(team.getChatColor() + team.getDisplayName());
       chestplate.setItemMeta(meta);
 
-      player.getInventory().setItem(7, chestplate);
+      player.getInventory().setItem(this.match == null ? 7 : 8, chestplate);
       player.updateInventory();
     } else {
       player.sendMessage(

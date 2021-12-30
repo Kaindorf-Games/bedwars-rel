@@ -135,7 +135,7 @@ public class PlayerStorage {
     ItemMeta im = null;
 
     // choose team only when autobalance is disabled
-    if (!game.isAutobalanceEnabled()) {
+    if (!game.isAutobalanceEnabled() && game.getMatch() == null) {
       // Choose team (Wool)
       ItemStack teamSelection = new ItemStack(Material.BED, 1);
       im = teamSelection.getItemMeta();
@@ -145,11 +145,13 @@ public class PlayerStorage {
     }
 
     // Leave game (Slimeball)
-    ItemStack leaveGame = new ItemStack(Material.SLIME_BALL, 1);
-    im = leaveGame.getItemMeta();
-    im.setDisplayName(BedwarsRel._l(this.player, "lobby.leavegame"));
-    leaveGame.setItemMeta(im);
-    this.player.getInventory().setItem(8, leaveGame);
+    if (game.getMatch() == null) {
+      ItemStack leaveGame = new ItemStack(Material.SLIME_BALL, 1);
+      im = leaveGame.getItemMeta();
+      im.setDisplayName(BedwarsRel._l(this.player, "lobby.leavegame"));
+      leaveGame.setItemMeta(im);
+      this.player.getInventory().setItem(8, leaveGame);
+    }
 
     if ((this.player.hasPermission("bw.setup") || this.player.isOp()
         || this.player.hasPermission("bw.vip.forcestart"))
