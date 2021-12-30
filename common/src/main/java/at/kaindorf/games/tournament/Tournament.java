@@ -311,4 +311,21 @@ public class Tournament {
     this.teams.remove(team.get());
     return true;
   }
+
+  public boolean addPointsToTeam(String team, int points) {
+    Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(team)).findFirst();
+
+    if(!optional.isPresent()) {
+      return false;
+    }
+
+    TourneyTeam tourneyTeam = optional.get();
+    if(tourneyTeam.getStatistics().size() == 0) {
+      return false;
+    }
+    tourneyTeam.getStatistics().get(tourneyTeam.getStatistics().size()-1).addPoints(points);
+
+    return true;
+
+  }
 }

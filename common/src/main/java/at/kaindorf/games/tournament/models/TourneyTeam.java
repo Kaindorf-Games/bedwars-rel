@@ -71,6 +71,7 @@ public class TourneyTeam {
       points += stat.getFinalKills() * TourneyProperties.pointsForFinalKill;
       points += stat.getDestroyedBeds() * TourneyProperties.pointsForBed;
       points += (stat.isWin() ? 1 : 0) * TourneyProperties.pointsForWin;
+      points += stat.getExtraPoints();
     }
 
     return points;

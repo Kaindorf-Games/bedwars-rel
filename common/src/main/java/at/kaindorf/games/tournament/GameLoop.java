@@ -102,7 +102,7 @@ public class GameLoop extends BukkitRunnable {
       assignTeamColors(match.getTeams(), game);
       throwPlayersIntoTheGame(match.getTeams().stream().map(TourneyTeam::getPlayers).reduce(this::connectPlayerLists).get(), game);
       // add team statistics to the teams
-      match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false)));
+      match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false, 0)));
       match.setRunning(true);
       index++;
     }

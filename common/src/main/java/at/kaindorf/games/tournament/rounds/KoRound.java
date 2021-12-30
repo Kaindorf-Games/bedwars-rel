@@ -75,6 +75,7 @@ public class KoRound {
       int points = statistics.getFinalKills() * TourneyProperties.pointsForFinalKill;
       points += statistics.getDestroyedBeds() * TourneyProperties.pointsForBed;
       points += (statistics.isWin() ? 1 : 0) * TourneyProperties.pointsForBed;
+      points += statistics.getExtraPoints();
       return points;
     }
     return 0;

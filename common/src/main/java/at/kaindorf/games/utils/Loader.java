@@ -187,10 +187,10 @@ public class Loader {
           match,
           section.getInt("finalKills"),
           section.getInt("destroyedBeds"),
-          section.getBoolean("win")
+          section.getBoolean("win"),
+          section.getInt("extraPoints")
       );
 
-      /*TODO: teamID doesn't exist*/
       TourneyTeam team = Tournament.getInstance().getTeamPerId(Integer.parseInt(teamKey.split("_")[1]));
       team.addStatistic(statistics);
     }
