@@ -190,7 +190,8 @@ public class Loader {
           section.getBoolean("win")
       );
 
-      TourneyTeam team = Tournament.getInstance().getTeamPerId(section.getInt("teamId"));
+      /*TODO: teamID doesn't exist*/
+      TourneyTeam team = Tournament.getInstance().getTeamPerId(Integer.parseInt(teamKey.split("_")[1]));
       team.addStatistic(statistics);
     }
   }

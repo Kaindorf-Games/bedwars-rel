@@ -835,7 +835,7 @@ public final class Utils {
       map.put("finalKills", statistics.getFinalKills());
       map.put("win", statistics.isWin());
 
-      teamStats.put("team" + t.getId(), map);
+      teamStats.put("team_" + t.getId(), map);
     }
 
     return teamStats;
