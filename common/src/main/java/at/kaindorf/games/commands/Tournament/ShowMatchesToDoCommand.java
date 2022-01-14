@@ -56,7 +56,7 @@ public class ShowMatchesToDoCommand extends BaseCommand {
       return true;
     }
 
-    String out = matches.stream().map(this::buildChatOutput).reduce((m1, m2) -> m1 + m2).get();
+    String out = matches.stream().map(this::buildChatOutput).reduce((m1, m2) -> m1 + m2).orElse("No matches");
 
     ChatWriter.paginateOutput(sender, out, page);
 

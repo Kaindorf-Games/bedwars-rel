@@ -64,6 +64,9 @@ public class GameLoop extends BukkitRunnable {
     Bukkit.getLogger().info("-------");
 //    getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
 //    groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).forEach(m -> Bukkit.getLogger().info(m.toString()));
+//    Bukkit.getLogger().info("Groupstage finished: "+groupStage.isFinished());
+//    Bukkit.getLogger().info("KoStage value: "+(koStage==null));
+//    Bukkit.getLogger().info("KoStage finished: "+(koStage != null && koStage.isFinished()));
 
     if (!groupStage.isFinished()) {
       Bukkit.getLogger().info("Group Stage");
@@ -118,7 +121,7 @@ public class GameLoop extends BukkitRunnable {
     game.kickAllPlayers();
 
     for (TourneyPlayer tourneyPlayer : players) {
-      if (tourneyPlayer.getPlayer() != null) {
+      if (tourneyPlayer.getPlayer() != null && tourneyPlayer.getPlayer().isOnline()) {
         game.playerJoins(tourneyPlayer.getPlayer());
 
         // throw players into their team
@@ -132,7 +135,7 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private List<Game> getWaitingGames() {
-    return games.stream().filter(g -> g.getState() == GameState.WAITING).collect(Collectors.toList());
+    return games.stream().filter(g -> g.getMatch() == null).collect(Collectors.toList());
   }
 
   private boolean areTeamsReady(List<TourneyTeam> teams) {

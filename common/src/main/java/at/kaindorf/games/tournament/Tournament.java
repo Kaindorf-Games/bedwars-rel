@@ -315,17 +315,50 @@ public class Tournament {
   public boolean addPointsToTeam(String team, int points) {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(team)).findFirst();
 
-    if(!optional.isPresent()) {
+    if (!optional.isPresent()) {
       return false;
     }
 
     TourneyTeam tourneyTeam = optional.get();
-    if(tourneyTeam.getStatistics().size() == 0) {
+    if (tourneyTeam.getStatistics().size() == 0) {
       return false;
     }
-    tourneyTeam.getStatistics().get(tourneyTeam.getStatistics().size()-1).addPoints(points);
+    tourneyTeam.getStatistics().get(tourneyTeam.getStatistics().size() - 1).addPoints(points);
 
     return true;
 
+  }
+
+  public TourneyTeam findWinner(List<TourneyTeam> teams, List<TourneyMatch> matches) {
+    List<TourneyTeam> winner = new LinkedList<>();
+    winner.add(teams.get(0));
+    long maxWins = teams.get(0).getStatistics().stream().filter(st -> matches.contains(st.getMatch()) && st.isWin()).count();
+
+    for (int i = 1; i < teams.size(); i++) {
+      long wins = teams.get(i).getStatistics().stream().filter(st -> matches.contains(st.getMatch()) && st.isWin()).count();
+
+      if(wins > maxWins) {
+        winner = new LinkedList<>();
+        winner.add(teams.get(i));
+        maxWins = wins;
+      } else if(wins == maxWins) {
+        winner.add(teams.get(i));
+      }
+    }
+
+    if(winner.size() == 1) {
+      return winner.get(0);
+    }
+
+    List<Pair<TourneyTeam, Integer>> winners = new LinkedList<>();
+
+    for(TourneyTeam team : winner) {
+      List<TourneyGameStatistic> stats = team.getStatistics().stream().filter(st -> matches.contains(st.getMatch()) && st.isWin()).collect(Collectors.toList());
+      int points = stats.stream().map(TourneyGameStatistic::calculatePoints).reduce(Integer::sum).orElse(0);
+      winners.add(new Pair<>(team, points*-1));
+    }
+
+    winners.sort(Comparator.comparingInt(Pair::getSecond));
+    return winner.get(0);
   }
 }

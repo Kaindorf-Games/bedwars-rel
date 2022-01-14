@@ -47,12 +47,12 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       return false;
     }
 
+    resetTournament();
+
     boolean res = Tournament.getInstance().generateGroupMatches();
     if(!res) {
       sender.sendMessage(ChatColor.RED + "groupStage.yml is missing");
     }
-
-    resetTournament();
 
     sender.sendMessage(ChatColor.GREEN+"Tournament started");
 
@@ -80,6 +80,10 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     // set stop to false
     Tournament.getInstance().setHardStop(false);
     Tournament.getInstance().setSoftStop(false);
+
+    // reset groupstage and kostage
+    Tournament.getInstance().setKoStage(null);
+    Tournament.getInstance().setGroupStage(null);
 
     // reset remove All statistics
     Tournament.getInstance().getTeams().forEach(t -> t.getStatistics().clear());

@@ -1,6 +1,7 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import lombok.Data;
 import org.bukkit.Bukkit;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 public class KoStage {
@@ -43,7 +45,9 @@ public class KoStage {
 
     // it was a final
     if (!koRounds.containsKey(currentKoRound + 1)) {
-      Tournament.getInstance().announceWinner(teams.get(0));
+      teams = currentKoRound().getMatchesDone().get(0).getTeams();
+      TourneyTeam winner = Tournament.getInstance().findWinner(teams, currentKoRound().getMatchesDone().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()));
+      Tournament.getInstance().announceWinner(winner);
       this.finished = true;
       return;
     }

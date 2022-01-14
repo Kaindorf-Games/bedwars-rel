@@ -1,5 +1,6 @@
 package at.kaindorf.games.tournament.models;
 
+import at.kaindorf.games.tournament.TourneyProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -40,5 +41,14 @@ public class TourneyGameStatistic {
 
   public void addPoints(int points) {
     extraPoints += points;
+  }
+
+  public int calculatePoints() {
+    int points = 0;
+    points += this.getFinalKills() * TourneyProperties.pointsForFinalKill;
+    points += this.getDestroyedBeds() * TourneyProperties.pointsForBed;
+    points += (this.isWin() ? 1 : 0) * TourneyProperties.pointsForWin;
+    points += this.getExtraPoints();
+    return points;
   }
 }
