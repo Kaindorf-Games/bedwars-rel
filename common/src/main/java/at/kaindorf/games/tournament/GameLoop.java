@@ -4,10 +4,7 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.game.Team;
-import at.kaindorf.games.tournament.models.TourneyGameStatistic;
-import at.kaindorf.games.tournament.models.TourneyMatch;
-import at.kaindorf.games.tournament.models.TourneyPlayer;
-import at.kaindorf.games.tournament.models.TourneyTeam;
+import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoRound;
 import at.kaindorf.games.tournament.rounds.KoStage;
@@ -70,7 +67,9 @@ public class GameLoop extends BukkitRunnable {
 
     if (!groupStage.isFinished()) {
       Bukkit.getLogger().info("Group Stage");
-      tryToStartGames(groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
+      List<TourneyMatch> matches = groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
+      removeMatchesWithOneTeam(matches, true);
+      tryToStartGames(matches, getWaitingGames());
     } else if (koStage == null) {
       Bukkit.getLogger().info("transition");
       List<TourneyTeam> teams = groupStage.getQualifiedTeamsForKoRound(qualifiedTeams);
@@ -81,7 +80,22 @@ public class GameLoop extends BukkitRunnable {
       if (koRound.isFinished()) {
         koStage.nextKoRound();
       } else {
-        tryToStartGames(koRound.getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), getWaitingGames());
+        List<TourneyMatch> matches = koRound.getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
+        removeMatchesWithOneTeam(matches, false);
+        tryToStartGames(matches, getWaitingGames());
+      }
+    }
+  }
+
+  private void removeMatchesWithOneTeam(List<TourneyMatch> matches, boolean groupStage) {
+    for (TourneyMatch match : matches) {
+      if (match.getTeams().size() == 1) {
+        match.getTeams().get(0).addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, true, 0));
+        if (groupStage) {
+          Tournament.getInstance().getGroupStage().matchPlayed((TourneyGroupMatch) match);
+        } else {
+          Tournament.getInstance().getKoStage().currentKoRound().matchPlayed((TourneyKoMatch) match);
+        }
       }
     }
   }
@@ -103,7 +117,7 @@ public class GameLoop extends BukkitRunnable {
       throwPlayersIntoTheGame(match.getTeams().stream().map(TourneyTeam::getPlayers).reduce(this::connectPlayerLists).get(), game);
       // add team statistics to the teams
       match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false, 0)));
-      match.setRunning(true);
+      match.setGame(game);
       index++;
     }
   }
@@ -126,7 +140,7 @@ public class GameLoop extends BukkitRunnable {
 
         // throw players into their team
         Optional<TourneyTeam> teamOfPlayer = Tournament.getInstance().getTourneyTeamOfPlayer(tourneyPlayer.getPlayer());
-        if(teamOfPlayer.isPresent()) {
+        if (teamOfPlayer.isPresent()) {
           Team team = game.getTeam(teamOfPlayer.get().getTeamColor().name().toLowerCase());
           game.playerJoinTeam(tourneyPlayer.getPlayer(), team);
         }

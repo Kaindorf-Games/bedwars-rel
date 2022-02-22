@@ -302,13 +302,42 @@ public class Tournament {
   }
 
   public boolean deleteTourneyTeamByName(String name) {
-    Optional<TourneyTeam> team = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
+    Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
 
-    if (!team.isPresent()) {
+    if (!optional.isPresent()) {
       return false;
     }
 
-    this.teams.remove(team.get());
+    TourneyTeam team = optional.get();
+    this.teams.remove(team);
+
+    // remove from the group
+    if (groupStage != null) {
+      groups.forEach(g -> g.getTeams().removeIf(t -> t.getId() == team.getId()));
+      groups.removeIf(g -> g.getTeams().size() == 0);
+    }
+
+    // remove from the To do groupStage matches and from the to do matches of the current ko round
+    List<TourneyMatch> matches = new LinkedList<>();
+    if (groupStage != null) {
+      matches.addAll(groupStage.getMatchesToDo());
+    }
+    if (koStage != null) {
+      matches.addAll(koStage.currentKoRound().getMatchesTodo());
+    }
+    for(TourneyMatch match: matches) {
+      boolean isTeamToRemove = match.getTeams().stream().anyMatch(t -> t.getId() == team.getId());
+      if(isTeamToRemove) {
+        match.getTeams().removeIf(t -> t.getId() == team.getId());
+        if (match.isRunning()) {
+          match.setAborted(true);
+          match.getGame().stop();
+        }
+      }
+    }
+    matches.removeIf(match -> match.getTeams().size() == 0);
+
+
     return true;
   }
 
@@ -337,28 +366,40 @@ public class Tournament {
     for (int i = 1; i < teams.size(); i++) {
       long wins = teams.get(i).getStatistics().stream().filter(st -> matches.contains(st.getMatch()) && st.isWin()).count();
 
-      if(wins > maxWins) {
+      if (wins > maxWins) {
         winner = new LinkedList<>();
         winner.add(teams.get(i));
         maxWins = wins;
-      } else if(wins == maxWins) {
+      } else if (wins == maxWins) {
         winner.add(teams.get(i));
       }
     }
 
-    if(winner.size() == 1) {
+    if (winner.size() == 1) {
       return winner.get(0);
     }
 
     List<Pair<TourneyTeam, Integer>> winners = new LinkedList<>();
 
-    for(TourneyTeam team : winner) {
+    for (TourneyTeam team : winner) {
       List<TourneyGameStatistic> stats = team.getStatistics().stream().filter(st -> matches.contains(st.getMatch()) && st.isWin()).collect(Collectors.toList());
       int points = stats.stream().map(TourneyGameStatistic::calculatePoints).reduce(Integer::sum).orElse(0);
-      winners.add(new Pair<>(team, points*-1));
+      winners.add(new Pair<>(team, points * -1));
     }
 
     winners.sort(Comparator.comparingInt(Pair::getSecond));
     return winner.get(0);
+  }
+
+  public CurrentState getCurrentState() {
+    if (groupStage != null && !groupStage.isFinished()) {
+      return CurrentState.GROUP_STAGE;
+    } else if (koStage != null && !koStage.isFinished()) {
+      return CurrentState.KO_STAGE;
+    } else if (groupStage == null) {
+      return CurrentState.NOT_STARTED;
+    }
+
+    return CurrentState.ALREADY_FINISHED;
   }
 }

@@ -8,11 +8,11 @@ import java.io.File;
 
 public class TourneyProperties {
 
-  public static File playersFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/players.yml");
-  public static File groupsFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/groups.yml");
-  public static File teamsFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/teams.yml");
+  public static File playersFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/database/players.yml");
+  public static File groupsFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/database/groups.yml");
+  public static File teamsFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/database/teams.yml");
   public static File groupStageFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/groupStage.yml");
-  public static File currentStateFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/currentState.yml");
+  public static File currentStateFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/database/currentState.yml");
 
   public static File logFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/log.txt");
 

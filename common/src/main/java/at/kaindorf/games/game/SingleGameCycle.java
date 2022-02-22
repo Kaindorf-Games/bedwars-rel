@@ -116,14 +116,17 @@ public class SingleGameCycle extends GameCycle {
       this.getGame().setMatch(null);
 
       // move match to done
-      if (match instanceof TourneyGroupMatch) {
-        Tournament.getInstance().getGroupStage().matchPlayed((TourneyGroupMatch) match);
-      } else if (match instanceof TourneyKoMatch) {
-        Tournament.getInstance().getKoStage().currentKoRound().matchPlayed((TourneyKoMatch) match);
+      if (match.isAborted()) {
+        if (match instanceof TourneyGroupMatch) {
+          Tournament.getInstance().getGroupStage().matchPlayed((TourneyGroupMatch) match);
+        } else if (match instanceof TourneyKoMatch) {
+          Tournament.getInstance().getKoStage().currentKoRound().matchPlayed((TourneyKoMatch) match);
+        }
       }
 
       // set teams to be ready
       match.getTeams().forEach(t -> t.setGame(null));
+      match.setAborted(false);
     }
   }
 

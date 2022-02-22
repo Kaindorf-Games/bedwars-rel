@@ -1,5 +1,6 @@
 package at.kaindorf.games.tournament.models;
 
+import at.kaindorf.games.game.Game;
 import lombok.Data;
 
 import java.util.Collections;
@@ -9,7 +10,8 @@ import java.util.List;
 public class TourneyMatch {
   protected List<TourneyTeam> teams;
   protected int id;
-  protected boolean isRunning = false;
+  private Game game;
+  private boolean aborted;
 
   protected static int currentId = 0;
 
@@ -32,5 +34,9 @@ public class TourneyMatch {
     } else {
       return "is a rematch";
     }
+  }
+
+  public boolean isRunning() {
+    return game != null;
   }
 }

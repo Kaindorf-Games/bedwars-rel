@@ -43,7 +43,7 @@ public class RemoveTourneyTeam extends BaseCommand implements ICommand {
 
   @Override
   public String getCommand() {
-    return "teamRemove";
+    return "removeTeam";
   }
 
   @Override
