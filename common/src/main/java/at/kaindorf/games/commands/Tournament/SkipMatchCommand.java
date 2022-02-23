@@ -65,7 +65,7 @@ public class SkipMatchCommand extends BaseCommand {
     GroupStage gs = Tournament.getInstance().getGroupStage();
     KoStage ks = Tournament.getInstance().getKoStage();
 
-    if (!gs.isFinished()) {
+    if (Tournament.getInstance().getCurrentState() == CurrentState.GROUP_STAGE) {
       // remove matches from to do list
       List<TourneyGroupMatch> matches = gs.getMatchesToDo().stream().filter(m -> !m.isRunning()).collect(Collectors.toList());
       gs.setMatchesToDo(gs.getMatchesToDo().stream().filter(TourneyMatch::isRunning).collect(Collectors.toList()));
@@ -74,7 +74,7 @@ public class SkipMatchCommand extends BaseCommand {
         match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false, 0)));
         gs.addDoneMatch(match);
       }
-    } else if (gs.isFinished() && ks != null) {
+    } else if (Tournament.getInstance().getCurrentState() == CurrentState.KO_STAGE) {
       // remove matches from to do list
       List<TourneyKoMatch> matches = ks.currentKoRound().getMatchesTodo().stream().filter(m -> !m.isRunning()).collect(Collectors.toList());
       ks.currentKoRound().setMatchesTodo(ks.currentKoRound().getMatchesTodo().stream().filter(TourneyMatch::isRunning).collect(Collectors.toList()));

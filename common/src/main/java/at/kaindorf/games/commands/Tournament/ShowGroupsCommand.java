@@ -28,12 +28,17 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
       return false;
     }
 
+    if(Tournament.getInstance().getGroups().size() == 0) {
+      sender.sendMessage(ChatColor.RED + "No Groups found");
+      return true;
+    }
+
     int page = 1;
     if (args.size() > 0) {
       try {
         page = Integer.parseInt(args.get(0));
       } catch (NumberFormatException ex) {
-        sender.sendMessage("Not a number");
+        sender.sendMessage(ChatColor.RED + "Not a number!!!");
         return false;
       }
     }

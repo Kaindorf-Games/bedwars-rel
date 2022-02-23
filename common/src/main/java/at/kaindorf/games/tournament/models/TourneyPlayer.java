@@ -13,25 +13,8 @@ public class TourneyPlayer {
   private TourneyTeam team;
   private Player player;
   private int kills, destroyedBeds;
-  private static int currentId;
 
-  public TourneyPlayer(String uuid, String username) {
-    this.uuid = uuid;
-    this.username = username;
-    this.kills = 0;
-    this.destroyedBeds = 0;
-
-    this.id = currentId++;
-  }
-
-  public TourneyPlayer(String uuid, String username, int kills, int destroyedBeds) {
-    this.uuid = uuid;
-    this.username = username;
-    this.kills = kills;
-    this.destroyedBeds = destroyedBeds;
-
-    this.id = currentId++;
-  }
+  public static int currentId;
 
   public TourneyPlayer(int id, String uuid, String username, int kills, int destroyedBeds) {
     this.uuid = uuid;

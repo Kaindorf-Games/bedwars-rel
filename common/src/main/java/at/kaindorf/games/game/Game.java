@@ -1805,6 +1805,7 @@ public class Game {
   }
 
   public boolean stop() {
+    this.match = null;
     if (this.state == GameState.STOPPED) {
       return false;
     }

@@ -1,20 +1,15 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.Tournament;
-import at.kaindorf.games.tournament.TourneyProperties;
-import at.kaindorf.games.tournament.models.*;
+import at.kaindorf.games.tournament.models.CurrentState;
+import at.kaindorf.games.tournament.models.TourneyGroup;
+import at.kaindorf.games.tournament.models.TourneyGroupMatch;
+import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.Pair;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -22,29 +17,16 @@ public class GroupStage {
   private List<TourneyGroupMatch> matchesToDo;
   private List<TourneyGroupMatch> matchesDone;
 
+  public GroupStage(int groupSize, int groupStageRounds) {
+    matchesDone = new LinkedList<>();
+    matchesToDo = new LinkedList<>();
+
+    this.generateGroupStage(groupSize, groupStageRounds);
+  }
+
   public GroupStage() {
     matchesDone = new LinkedList<>();
     matchesToDo = new LinkedList<>();
-  }
-
-  @SneakyThrows
-  public boolean readGroupStageFromFile() {
-    if(!TourneyProperties.groupStageFile.exists()) return false;
-    YamlConfiguration yaml = new YamlConfiguration();
-    BufferedReader reader =
-        new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.groupStageFile), "UTF-8"));
-    yaml.load(reader);
-    for (String key : yaml.getKeys(false)) {
-      List<String> teamNames = yaml.getStringList(key);
-      // translating teamNames into TourneyTeam Objects
-      List<TourneyTeam> teams = teamNames.stream().map(tn -> Tournament.getInstance().getTeams().stream().filter(t -> t.getName().equals(tn)).findFirst().orElse(null)).collect(Collectors.toList());
-      matchesToDo.add(new TourneyGroupMatch(teams));
-    }
-
-    // randomize order of the matches
-    // otherwise some teams have to wait longer
-    Collections.shuffle(matchesToDo);
-    return true;
   }
 
   public void matchPlayed(TourneyGroupMatch match) {
@@ -83,5 +65,41 @@ public class GroupStage {
 
   public void addDoneMatch(TourneyGroupMatch match) {
     matchesDone.add(match);
+  }
+
+  @SneakyThrows
+  private void generateGroupStage(int groupSize, int groupStageRounds) {
+    List<TourneyTeam> teams = Tournament.getInstance().getTeams();
+    List<TourneyGroup> groups = Tournament.getInstance().getGroups();
+
+    if(teams.size() == 0) {
+      return;
+    }
+
+    // create groups
+    int anzGroups = (int) Math.ceil(teams.size()/(double) groupSize);
+    for (int i = 0;i<anzGroups;i++) {
+      Tournament.getInstance().addGroup("Group "+(char)('A'+i));
+    }
+
+    // add teams into groups
+    Collections.shuffle(teams);
+    for (int i = 0;i<teams.size(); i++) {
+      groups.get(i%anzGroups).addTeam(teams.get(i));
+    }
+
+    // generate Matches
+    for(int round = 0; round < groupStageRounds; round++) {
+      for(TourneyGroup g: groups) {
+        for(int t = 0;t < g.getTeams().size(); t++) {
+          for(int j = t+1; j<g.getTeams().size();j++) {
+            this.addToDoMatch(new TourneyGroupMatch(Arrays.asList(g.getTeams().get(t), g.getTeams().get(j)), round));
+          }
+        }
+      }
+    }
+
+//    groups.forEach(g -> Bukkit.getLogger().info(g.getName() + ": "+g.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", "+t2).orElse("")));
+//    this.getMatchesToDo().forEach(m -> Bukkit.getLogger().info(m.getId() + ": " + m.getGroup().getName() +", "+ m.getRound() + ", "+m.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + "|"+t2).orElse("")));
   }
 }

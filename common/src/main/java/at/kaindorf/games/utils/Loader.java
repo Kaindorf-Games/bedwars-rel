@@ -16,37 +16,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Loader {
 
   @SneakyThrows
-  public static List<String> loadSavedGroups() {
-    List<String> groups = new LinkedList<>();
-    // load Groups
-    if (TourneyProperties.groupsFile.exists() && TourneyProperties.groupsFile.canRead()) {
-      YamlConfiguration yaml = new YamlConfiguration();
-      BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new FileInputStream(TourneyProperties.groupsFile), "UTF-8"));
-      yaml.load(reader);
-      Set<String> keys = yaml.getKeys(false);
-      if (keys.size() > 0) {
-        for (String key : keys) {
-          String groupName = yaml.getString(key + ".name");
-          groups.add(groupName);
-        }
-      } else {
-        BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No group config found");
-      }
-    }
-    return groups;
-  }
-
-  @SneakyThrows
-  public static List<Pair<String, String>> loadSavedTeams() {
-    List<Pair<String, String>> teams = new LinkedList<>();
+  public static List<String> loadSavedTeams() {
+    List<String> teams = new LinkedList<>();
     // load Teams
     if (TourneyProperties.teamsFile.exists() && TourneyProperties.teamsFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
@@ -57,8 +33,7 @@ public class Loader {
       if (keys.size() > 0) {
         for (String key : keys) {
           String teamName = yaml.getString(key + ".name");
-          String teamGroup = yaml.getString(key + ".group");
-          teams.add(new Pair<>(teamName, teamGroup));
+          teams.add(teamName);
         }
       } else {
         BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No team config found");
@@ -68,8 +43,8 @@ public class Loader {
   }
 
   @SneakyThrows
-  public static List<Pair<TourneyPlayer, String>> loadSavedPlayers() {
-    List<Pair<TourneyPlayer, String>> players = new LinkedList<>();
+  public static List<Map<String, String>> loadSavedPlayers() {
+    List<Map<String, String>> players = new LinkedList<>();
     // load Player
     if (TourneyProperties.playersFile.exists() && TourneyProperties.playersFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
@@ -79,11 +54,13 @@ public class Loader {
       Set<String> keys = yaml.getKeys(false);
       if (keys.size() > 0) {
         for (String key : keys) {
-          int kills = yaml.getInt(key + ".kills");
-          String teamName = yaml.getString(key + ".team");
-          int destroyedBeds = yaml.getInt(key + ".destroyedBeds");
-          String uuid = yaml.getString(key + ".uuid");
-          players.add(new Pair<>(new TourneyPlayer(uuid, "", kills, destroyedBeds), teamName));
+          Map<String, String> playerMap = new HashMap<>();
+          playerMap.put("kills", String.valueOf(yaml.getInt(key + ".kills")));
+          playerMap.put("teamName", yaml.getString(key + ".team"));
+          playerMap.put("destroyedBeds", String.valueOf(yaml.getInt(key + ".destroyedBeds")));
+          playerMap.put("uuid", yaml.getString(key + ".uuid"));
+
+          players.add(playerMap);
         }
       } else {
         BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No player config found");
@@ -133,7 +110,7 @@ public class Loader {
         for (String key : yaml.getConfigurationSection("matchesDone").getKeys(false)) {
           ConfigurationSection matchSection = yaml.getConfigurationSection("matchesDone." + key);
           if (state == CurrentState.GROUP_STAGE) {
-            TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")));
+            TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")), matchSection.getInt("round"));
             addTeamStatisticToTeam(matchSection, match);
             groupStage.addDoneMatch(match);
           } else {
@@ -148,7 +125,7 @@ public class Loader {
       for (String key : yaml.getConfigurationSection("matchesToDo").getKeys(false)) {
         ConfigurationSection matchSection = yaml.getConfigurationSection("matchesToDo." + key);
         if (state == CurrentState.GROUP_STAGE) {
-          TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")));
+          TourneyGroupMatch match = new TourneyGroupMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")), matchSection.getInt("round"));
           groupStage.addToDoMatch(match);
         } else {
           TourneyKoMatch match = new TourneyKoMatch(matchSection.getInt("id"), Tournament.getInstance().getTeamsPerId(matchSection.getIntegerList("teams")), matchSection.getInt("rematchId",-1));

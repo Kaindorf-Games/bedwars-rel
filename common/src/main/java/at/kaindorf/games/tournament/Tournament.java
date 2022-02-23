@@ -3,6 +3,7 @@ package at.kaindorf.games.tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.exceptions.TournamentEntityExistsException;
+import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
@@ -56,20 +57,18 @@ public class Tournament {
   public void loadSaves() {
     Bukkit.getLogger().info("Loading Tournament Saves ...");
     try {
-      // load Groups
-      for (String group : Loader.loadSavedGroups()) {
-        addGroup(group);
-      }
-
       // load Teams
-      for (Pair<String, String> p : Loader.loadSavedTeams()) {
-        addTeam(p.getFirst(), p.getSecond());
+      for (String team : Loader.loadSavedTeams()) {
+        addTeam(team);
       }
 
       // load Player
-      for (Pair<TourneyPlayer, String> p : Loader.loadSavedPlayers()) {
-        TourneyPlayer player = p.getFirst();
-        addPlayer(player.getUuid(), p.getSecond(), player.getKills(), player.getDestroyedBeds());
+      for (Map<String, String> playerMap : Loader.loadSavedPlayers()) {
+        addPlayer(
+            playerMap.get("uuid"),
+            playerMap.get("teamName"),
+            Integer.parseInt(playerMap.get("kills")),
+            Integer.parseInt(playerMap.get("destroyedBeds")));
       }
     } catch (TournamentEntityExistsException e) {
       Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
@@ -79,33 +78,30 @@ public class Tournament {
   }
 
   public void addGroup(String name) throws TournamentEntityExistsException {
-    Optional<TourneyGroup> optional = groups.stream().filter(g -> g.getName().equals(name)).findFirst();
-    if (!optional.isPresent()) {
-      groups.add(new TourneyGroup(name));
-    }
+    addGroup(TourneyGroup.currentId + 1, name);
   }
 
   public void addGroup(int id, String name) throws TournamentEntityExistsException {
     Optional<TourneyGroup> optional = groups.stream().filter(g -> g.getName().equals(name)).findFirst();
-    if (!optional.isPresent()) {
-      groups.add(new TourneyGroup(id, name));
+    if (optional.isPresent()) {
+      throw new TournamentEntityExistsException("Group "+ name + "exists already!!!");
     }
+    TourneyGroup group = new TourneyGroup(id, name);
+    groups.add(group);
+  }
+
+  public void addTeam(String name) throws  TournamentEntityExistsException {
+    this.addTeam(name, "");
   }
 
   public void addTeam(String name, String groupName) throws TournamentEntityExistsException {
-    Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
-    if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Team " + name + " exists already");
-    }
-    TourneyTeam team = new TourneyTeam(name);
-    teams.add(team);
-    this.getGroup(groupName).addTeam(team);
+    this.addTeam(TourneyTeam.currentId+1, name, groupName);
   }
 
   public void addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Team " + name + " exists already");
+      throw new TournamentEntityExistsException("Team " + name + " exists already!!!");
     }
     TourneyTeam team = new TourneyTeam(id, name);
     teams.add(team);
@@ -119,20 +115,13 @@ public class Tournament {
   }
 
   public void addPlayer(String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
-    Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
-    if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player " + uuid + " exists already");
-    }
-    String username = UsernameFetcher.getUsernameFromUUID(uuid);
-    TourneyPlayer player = new TourneyPlayer(uuid, username, kills, destroyedBeds);
-    players.add(player);
-    this.getTeam(teamName).addPlayer(player);
+    addPlayer(TourneyPlayer.currentId + 1, uuid, teamName, kills, destroyedBeds);
   }
 
   public void addPlayer(int id, String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
     Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player " + uuid + " exists already");
+      throw new TournamentEntityExistsException("Player " + uuid + " exists already!!!");
     }
     String username = UsernameFetcher.getUsernameFromUUID(uuid);
     TourneyPlayer player = new TourneyPlayer(id, uuid, username, kills, destroyedBeds);
@@ -159,11 +148,9 @@ public class Tournament {
   }
 
   public void show() {
-    String gs = groups.stream().map(TourneyGroup::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
     String ts = teams.stream().map(TourneyTeam::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
     String ps = players.stream().map(TourneyPlayer::getUsername).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
 
-    Bukkit.getLogger().info("Groups: " + gs);
     Bukkit.getLogger().info("Teams: " + ts);
     Bukkit.getLogger().info("Players: " + ps);
   }
@@ -171,16 +158,15 @@ public class Tournament {
   @SneakyThrows
   public void save() {
     Saver.clear();
-    Saver.saveGroups(this.groups);
     Saver.saveTeams(this.teams);
     Saver.savePlayers(this.players);
   }
 
 
   /*TODO: Generates Matches automatically. At the moment he gets the Matches from a File*/
-  public boolean generateGroupMatches() {
-    groupStage = new GroupStage();
-    return groupStage.readGroupStageFromFile();
+  public boolean generateGroupMatches(int groupSize, int groupStageRounds) {
+    groupStage = new GroupStage(groupSize, groupStageRounds);
+    return groupStage.getMatchesToDo().size() > 0;
   }
 
   public void generateKoMatches(List<TourneyTeam> teams, int qualifiedForNextKoRound, boolean rematch, boolean rematchFinal) {
@@ -278,6 +264,7 @@ public class Tournament {
   public void continueStoopedTournament() {
     clear();
     CurrentState state = Loader.loadTournamentState();
+    Bukkit.getLogger().info(""+state);
 
     TournamentStartEvent event = new TournamentStartEvent(qualifiedTeams, rematchKo, rematchFinal);
     BedwarsRel.getInstance().getServer().getPluginManager().callEvent(event);
@@ -332,6 +319,7 @@ public class Tournament {
         if (match.isRunning()) {
           match.setAborted(true);
           match.getGame().stop();
+          match.getGame().setState(GameState.WAITING);
         }
       }
     }
@@ -394,12 +382,10 @@ public class Tournament {
   public CurrentState getCurrentState() {
     if (groupStage != null && !groupStage.isFinished()) {
       return CurrentState.GROUP_STAGE;
-    } else if (koStage != null && !koStage.isFinished()) {
+    } else if (koStage != null && !koStage.isFinished() && groupStage.isFinished()) {
       return CurrentState.KO_STAGE;
-    } else if (groupStage == null) {
-      return CurrentState.NOT_STARTED;
+    } else {
+      return CurrentState.TRANSITION;
     }
-
-    return CurrentState.ALREADY_FINISHED;
   }
 }

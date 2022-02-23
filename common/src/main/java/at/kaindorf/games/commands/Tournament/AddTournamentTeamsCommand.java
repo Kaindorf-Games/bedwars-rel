@@ -64,13 +64,9 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
 
         JSONObject team = (JSONObject) teamObj;
 
-        // add group
-        String groupName = String.valueOf(team.get("group"));
-        tourney.addGroup(groupName);
-
         // add team
         String teamName = String.valueOf(team.get("teamName"));
-        tourney.addTeam(teamName, groupName);
+        tourney.addTeam(teamName);
 
         JSONArray playersObj = (JSONArray) team.get("players");
 

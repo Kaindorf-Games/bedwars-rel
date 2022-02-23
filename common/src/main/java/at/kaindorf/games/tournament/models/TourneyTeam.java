@@ -12,28 +12,22 @@ import java.util.List;
 public class TourneyTeam {
   private int id;
   private List<TourneyPlayer> players;
+  private TourneyGroup group;
   private List<TourneyGameStatistic> statistics;
   private String name;
   private Game game;
   private boolean paused = false;
   private TeamColor teamColor;
 
-  private static int currentId = 0;
-
-  public TourneyTeam(String name) {
-    this.name = name;
-    this.players = new LinkedList<>();
-    this.statistics = new LinkedList<>();
-    game = null;
-    this.id = currentId++;
-  }
+  public static int currentId = 0;
 
   public TourneyTeam(int id, String name) {
+    this.id = id;
     this.name = name;
     this.players = new LinkedList<>();
     this.statistics = new LinkedList<>();
-    game = null;
-    this.id = id;
+    this.game = null;
+    this.group = null;
 
     if(this.id > currentId) {
       currentId = this.id;
@@ -42,6 +36,7 @@ public class TourneyTeam {
 
   public void addPlayer(TourneyPlayer player) {
     this.players.add(player);
+    player.setTeam(this);
   }
 
   public void addStatistic(TourneyGameStatistic teamStatistics) {

@@ -773,7 +773,6 @@ public final class Utils {
   public static Map<String, Object> tourneyTeamSerialize(TourneyTeam team, String group) {
     Map<String, Object> map = new HashMap<>();
     map.put("name", team.getName());
-    map.put("group", group);
 
     return map;
   }
@@ -792,6 +791,7 @@ public final class Utils {
     map.put("id", match.getId());
     map.put("teams", match.getTeams().stream().map(TourneyTeam::getId).collect(Collectors.toList()));
     map.put("group", match.getGroup().getId());
+    map.put("round", match.getRound());
     return map;
   }
 

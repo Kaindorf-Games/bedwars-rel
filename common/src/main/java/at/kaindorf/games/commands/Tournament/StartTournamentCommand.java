@@ -34,24 +34,26 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       return true;
     }
 
-    int rounds = 1, qualifiedTeams = 0;
+    int groupStageRounds = 1, qualifiedTeams = 0, groupSize = 0;
     boolean rematchKo = false, rematchFinal = false;
 
     try {
-      qualifiedTeams = Integer.parseInt(args.get(0));
-      rematchKo = Boolean.parseBoolean(args.get(1));
-      rematchFinal = Boolean.parseBoolean(args.get(2));
-      validateInput(rounds, qualifiedTeams);
+      groupSize = Integer.parseInt(args.get(0));
+      groupStageRounds = Integer.parseInt(args.get(1));
+      qualifiedTeams = Integer.parseInt(args.get(2));
+      rematchKo = Boolean.parseBoolean(args.get(3));
+      rematchFinal = Boolean.parseBoolean(args.get(4));
+      validateInput(groupStageRounds, qualifiedTeams);
     } catch (Exception e) {
-      sender.sendMessage(ChatColor.RED + "Invalid Inputs");
+      sender.sendMessage(ChatColor.RED + "Invalid Inputs!!!");
       return false;
     }
 
     resetTournament();
 
-    boolean res = Tournament.getInstance().generateGroupMatches();
+    boolean res = Tournament.getInstance().generateGroupMatches(groupSize, groupStageRounds);
     if(!res) {
-      sender.sendMessage(ChatColor.RED + "groupStage.yml is missing");
+      sender.sendMessage(ChatColor.RED + "Generating Group Stage failed!!!");
     }
 
     sender.sendMessage(ChatColor.GREEN+"Tournament started");
@@ -66,8 +68,7 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
   }
 
   private void validateInput(int rounds, int qualifiedTeams) throws Exception {
-    int minTeams = Tournament.getInstance().getGroups().stream().mapToInt(g -> g.getTeams().size()).min().orElse(0);
-    if(rounds <= 0 || qualifiedTeams <=0 || qualifiedTeams > minTeams)
+    if(rounds <= 0 || qualifiedTeams <=0)
       throw new Exception("Invalid Inputs");
   }
 
@@ -76,6 +77,9 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     if(TourneyProperties.logFile.exists()) {
       TourneyProperties.logFile.delete();
     }
+
+    Tournament.getInstance().getGroups().clear();
+    Tournament.getInstance().getTeams().forEach(t -> t.setGroup(null));
 
     // set stop to false
     Tournament.getInstance().setHardStop(false);
@@ -91,8 +95,7 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public String[] getArguments() {
-//    return new String[]{"rounds<int>", "qualifiedTeams<int>", "rematchKo<bool>", "rematchFinal<bool>"};
-    return new String[]{"qualifiedTeams<int>", "rematchKo<bool>", "rematchFinal<bool>"};
+    return new String[]{"groupSize<int>","groupStageRounds<int>","qualifiedTeams<int>", "rematchKo<bool>", "rematchFinal<bool>"};
   }
 
   @Override

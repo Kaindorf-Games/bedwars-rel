@@ -26,9 +26,19 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
       return false;
     }
 
+    if(Tournament.getInstance().getTeams().size() == 0) {
+      sender.sendMessage(ChatColor.RED + "No Teams found");
+      return true;
+    }
+
     int page = 1;
     if (args.size() > 0) {
-      page = Integer.parseInt(args.get(0));
+      try {
+        page = Integer.parseInt(args.get(0));
+      } catch (NumberFormatException ex) {
+        sender.sendMessage(ChatColor.RED + "Not a number");
+        return false;
+      }
     }
 
     String output = buildChatOutput();

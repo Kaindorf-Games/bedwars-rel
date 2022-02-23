@@ -11,7 +11,7 @@ public class TourneyMatch {
   protected List<TourneyTeam> teams;
   protected int id;
   private Game game;
-  private boolean aborted;
+  private boolean aborted = false;
 
   protected static int currentId = 0;
 

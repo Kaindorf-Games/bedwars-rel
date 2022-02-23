@@ -3,6 +3,7 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.CurrentState;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.rounds.GroupStage;
@@ -47,12 +48,17 @@ public class ShowMatchesToDoCommand extends BaseCommand {
     KoStage ks = Tournament.getInstance().getKoStage();
     List<TourneyMatch> matches;
 
-    if (!gs.isFinished()) {
+    if (Tournament.getInstance().getCurrentState() == CurrentState.GROUP_STAGE) {
       matches = gs.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
-    } else if (gs.isFinished() && ks != null) {
+    } else if (Tournament.getInstance().getCurrentState() == CurrentState.KO_STAGE) {
       matches = ks.currentKoRound().getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
     } else {
       sender.sendMessage(ChatColor.RED + "Tournament is in Transition");
+      return true;
+    }
+
+    if(matches.size() == 0) {
+      sender.sendMessage(ChatColor.RED + "No Matches to do!!!");
       return true;
     }
 
