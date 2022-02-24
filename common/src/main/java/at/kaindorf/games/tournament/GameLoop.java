@@ -73,7 +73,6 @@ public class GameLoop extends BukkitRunnable {
         int minRound = Collections.min(groupStage.getMatchesToDo().stream().map(TourneyGroupMatch::getRound).collect(Collectors.toList()));
         matches = groupStage.getMatchesToDo().stream().filter(m -> m.getRound() == minRound).map(m -> (TourneyMatch) m).collect(Collectors.toList());
       }
-      Bukkit.getLogger().info("Matches Size:" + matches.size());
       removeMatchesWithOneTeam(matches, true);
       tryToStartGames(matches, getWaitingGames());
     } else if (koStage == null) {

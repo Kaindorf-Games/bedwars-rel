@@ -72,12 +72,18 @@ public class GroupStage {
     List<TourneyTeam> teams = Tournament.getInstance().getTeams();
     List<TourneyGroup> groups = Tournament.getInstance().getGroups();
 
-    if(teams.size() == 0) {
+    if(teams.size() <= 1) {
       return;
     }
 
-    // create groups
+
     int anzGroups = (int) Math.ceil(teams.size()/(double) groupSize);
+    // remove the possibility that a group contains only one team
+    while (teams.size() / anzGroups < 2) {
+      anzGroups--;
+    }
+
+    // create groups
     for (int i = 0;i<anzGroups;i++) {
       Tournament.getInstance().addGroup("Group "+(char)('A'+i));
     }

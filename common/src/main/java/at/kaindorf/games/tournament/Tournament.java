@@ -312,10 +312,10 @@ public class Tournament {
     if (koStage != null) {
       matches.addAll(koStage.currentKoRound().getMatchesTodo());
     }
+
     for(TourneyMatch match: matches) {
-      boolean isTeamToRemove = match.getTeams().stream().anyMatch(t -> t.getId() == team.getId());
-      if(isTeamToRemove) {
-        match.getTeams().removeIf(t -> t.getId() == team.getId());
+      if(match.getTeams().stream().anyMatch(t -> t.getId() == team.getId())) {
+        match.setTeams(match.getTeams().stream().filter(t -> t.getId() != team.getId()).collect(Collectors.toList()));
         if (match.isRunning()) {
           match.setAborted(true);
           match.getGame().stop();

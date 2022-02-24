@@ -43,10 +43,10 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       qualifiedTeams = Integer.parseInt(args.get(2));
       rematchKo = Boolean.parseBoolean(args.get(3));
       rematchFinal = Boolean.parseBoolean(args.get(4));
-      validateInput(groupStageRounds, qualifiedTeams);
+      validateInput(groupStageRounds, qualifiedTeams, groupSize, groupStageRounds);
     } catch (Exception e) {
       sender.sendMessage(ChatColor.RED + "Invalid Inputs!!!");
-      return false;
+      return true;
     }
 
     resetTournament();
@@ -67,8 +67,8 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     return true;
   }
 
-  private void validateInput(int rounds, int qualifiedTeams) throws Exception {
-    if(rounds <= 0 || qualifiedTeams <=0)
+  private void validateInput(int rounds, int qualifiedTeams, int groupSize, int groupStageRounds) throws Exception {
+    if(rounds <= 0 || qualifiedTeams <=0 || groupSize < 2 || groupStageRounds < 1)
       throw new Exception("Invalid Inputs");
   }
 
