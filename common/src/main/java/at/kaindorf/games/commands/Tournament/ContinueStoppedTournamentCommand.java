@@ -5,15 +5,14 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
-import com.sun.xml.internal.stream.writers.WriterUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 
-public class ContinueStoppedTournament extends BaseCommand implements ICommand {
+public class ContinueStoppedTournamentCommand extends BaseCommand implements ICommand {
 
-  public ContinueStoppedTournament(BedwarsRel plugin) {
+  public ContinueStoppedTournamentCommand(BedwarsRel plugin) {
     super(plugin);
   }
 

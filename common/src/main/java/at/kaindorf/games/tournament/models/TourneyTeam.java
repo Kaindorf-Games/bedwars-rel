@@ -48,10 +48,12 @@ public class TourneyTeam {
   }
 
   public boolean isReady() {
-    long onlinePlayers = players.stream().map(TourneyPlayer::getPlayer).filter(p -> p != null && p.isOnline()).count();
+//    return numberOfPlayersOnline() >= 2 && !inGame() && !paused;
+    return numberOfPlayersOnline() >= 1 && !inGame() && !paused;
+  }
 
-//    return onlinePlayers >= 2 && !inGame() && !paused;
-    return onlinePlayers >= 1 && !inGame() && !paused;
+  public long numberOfPlayersOnline() {
+    return players.stream().map(TourneyPlayer::getPlayer).filter(p -> p != null && p.isOnline()).count();
   }
 
   public int calculatePoints(CurrentState state) {

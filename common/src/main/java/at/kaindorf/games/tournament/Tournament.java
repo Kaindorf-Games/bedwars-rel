@@ -232,7 +232,7 @@ public class Tournament {
     return BedwarsRel.getInstance().getGameLoopTask() != null;
   }
 
-  public void identifyPlayers() {
+  public void identifyOnlinePlayers() {
     players.stream().filter(p -> p.getPlayer() == null).forEach(TourneyPlayer::initPlayer);
   }
 
@@ -387,5 +387,14 @@ public class Tournament {
     } else {
       return CurrentState.TRANSITION;
     }
+  }
+
+  public void removeMissingTeams() throws Exception {
+    if(groupStage != null || koStage != null) {
+      throw new Exception("Tournament is already running!!!");
+    }
+    this.identifyOnlinePlayers();
+    teams.removeIf(t -> t.numberOfPlayersOnline() == 0);
+
   }
 }

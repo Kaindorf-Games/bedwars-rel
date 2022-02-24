@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 
-public class RemoveTourneyTeam extends BaseCommand implements ICommand {
-  public RemoveTourneyTeam(BedwarsRel plugin) {
+public class RemoveTourneyTeamCommand extends BaseCommand implements ICommand {
+  public RemoveTourneyTeamCommand(BedwarsRel plugin) {
     super(plugin);
   }
 

@@ -856,13 +856,14 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new LoadTourneyEntitiesCommand(this));
     this.tourneyCommands.add(new StartTournamentCommand(this));
     this.tourneyCommands.add(new StopTournamentCommand(this));
-    this.tourneyCommands.add(new ContinueStoppedTournament(this));
+    this.tourneyCommands.add(new ContinueStoppedTournamentCommand(this));
     this.tourneyCommands.add(new TeamPauseCommand(this));
     this.tourneyCommands.add(new TeamNoPauseCommand(this));
-    this.tourneyCommands.add(new RemoveTourneyTeam(this));
+    this.tourneyCommands.add(new RemoveTourneyTeamCommand(this));
     this.tourneyCommands.add(new SkipMatchCommand(this));
     this.tourneyCommands.add(new ShowMatchesToDoCommand(this));
     this.tourneyCommands.add(new AddPointsCommand(this));
+    this.tourneyCommands.add(new RemoveMissingTeamsCommands(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

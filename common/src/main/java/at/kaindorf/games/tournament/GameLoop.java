@@ -54,7 +54,7 @@ public class GameLoop extends BukkitRunnable {
       return;
     }
 
-    tournament.identifyPlayers();
+    tournament.identifyOnlinePlayers();
     GroupStage groupStage = tournament.getGroupStage();
     KoStage koStage = tournament.getKoStage();
 
