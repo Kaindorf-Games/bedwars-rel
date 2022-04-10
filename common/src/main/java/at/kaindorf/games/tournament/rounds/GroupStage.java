@@ -97,10 +97,20 @@ public class GroupStage {
     // generate Matches
     for(int round = 0; round < groupStageRounds; round++) {
       for(TourneyGroup g: groups) {
-        for(int t = 0;t < g.getTeams().size(); t++) {
-          for(int j = t+1; j<g.getTeams().size();j++) {
-            this.addToDoMatch(new TourneyGroupMatch(Arrays.asList(g.getTeams().get(t), g.getTeams().get(j)), round));
+        List<TourneyTeam> gTeams = g.getTeams();
+
+        if(gTeams.size()%4 == 0) {
+          int m = 0;
+          while(m < gTeams.size()/4) {
+            this.addToDoMatch(new TourneyGroupMatch(Arrays.asList(gTeams.get(m*4), gTeams.get(m*4+1), gTeams.get(m*4+2), gTeams.get(m*4+3)), round));
+            m++;
           }
+        } else if(gTeams.size()%4 == 1) {
+          // TODO:
+        } else if(gTeams.size()%4==2) {
+          // TODO:
+        } else { //gTeams.size()%4==3
+          // TODO:
         }
       }
     }
