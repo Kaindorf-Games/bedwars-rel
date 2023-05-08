@@ -844,6 +844,7 @@ public class BedwarsRel extends JavaPlugin {
     this.bwCommands.add(new AutoConnectCommand(this));
     this.bwCommands.add(new SwitchBedwarsModeCommand(this));
     this.bwCommands.add(new ShowBedwarsModeCommand(this));
+    this.bwCommands.add(new MovePlayersIntoGame(this));
     this.getCommand("bw").setExecutor(executor);
 
     // Tournament Commands

@@ -6,7 +6,9 @@ import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyProperties;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.utils.ChatWriter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -45,7 +47,7 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       rematchFinal = Boolean.parseBoolean(args.get(4));
       validateInput(groupStageRounds, qualifiedTeams, groupSize, groupStageRounds);
     } catch (Exception e) {
-      sender.sendMessage(ChatColor.RED + "Invalid Inputs!!!");
+      sender.sendMessage(ChatColor.RED + e.getMessage());
       return true;
     }
 
@@ -70,6 +72,9 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
   private void validateInput(int rounds, int qualifiedTeams, int groupSize, int groupStageRounds) throws Exception {
     if(rounds <= 0 || qualifiedTeams <=0 || groupSize < 2 || groupStageRounds < 1)
       throw new Exception("Invalid Inputs");
+
+    if(BedwarsRel.getInstance().getGameManager().getGames().stream().map(g -> g.getTeams().size()).noneMatch(s -> s >= groupSize))
+      throw new Exception("At least one map has to support the group size");
   }
 
   private void resetTournament() {
@@ -88,6 +93,7 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     // reset groupstage and kostage
     Tournament.getInstance().setKoStage(null);
     Tournament.getInstance().setGroupStage(null);
+    TourneyMatch.resetId();
 
     // reset remove All statistics
     Tournament.getInstance().getTeams().forEach(t -> t.getStatistics().clear());

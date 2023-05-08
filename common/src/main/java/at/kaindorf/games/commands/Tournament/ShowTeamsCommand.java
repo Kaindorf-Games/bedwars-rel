@@ -57,7 +57,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
 
       sb.append(ChatColor.YELLOW + "" + team.getName() + paused + "\n");
       team.getPlayers().forEach(p -> {
-        sb.append(ChatColor.YELLOW + "  " + p.getUsername() + "\n");
+        sb.append(ChatColor.YELLOW + "  " + p.getUuid() + "\n");
       });
       sb.append(ChatColor.YELLOW + "  Points group stage: " + team.calculatePoints(CurrentState.GROUP_STAGE) + "\n");
       sb.append(ChatColor.YELLOW + "  Points ko stage: " + team.calculatePoints(CurrentState.KO_STAGE) + "\n\n");

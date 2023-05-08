@@ -123,8 +123,7 @@ public class Tournament {
     if (optional.isPresent()) {
       throw new TournamentEntityExistsException("Player " + uuid + " exists already!!!");
     }
-    String username = UsernameFetcher.getUsernameFromUUID(uuid);
-    TourneyPlayer player = new TourneyPlayer(id, uuid, username, kills, destroyedBeds);
+    TourneyPlayer player = new TourneyPlayer(id, uuid, null, kills, destroyedBeds);
     players.add(player);
     this.getTeam(teamName).addPlayer(player);
   }
@@ -149,7 +148,7 @@ public class Tournament {
 
   public void show() {
     String ts = teams.stream().map(TourneyTeam::getName).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
-    String ps = players.stream().map(TourneyPlayer::getUsername).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
+    String ps = players.stream().map(TourneyPlayer::getUuid).reduce((g1, g2) -> g1 + ", " + g2).orElse("-");
 
     Bukkit.getLogger().info("Teams: " + ts);
     Bukkit.getLogger().info("Players: " + ps);
@@ -163,7 +162,6 @@ public class Tournament {
   }
 
 
-  /*TODO: Generates Matches automatically. At the moment he gets the Matches from a File*/
   public boolean generateGroupMatches(int groupSize, int groupStageRounds) {
     groupStage = new GroupStage(groupSize, groupStageRounds);
     return groupStage.getMatchesToDo().size() > 0;
@@ -256,6 +254,7 @@ public class Tournament {
 
   public void cancel() {
     saveCurrentState();
+    Tournament.getInstance().teams.forEach(t -> t.setGame(null));
 
     BedwarsRel.getInstance().getGameLoopTask().cancel();
     BedwarsRel.getInstance().setGameLoopTask(null);

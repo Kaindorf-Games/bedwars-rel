@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -128,6 +127,7 @@ public class SingleGameCycle extends GameCycle {
       match.getTeams().forEach(t -> t.setGame(null));
       match.setAborted(false);
     }
+    this.getGame().setDisableLeave(false);
   }
 
   @Override

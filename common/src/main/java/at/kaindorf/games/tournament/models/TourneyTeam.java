@@ -4,6 +4,8 @@ import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.TeamColor;
 import at.kaindorf.games.tournament.TourneyProperties;
 import lombok.Data;
+import org.bukkit.Bukkit;
+import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.util.LinkedList;
 import java.util.List;

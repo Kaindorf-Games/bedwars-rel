@@ -109,13 +109,14 @@ public class GameLoop extends BukkitRunnable {
     int index = 0;
     while (waitingGames.size() > 0 && index < matches.size()) {
       TourneyMatch match = matches.get(index);
+      Optional<Game> gameOptional = waitingGames.stream().filter(g-> g.getTeams().size() >= match.getTeams().size()).findFirst();
 
-      if (!areTeamsReady(match.getTeams())) {
+      if (!areTeamsReady(match.getTeams()) || !gameOptional.isPresent()) {
         index++;
         continue;
       }
-
-      Game game = waitingGames.remove(0);
+      Game game = gameOptional.get();
+      waitingGames.remove(game);
       game.setMatch(match);
       setTeamsPlaying(match.getTeams(), game);
       assignTeamColors(match.getTeams(), game);
@@ -154,7 +155,9 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private List<Game> getWaitingGames() {
-    return games.stream().filter(g -> g.getMatch() == null).collect(Collectors.toList());
+    List<Game> waitingGames = games.stream().filter(g -> g.getMatch() == null && g.getState() == GameState.WAITING).collect(Collectors.toList());
+    Collections.shuffle(waitingGames);
+    return waitingGames;
   }
 
   private boolean areTeamsReady(List<TourneyTeam> teams) {

@@ -39,4 +39,8 @@ public class TourneyMatch {
   public boolean isRunning() {
     return game != null;
   }
+
+  public static void resetId() {
+    currentId = 0;
+  }
 }

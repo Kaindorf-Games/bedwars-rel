@@ -25,8 +25,14 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
 
     if (args.size() == 1) {
       BedwarsRel.Mode mode = null;
+      String in = args.get(0);
+      if(in.equalsIgnoreCase("t")) {
+        in = "tournament";
+      } else if(in.equalsIgnoreCase("n")) {
+        in = "normal";
+      }
       try {
-        mode = BedwarsRel.Mode.valueOf(args.get(0).toUpperCase());
+        mode = BedwarsRel.Mode.valueOf(in.toUpperCase());
       } catch (IllegalArgumentException ex) {
         sender.sendMessage(ChatColor.RED + "Wrong Mode supplied!");
         return false;
@@ -34,6 +40,7 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
 
       if (mode == BedwarsRel.getInstance().getMode()) {
         sender.sendMessage(ChatColor.YELLOW + "Mode is already set");
+        return true;
       }
 
       BedwarsRel.getInstance().changeModeTo(mode);

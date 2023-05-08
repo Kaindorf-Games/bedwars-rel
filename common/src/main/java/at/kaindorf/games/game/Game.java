@@ -99,6 +99,7 @@ public class Game {
   private int time = 1000;
   private int timeLeft = 0;
   private TourneyMatch match;
+  private boolean disableLeave;
 
   public Game(String name) {
     super();
@@ -139,6 +140,7 @@ public class Game {
     }
 
     this.match = null;
+    this.disableLeave = false;
   }
 
   /*

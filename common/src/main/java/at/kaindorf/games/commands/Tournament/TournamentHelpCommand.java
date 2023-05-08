@@ -4,6 +4,8 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
+import com.avaje.ebeaninternal.server.transaction.BulkEventListenerMap;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -24,9 +26,9 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
     String msg = "";
     // generate the messages for the two main permissions
     if (sender.hasPermission("tourney.manage")) {
-      msg = generateHelpMessage(commands);
+      msg = generateMessage(commands);
     } else if (sender.hasPermission("tourney.player")) {
-      msg = generateHelpMessage(commands.stream().filter(c -> c.getPermission().equals("player")).collect(Collectors.toList()));
+      msg = generateMessage(commands.stream().filter(c -> c.getPermission().equals("player")).collect(Collectors.toList()));
     } else {
       ChatWriter.wrongPermissionMessage(sender);
       return false;
@@ -44,34 +46,47 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
     return true;
   }
 
-  private String generateHelpMessage(List<BaseCommand> commands) {
+  private String generateMessage(List<BaseCommand> commands) {
     StringBuilder sb = new StringBuilder();
-    for (BaseCommand command : commands) {
-      if (command.blockDuringMode() == BedwarsRel.getInstance().getMode()) {
-        continue;
-      }
+    sb.append(ChatColor.GREEN+"--------- Tourney Help ---------\n");
+    for (BaseCommand command : commands.stream().filter(c -> !c.getPermission().equalsIgnoreCase("manage")).collect(Collectors.toList())) {
+      generateLine(command, sb);
+    }
 
-      String arguments = "";
-      for (String arg : command.getArguments()) {
-        arguments += " {" + arg + "}";
-      }
+    List<BaseCommand> adminCommands = commands.stream().filter(c -> c.getPermission().equalsIgnoreCase("manage")).collect(Collectors.toList());
+    if(adminCommands.size() > 0) {
+      sb.append(ChatColor.BLUE+"---------- Admin Help ----------\n");
+      for (BaseCommand command : adminCommands) {
+        generateLine(command, sb);
 
-      if (command.getCommand().equalsIgnoreCase("help") ||
-          command.getCommand().equalsIgnoreCase("showteams") ||
-          command.getCommand().equalsIgnoreCase("showgroups") ||
-          command.getCommand().equalsIgnoreCase("matches")) {
-        arguments += " {page?}";
-      } else if (command.getCommand().equalsIgnoreCase("clear")) {
-        arguments += " {saves|config}";
-      } else if (command.getCommand().equalsIgnoreCase("stop")) {
-        arguments += "{soft|hard}";
       }
-
-      sb.append(ChatColor.YELLOW + "/" + "tourney"
-          + " " + command.getCommand() + arguments + " - " + command.getDescription() + "\n");
     }
 
     return sb.toString();
+  }
+
+  private void generateLine(BaseCommand command, StringBuilder sb) {
+    if (command.blockDuringMode() == BedwarsRel.getInstance().getMode()) {
+      return;
+    }
+    String arguments = "";
+    for (String arg : command.getArguments()) {
+      arguments += " {" + arg + "}";
+    }
+
+    if (command.getCommand().equalsIgnoreCase("help") ||
+        command.getCommand().equalsIgnoreCase("showteams") ||
+        command.getCommand().equalsIgnoreCase("showgroups") ||
+        command.getCommand().equalsIgnoreCase("matches")) {
+      arguments += " {page?}";
+    } else if (command.getCommand().equalsIgnoreCase("clear")) {
+      arguments += " {saves|config}";
+    } else if (command.getCommand().equalsIgnoreCase("stop")) {
+      arguments += "{soft|hard}";
+    }
+
+    sb.append(ChatColor.YELLOW + "/" + "tourney"
+        + " " + command.getCommand() + arguments + " - " + command.getDescription() + "\n");
   }
 
   @Override

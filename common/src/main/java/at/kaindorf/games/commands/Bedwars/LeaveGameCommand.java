@@ -29,6 +29,11 @@ public class LeaveGameCommand extends BaseCommand {
       return true;
     }
 
+    if (game.isDisableLeave()) {
+      sender.sendMessage(ChatColor.RED+"Leaving a game is disabled!");
+      return true;
+    }
+
     game.playerLeave(player, false);
     return true;
   }

@@ -8,6 +8,7 @@ import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.Pair;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +73,9 @@ public class GroupStage {
     List<TourneyTeam> teams = Tournament.getInstance().getTeams();
     List<TourneyGroup> groups = Tournament.getInstance().getGroups();
 
+    Bukkit.getLogger().info(teams.size()+"");
+    Bukkit.getLogger().info(groups.size()+"");
+
     if(teams.size() <= 1) {
       return;
     }
@@ -97,21 +101,7 @@ public class GroupStage {
     // generate Matches
     for(int round = 0; round < groupStageRounds; round++) {
       for(TourneyGroup g: groups) {
-        List<TourneyTeam> gTeams = g.getTeams();
-
-        if(gTeams.size()%4 == 0) {
-          int m = 0;
-          while(m < gTeams.size()/4) {
-            this.addToDoMatch(new TourneyGroupMatch(Arrays.asList(gTeams.get(m*4), gTeams.get(m*4+1), gTeams.get(m*4+2), gTeams.get(m*4+3)), round));
-            m++;
-          }
-        } else if(gTeams.size()%4 == 1) {
-          // TODO:
-        } else if(gTeams.size()%4==2) {
-          // TODO:
-        } else { //gTeams.size()%4==3
-          // TODO:
-        }
+        this.addToDoMatch(new TourneyGroupMatch(g.getTeams(), round));
       }
     }
 

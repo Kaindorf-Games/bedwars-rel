@@ -145,7 +145,7 @@ public class PlayerStorage {
     }
 
     // Leave game (Slimeball)
-    if (game.getMatch() == null) {
+    if (game.getMatch() == null && !game.isDisableLeave()) {
       ItemStack leaveGame = new ItemStack(Material.SLIME_BALL, 1);
       im = leaveGame.getItemMeta();
       im.setDisplayName(BedwarsRel._l(this.player, "lobby.leavegame"));
