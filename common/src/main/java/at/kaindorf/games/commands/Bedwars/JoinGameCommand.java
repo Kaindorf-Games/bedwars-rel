@@ -9,6 +9,9 @@ import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -97,8 +100,8 @@ public class JoinGameCommand extends BaseCommand {
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.TOURNAMENT;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 
 }

@@ -66,7 +66,7 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
   }
 
   private void generateLine(BaseCommand command, StringBuilder sb) {
-    if (command.blockDuringMode() == BedwarsRel.getInstance().getMode()) {
+    if (command.blockDuringMode().contains(BedwarsRel.getInstance().getMode())) {
       return;
     }
     String arguments = "";

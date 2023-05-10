@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class TeamPauseCommand extends BaseCommand implements ICommand {
@@ -82,8 +84,8 @@ public class TeamPauseCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.NORMAL;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 
   protected boolean pauseValue() {

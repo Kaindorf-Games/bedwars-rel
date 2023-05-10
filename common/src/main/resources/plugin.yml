@@ -24,6 +24,8 @@ commands:
     description: Base command for all Tournament commands
     usage: /<command> help
     permission: tourney.player
+    aliases:
+      - t
 
 permissions:
   bw.base:

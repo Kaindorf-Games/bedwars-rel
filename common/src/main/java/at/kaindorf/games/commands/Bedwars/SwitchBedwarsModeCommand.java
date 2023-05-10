@@ -30,6 +30,8 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
         in = "tournament";
       } else if(in.equalsIgnoreCase("n")) {
         in = "normal";
+      } else if (in.equalsIgnoreCase("l")) {
+        in = "lan";
       }
       try {
         mode = BedwarsRel.Mode.valueOf(in.toUpperCase());
@@ -53,7 +55,7 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
 
   @Override
   public String[] getArguments() {
-    return new String[]{"<normal|tournament>"};
+    return new String[]{"<normal|tournament|lan>"};
   }
 
   @Override
@@ -63,7 +65,7 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "switches between normal and Tournament Mode";
+    return "switches between modes";
   }
 
   @Override

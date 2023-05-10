@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
@@ -88,7 +89,7 @@ public class AutoConnectCommand extends BaseCommand {
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.TOURNAMENT;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 }

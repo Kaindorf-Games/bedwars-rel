@@ -9,6 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ContinueStoppedTournamentCommand extends BaseCommand implements ICommand {
 
@@ -58,7 +60,7 @@ public class ContinueStoppedTournamentCommand extends BaseCommand implements ICo
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.NORMAL;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 }

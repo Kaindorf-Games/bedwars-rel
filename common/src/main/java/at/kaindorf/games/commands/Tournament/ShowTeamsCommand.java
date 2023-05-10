@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ShowTeamsCommand extends BaseCommand implements ICommand {
@@ -91,7 +92,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.NORMAL;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 }

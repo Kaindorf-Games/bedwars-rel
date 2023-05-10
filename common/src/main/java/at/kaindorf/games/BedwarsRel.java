@@ -986,7 +986,7 @@ public class BedwarsRel extends JavaPlugin {
   }
 
   public enum Mode {
-    TOURNAMENT, NORMAL
+    TOURNAMENT, NORMAL, LAN
   }
 
 }

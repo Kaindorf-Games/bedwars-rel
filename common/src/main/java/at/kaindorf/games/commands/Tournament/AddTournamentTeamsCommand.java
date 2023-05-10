@@ -17,6 +17,8 @@ import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
@@ -116,7 +118,7 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public BedwarsRel.Mode blockDuringMode() {
-    return BedwarsRel.Mode.NORMAL;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Arrays.asList(BedwarsRel.Mode.NORMAL);
   }
 }

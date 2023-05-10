@@ -2,7 +2,10 @@ package at.kaindorf.games.commands;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.utils.ChatWriter;
-import java.util.ArrayList;
+
+import java.lang.reflect.Array;
+import java.util.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,8 +54,8 @@ public abstract class BaseCommand implements ICommand {
   }
 
 
-  public BedwarsRel.Mode blockDuringMode() {
-    return null;
+  public List<BedwarsRel.Mode> blockDuringMode() {
+    return Collections.emptyList();
   }
 
 }
