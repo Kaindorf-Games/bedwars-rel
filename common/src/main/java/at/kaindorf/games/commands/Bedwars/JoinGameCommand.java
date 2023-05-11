@@ -101,7 +101,7 @@ public class JoinGameCommand extends BaseCommand {
 
   @Override
   public List<BedwarsRel.Mode> blockDuringMode() {
-    return Arrays.asList(BedwarsRel.Mode.NORMAL);
+    return Arrays.asList(BedwarsRel.Mode.TOURNAMENT, BedwarsRel.Mode.LAN);
   }
 
 }

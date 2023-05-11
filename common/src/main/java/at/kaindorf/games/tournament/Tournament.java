@@ -35,6 +35,8 @@ public class Tournament {
   private int qualifiedTeams;
   private boolean rematchKo, rematchFinal;
 
+  private int lanTeamSizes = 2;
+
   public static Tournament getInstance() {
     if (instance == null) {
       instance = new Tournament();
@@ -90,15 +92,15 @@ public class Tournament {
     groups.add(group);
   }
 
-  public void addTeam(String name) throws  TournamentEntityExistsException {
-    this.addTeam(name, "");
+  public TourneyTeam addTeam(String name) throws  TournamentEntityExistsException {
+    return this.addTeam(name, "");
   }
 
-  public void addTeam(String name, String groupName) throws TournamentEntityExistsException {
-    this.addTeam(TourneyTeam.currentId+1, name, groupName);
+  public TourneyTeam addTeam(String name, String groupName) throws TournamentEntityExistsException {
+    return this.addTeam(TourneyTeam.currentId+1, name, groupName);
   }
 
-  public void addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
+  public TourneyTeam addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
       throw new TournamentEntityExistsException("Team " + name + " exists already!!!");
@@ -108,6 +110,7 @@ public class Tournament {
     if (!groupName.isEmpty()) {
       this.getGroup(groupName).addTeam(team);
     }
+    return team;
   }
 
   public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException {
