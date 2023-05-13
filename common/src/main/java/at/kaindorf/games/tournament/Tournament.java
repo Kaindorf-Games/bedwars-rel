@@ -2,7 +2,10 @@ package at.kaindorf.games.tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.events.TournamentStartEvent;
-import at.kaindorf.games.exceptions.TournamentEntityExistsException;
+import at.kaindorf.games.exceptions.exist.TournamentEntityExistsException;
+import at.kaindorf.games.exceptions.exist.TourneyPlayerExistsException;
+import at.kaindorf.games.exceptions.exist.TourneyTeamExistsException;
+import at.kaindorf.games.exceptions.missing.TournamentEntityMissingException;
 import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.statistics.PlayerStatistic;
 import at.kaindorf.games.tournament.models.*;
@@ -11,7 +14,6 @@ import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.utils.Loader;
 import at.kaindorf.games.utils.Pair;
 import at.kaindorf.games.utils.Saver;
-import at.kaindorf.games.utils.UsernameFetcher;
 import lombok.Data;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
@@ -72,8 +74,8 @@ public class Tournament {
             Integer.parseInt(playerMap.get("kills")),
             Integer.parseInt(playerMap.get("destroyedBeds")));
       }
-    } catch (TournamentEntityExistsException e) {
-      Bukkit.getLogger().log(Level.SEVERE, e.getMessage());
+    } catch (TournamentEntityExistsException | TournamentEntityMissingException ex) {
+      Bukkit.getLogger().log(Level.SEVERE, ex.getMessage());
       this.clear();
     }
 
@@ -103,7 +105,7 @@ public class Tournament {
   public TourneyTeam addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Team " + name + " exists already!!!");
+      throw new TourneyTeamExistsException(name);
     }
     TourneyTeam team = new TourneyTeam(id, name);
     teams.add(team);
@@ -113,22 +115,27 @@ public class Tournament {
     return team;
   }
 
-  public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException {
+  public void addPlayer(String uuid, String teamName) throws TournamentEntityExistsException, TournamentEntityMissingException {
     addPlayer(uuid, teamName, 0, 0);
   }
 
-  public void addPlayer(String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
+  public void addPlayer(String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException, TournamentEntityMissingException {
     addPlayer(TourneyPlayer.currentId + 1, uuid, teamName, kills, destroyedBeds);
   }
 
-  public void addPlayer(int id, String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException {
+  public void addPlayer(int id, String uuid, String teamName, int kills, int destroyedBeds) throws TournamentEntityExistsException, TournamentEntityMissingException {
     Optional<TourneyPlayer> optional = players.stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Player " + uuid + " exists already!!!");
+      throw new TourneyPlayerExistsException(uuid);
     }
     TourneyPlayer player = new TourneyPlayer(id, uuid, null, kills, destroyedBeds);
-    players.add(player);
-    this.getTeam(teamName).addPlayer(player);
+    Optional<TourneyTeam> team = this.getTeam(teamName);
+    if(team.isPresent()) {
+      team.get().addPlayer(player);
+      players.add(player);
+    } else {
+      throw new TournamentEntityMissingException("Team "+ teamName+ " doesn't exist");
+    }
   }
 
 
@@ -136,8 +143,8 @@ public class Tournament {
     return groups.stream().filter(g -> g.getName().equals(name)).findFirst().get();
   }
 
-  private TourneyTeam getTeam(String name) {
-    return teams.stream().filter(t -> t.getName().equals(name)).findFirst().get();
+  private Optional<TourneyTeam> getTeam(String name) {
+    return teams.stream().filter(t -> t.getName().equals(name)).findFirst();
   }
 
   public void clear() {
@@ -398,5 +405,9 @@ public class Tournament {
     this.identifyOnlinePlayers();
     teams.removeIf(t -> t.numberOfPlayersOnline() == 0);
 
+  }
+
+  public void removeTeam(String name) {
+    this.teams.removeIf(t -> t.getName().equals(name));
   }
 }

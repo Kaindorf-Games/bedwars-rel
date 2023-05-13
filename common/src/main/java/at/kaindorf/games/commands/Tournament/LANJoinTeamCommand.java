@@ -4,7 +4,6 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.exceptions.exist.TournamentEntityExistsException;
-import at.kaindorf.games.exceptions.exist.TourneyPlayerExistsException;
 import at.kaindorf.games.exceptions.missing.TournamentEntityMissingException;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyTeam;
@@ -16,10 +15,11 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public class LANCreateTeamCommand extends BaseCommand implements ICommand {
+public class LANJoinTeamCommand extends BaseCommand implements ICommand {
 
-    public LANCreateTeamCommand(BedwarsRel plugin) {
+    public LANJoinTeamCommand(BedwarsRel plugin) {
         super(plugin);
     }
 
@@ -29,40 +29,46 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
             ChatWriter.wrongPermissionMessage(sender);
             return true;
         }
-        TourneyTeam team = null;
-        try {
-            team = Tournament.getInstance().addTeam(args.get(0));
-            Tournament.getInstance().addPlayer(Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString(), team.getName());
-            sender.sendMessage(ChatColor.GREEN + "Team created");
-        } catch (TourneyPlayerExistsException ex) {
-            Tournament.getInstance().removeTeam(team.getName());
-            sender.sendMessage(ChatColor.RED+ex.getMessage());
+        Optional<TourneyTeam> team = Tournament.getInstance().getTeamPerName(args.get(0));
+        if (!team.isPresent()) {
+            sender.sendMessage(ChatColor.RED+"Team doesn't exist");
+            return true;
+        }
+
+        if (team.get().getPlayers().size() >= Tournament.getInstance().getLanTeamSizes()) {
+            sender.sendMessage(ChatColor.RED+"Team is full");
+            return true;
+        }
+
+        try
+        {
+            Tournament.getInstance().addPlayer(Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString(), args.get(0));
+            sender.sendMessage(ChatColor.GREEN+ "Team joined");
         } catch (TournamentEntityExistsException | TournamentEntityMissingException ex) {
             sender.sendMessage(ChatColor.RED+ex.getMessage());
         }
-
 
         return true;
     }
 
     @Override
     public String[] getArguments() {
-        return new String[]{"name"};
+        return new String[]{"team"};
     }
 
     @Override
     public String getCommand() {
-        return "create";
+        return "join";
     }
 
     @Override
     public String getDescription() {
-        return "Create your own custom team";
+        return "join other team manually";
     }
 
     @Override
     public String getName() {
-        return "create";
+        return "join";
     }
 
     @Override

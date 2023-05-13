@@ -5,10 +5,13 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
+import net.minecraft.server.v1_8_R3.ExceptionInvalidNumber;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
 
@@ -23,11 +26,15 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
             return true;
         }
 
-        int teams = Tournament.getInstance().getLanTeamSizes();;
+        int teams;
         try {
             teams = Integer.parseInt(args.get(0));
-        } catch (NumberFormatException ex) {
+            if (teams <= 0) {
+                throw new Exception();
+            }
+        } catch (Exception ex) {
             sender.sendMessage(ChatColor.RED+"Team size must be a positive integer");
+            return true;
         }
         Tournament.getInstance().setLanTeamSizes(teams);
 
@@ -57,5 +64,10 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
     @Override
     public String getPermission() {
         return "manage";
+    }
+
+    @Override
+    public List<BedwarsRel.Mode> blockDuringMode() {
+        return Arrays.asList(BedwarsRel.Mode.NORMAL, BedwarsRel.Mode.TOURNAMENT);
     }
 }
