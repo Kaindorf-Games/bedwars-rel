@@ -3,10 +3,8 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.exceptions.exist.TournamentEntityExistsException;
-import at.kaindorf.games.exceptions.exist.TourneyPlayerExistsException;
-import at.kaindorf.games.exceptions.missing.TournamentEntityMissingException;
 import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.Bukkit;
@@ -16,10 +14,10 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public class LANCreateTeamCommand extends BaseCommand implements ICommand {
-
-    public LANCreateTeamCommand(BedwarsRel plugin) {
+public class LANLeaveTeamCommand extends BaseCommand implements ICommand {
+    public LANLeaveTeamCommand(BedwarsRel plugin) {
         super(plugin);
     }
 
@@ -31,20 +29,25 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
         }
 
         if (Tournament.getInstance().getGroups().size() > 0) {
-            sender.sendMessage(ChatColor.RED + "Tournament has already started! Creating a team is not possible anymore");
+            sender.sendMessage(ChatColor.RED + "Tournament has already started! Leaving a team is not possible anymore");
             return true;
         }
 
-        TourneyTeam team = null;
-        try {
-            team = Tournament.getInstance().addTeam(args.get(0));
-            Tournament.getInstance().addPlayer(Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString(), team.getName());
-            sender.sendMessage(ChatColor.GREEN + "Team created");
-        } catch (TourneyPlayerExistsException ex) {
-            Tournament.getInstance().removeTeam(team.getName());
-            sender.sendMessage(ChatColor.RED+ex.getMessage());
-        } catch (TournamentEntityExistsException | TournamentEntityMissingException ex) {
-            sender.sendMessage(ChatColor.RED+ex.getMessage());
+        String uuid = Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString();
+        Optional<TourneyPlayer> playerOptional = Tournament.getInstance().getPlayers().stream().filter(p -> p.getUuid().equals(uuid)).findFirst();
+
+        if(playerOptional.isPresent()) {
+            TourneyPlayer player = playerOptional.get();
+            Tournament.getInstance().getPlayers().remove(player);
+
+            if(player.getTeam().getPlayers().size() == 1) {
+                Tournament.getInstance().removeTeam(player.getTeam().getName());
+            } else {
+                player.getTeam().getPlayers().remove(player);
+            }
+            sender.sendMessage(ChatColor.GREEN + "You left the team");
+        } else {
+            sender.sendMessage(ChatColor.RED + "You aren't in any team");
         }
 
 
@@ -53,22 +56,22 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String[] getArguments() {
-        return new String[]{"name"};
+        return new String[0];
     }
 
     @Override
     public String getCommand() {
-        return "create";
+        return "leaveTeam";
     }
 
     @Override
     public String getDescription() {
-        return "Create your own custom team";
+        return "leave team manually";
     }
 
     @Override
     public String getName() {
-        return "create";
+        return "leaveTeam";
     }
 
     @Override

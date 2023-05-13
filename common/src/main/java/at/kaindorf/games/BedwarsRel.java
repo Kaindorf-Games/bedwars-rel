@@ -868,6 +868,7 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new LANCreateTeamCommand(this));
     this.tourneyCommands.add(new LANSetTeamSizeCommand(this));
     this.tourneyCommands.add(new LANJoinTeamCommand(this));
+    this.tourneyCommands.add(new LANLeaveTeamCommand(this));
     this.getCommand("tourney").setExecutor(executor);
   }
 

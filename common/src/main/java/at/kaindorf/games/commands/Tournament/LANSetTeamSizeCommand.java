@@ -37,6 +37,7 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
             return true;
         }
         Tournament.getInstance().setLanTeamSizes(teams);
+        sender.sendMessage(ChatColor.GREEN+"Team size set to "+teams);
 
         return true;
     }

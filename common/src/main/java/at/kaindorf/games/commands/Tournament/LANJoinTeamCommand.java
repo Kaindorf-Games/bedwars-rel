@@ -29,6 +29,12 @@ public class LANJoinTeamCommand extends BaseCommand implements ICommand {
             ChatWriter.wrongPermissionMessage(sender);
             return true;
         }
+
+        if (Tournament.getInstance().getGroups().size() > 0) {
+            sender.sendMessage(ChatColor.RED + "Tournament has already started! Joining a team is not possible anymore");
+            return true;
+        }
+
         Optional<TourneyTeam> team = Tournament.getInstance().getTeamPerName(args.get(0));
         if (!team.isPresent()) {
             sender.sendMessage(ChatColor.RED+"Team doesn't exist");
@@ -58,7 +64,7 @@ public class LANJoinTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "join";
+        return "joinTeam";
     }
 
     @Override
@@ -68,7 +74,7 @@ public class LANJoinTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getName() {
-        return "join";
+        return "joinTeam";
     }
 
     @Override
