@@ -4,6 +4,7 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.events.TournamentStartEvent;
+import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyProperties;
 import at.kaindorf.games.tournament.models.TourneyMatch;
@@ -28,15 +29,7 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    if(Tournament.getInstance().getTeams().size() == 0) {
-      sender.sendMessage(ChatColor.YELLOW +"You have to add teams first");
-      return true;
-    }
-
-    if(Tournament.getInstance().isTournamentRunning()) {
-      sender.sendMessage(ChatColor.YELLOW +"Tournament has already started");
-      return true;
-    }
+    if(!this.checkIfTournamentCanBeStarted(sender)) return true;
 
     int groupStageRounds = 1, qualifiedTeams = 0, groupSize = 0;
     boolean rematchKo = false, rematchFinal = false;
@@ -71,11 +64,25 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     return true;
   }
 
+  private boolean checkIfTournamentCanBeStarted(CommandSender sender) {
+    if(Tournament.getInstance().getTeams().size() == 0) {
+      sender.sendMessage(ChatColor.YELLOW +"You have to add teams first");
+      return false;
+    }
+
+    if(Tournament.getInstance().isTournamentRunning()) {
+      sender.sendMessage(ChatColor.YELLOW +"Tournament has already started");
+      return false;
+    }
+
+    return true;
+  }
+
   private void validateInput(int rounds, int qualifiedTeams, int groupSize, int groupStageRounds) throws Exception {
     if(rounds <= 0 || qualifiedTeams <=0 || groupSize < 2 || groupStageRounds < 1)
       throw new Exception("Invalid Inputs");
 
-    if(BedwarsRel.getInstance().getGameManager().getGames().stream().map(g -> g.getTeams().size()).noneMatch(s -> s >= groupSize))
+    if(BedwarsRel.getInstance().getGameManager().getGames().stream().filter(g -> g.getState() != GameState.STOPPED).map(g -> g.getTeams().size()).noneMatch(s -> s >= groupSize))
       throw new Exception("At least one map has to support the group size");
   }
 

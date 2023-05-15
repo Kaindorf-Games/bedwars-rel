@@ -43,4 +43,8 @@ public class TourneyMatch {
   public static void resetId() {
     currentId = 0;
   }
+
+  public int getMaxPlayersOfTeam() {
+    return this.teams.stream().mapToInt(t -> t.getPlayers().size()).max().orElse(0);
+  }
 }

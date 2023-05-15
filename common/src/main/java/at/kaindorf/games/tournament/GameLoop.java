@@ -58,16 +58,8 @@ public class GameLoop extends BukkitRunnable {
     GroupStage groupStage = tournament.getGroupStage();
     KoStage koStage = tournament.getKoStage();
 
-    Bukkit.getLogger().info("-------");
-//    getWaitingGames().forEach(g -> Bukkit.getLogger().info(g.getName()));
-//    groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).forEach(m -> Bukkit.getLogger().info(m.toString()));
-//    Bukkit.getLogger().info("Groupstage finished: "+groupStage.isFinished());
-//    Bukkit.getLogger().info("KoStage value: "+(koStage==null));
-//    Bukkit.getLogger().info("KoStage finished: "+(koStage != null && koStage.isFinished()));
 
     if (!groupStage.isFinished()) {
-      Bukkit.getLogger().info("Group Stage");
-
       List<TourneyMatch> matches = groupStage.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
       if(TourneyProperties.playInRounds) {
         int minRound = Collections.min(groupStage.getMatchesToDo().stream().map(TourneyGroupMatch::getRound).collect(Collectors.toList()));
@@ -76,11 +68,9 @@ public class GameLoop extends BukkitRunnable {
       removeMatchesWithOneTeam(matches, true);
       tryToStartGames(matches, getWaitingGames());
     } else if (koStage == null) {
-      Bukkit.getLogger().info("transition");
       List<TourneyTeam> teams = groupStage.getQualifiedTeamsForKoRound(qualifiedTeams);
       tournament.generateKoMatches(teams, 2, rematchKo, rematchFinal);
     } else if (!koStage.isFinished()) {
-      Bukkit.getLogger().info("Ko Stage");
       KoRound koRound = koStage.currentKoRound();
       if (koRound.isFinished()) {
         koStage.nextKoRound();
@@ -109,7 +99,8 @@ public class GameLoop extends BukkitRunnable {
     int index = 0;
     while (waitingGames.size() > 0 && index < matches.size()) {
       TourneyMatch match = matches.get(index);
-      Optional<Game> gameOptional = waitingGames.stream().filter(g-> g.getTeams().size() >= match.getTeams().size()).findFirst();
+      int maxPlayers = match.getMaxPlayersOfTeam();
+      Optional<Game> gameOptional = waitingGames.stream().filter(g-> g.getTeams().size() >= match.getTeams().size() && g.getTeams().get(g.getTeams().keySet().iterator().next()).getMaxPlayers() >= maxPlayers).findFirst();
 
       if (!areTeamsReady(match.getTeams()) || !gameOptional.isPresent()) {
         index++;
@@ -185,7 +176,7 @@ public class GameLoop extends BukkitRunnable {
   }
 
   private void stopAllGames() {
-    for (Game g : games) {
+    for (Game g : games.stream().filter(ga -> ga.getState() != GameState.STOPPED).collect(Collectors.toList())) {
       if (g.getMatch() != null) {
         g.getMatch().setAborted(true);
       }
