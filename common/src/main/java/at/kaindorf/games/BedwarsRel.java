@@ -3,6 +3,8 @@ package at.kaindorf.games;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.Bedwars.*;
 import at.kaindorf.games.commands.Tournament.*;
+import at.kaindorf.games.commands.development.DevHelpCommand;
+import at.kaindorf.games.commands.development.DevKillAllCommand;
 import at.kaindorf.games.database.DatabaseManager;
 import at.kaindorf.games.game.*;
 import at.kaindorf.games.listener.*;
@@ -52,6 +54,7 @@ public class BedwarsRel extends JavaPlugin {
   private Bugsnag bugsnag;
   private ArrayList<BaseCommand> bwCommands = new ArrayList<>();
   private ArrayList<BaseCommand> tourneyCommands = new ArrayList<>();
+  private ArrayList<BaseCommand> devCommands = new ArrayList<>();
   private Package craftbukkit = null;
   private DatabaseManager dbManager = null;
   @Getter
@@ -73,7 +76,9 @@ public class BedwarsRel extends JavaPlugin {
   @Getter
   private BukkitTask gameLoopTask = null;
   @Getter
-  private Mode mode = Mode.LAN;
+  private Mode mode = Mode.TOURNAMENT;
+  @Getter
+  private final boolean isDevMode = false;
 
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
@@ -275,6 +280,11 @@ public class BedwarsRel extends JavaPlugin {
   @SuppressWarnings("unchecked")
   public ArrayList<BaseCommand> getBedwarsCommands() {
     return (ArrayList<BaseCommand>) this.bwCommands.clone();
+  }
+
+  @SuppressWarnings("unchecked")
+  public ArrayList<BaseCommand> getDevCommands() {
+    return (ArrayList<BaseCommand>) this.devCommands.clone();
   }
 
   @SuppressWarnings("unchecked")
@@ -870,6 +880,12 @@ public class BedwarsRel extends JavaPlugin {
     this.tourneyCommands.add(new LANJoinTeamCommand(this));
     this.tourneyCommands.add(new LANLeaveTeamCommand(this));
     this.getCommand("tourney").setExecutor(executor);
+
+    if(this.isDevMode) {
+      this.devCommands.add(new DevHelpCommand(this));
+      this.devCommands.add(new DevKillAllCommand(this));
+    }
+    this.getCommand("dev").setExecutor(executor);
   }
 
   private void registerConfigurationClasses() {

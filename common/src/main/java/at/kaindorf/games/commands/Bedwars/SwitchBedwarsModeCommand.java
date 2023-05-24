@@ -46,7 +46,7 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
       }
 
       BedwarsRel.getInstance().changeModeTo(mode);
-      sender.sendMessage(ChatColor.GREEN + "Mode change complete");
+      sender.sendMessage(ChatColor.GREEN + "Mode changed to "+mode.toString().toLowerCase());
       return true;
     }
 

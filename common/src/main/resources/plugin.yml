@@ -26,6 +26,11 @@ commands:
     permission: tourney.player
     aliases:
       - t
+  dev:
+    description: Command for development purposes
+    usage: /<command> help
+    permission-message: You ain't a dev
+    permission: dev.developer
 
 permissions:
   bw.base:
@@ -58,3 +63,7 @@ permissions:
   tourney.player:
     description: Allows players to use show commands
     default: true
+  dev.developer:
+    description: Makes you a dev
+    default: op
+

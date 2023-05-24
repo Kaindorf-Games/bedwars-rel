@@ -58,4 +58,8 @@ public abstract class BaseCommand implements ICommand {
     return Collections.emptyList();
   }
 
+  public boolean isDevCommand() {
+    return false;
+  }
+
 }
