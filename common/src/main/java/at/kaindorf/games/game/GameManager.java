@@ -1,5 +1,6 @@
 package at.kaindorf.games.game;
 
+import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -7,10 +8,8 @@ import at.kaindorf.games.BedwarsRel;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -100,6 +99,11 @@ public class GameManager {
   public Game getGameOfPlayer(Player player) {
     return this.gamePlayer.get(player);
   }
+
+  public Optional<Game> getGameWithTeam(TourneyTeam team) {
+    return this.games.stream().filter(g -> g.getMatch().getTeams().stream().anyMatch(t -> t.getId() == team.getId())).findFirst();
+  }
+
 
   public int getGamePlayerAmount() {
     return this.gamePlayer.size();

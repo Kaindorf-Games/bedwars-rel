@@ -1243,6 +1243,7 @@ public class Game {
     }
 
     if (this.isSpectator(p)) {
+      this.removeSpectator(p);
       if (!this.getCycle().isEndGameRunning()) {
         for (Player player : this.getPlayers()) {
           if (player.equals(p)) {
@@ -1860,6 +1861,38 @@ public class Game {
     }
   }
 
+    public void removeSpectator(Player player) {
+        freePlayers.removeIf(fp -> fp.getUniqueId().equals(player.getUniqueId()));
+
+        this.getPlayerStorage(player).clean();
+        this.setPlayerGameMode(player);
+        this.setPlayerVisibility(player);
+
+
+        Location l = this.getMainLobby();
+        if(l == null) {
+            l = this.getLobby();
+        }
+
+        final Location location = l;
+
+        if (BedwarsRel.getInstance().isBungee()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.teleport(location);
+                }
+            }.runTaskLater(BedwarsRel.getInstance(), 10L);
+
+        } else {
+            player.teleport(location);
+        }
+
+        player.updateInventory();
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
+    }
+
   public void toSpectator(Player player) {
     final Player p = player;
 
@@ -1877,6 +1910,10 @@ public class Game {
     }
 
     final Location location = this.getPlayerTeleportLocation(p);
+
+    if(this.getPlayerSettings(p) == null) {
+      this.addPlayerSettings(p);
+    }
 
     if (!p.getLocation().getWorld().equals(location.getWorld())) {
       this.getPlayerSettings(p).setTeleporting(true);
