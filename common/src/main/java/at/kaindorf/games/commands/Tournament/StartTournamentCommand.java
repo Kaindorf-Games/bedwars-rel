@@ -4,7 +4,9 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.events.TournamentStartEvent;
+import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
+import at.kaindorf.games.game.Team;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyProperties;
 import at.kaindorf.games.tournament.models.TourneyMatch;
@@ -16,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StartTournamentCommand extends BaseCommand implements ICommand {
   public StartTournamentCommand(BedwarsRel plugin) {
@@ -82,7 +85,9 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
     if(rounds <= 0 || qualifiedTeams <=0 || groupSize < 2 || groupStageRounds < 1)
       throw new Exception("Invalid Inputs");
 
-    if(BedwarsRel.getInstance().getGameManager().getGames().stream().filter(g -> g.getState() != GameState.STOPPED).map(g -> g.getTeams().size()).noneMatch(s -> s >= groupSize))
+    List<Game> games = BedwarsRel.getInstance().getGameManager().getGames().stream().filter(g -> g.getState() != GameState.STOPPED && g.getTeams().size() >= groupSize).collect(Collectors.toList());
+    int maxTeamSize = Tournament.getInstance().getTeams().stream().mapToInt(t -> t.getPlayers().size()).max().orElse(0);
+    if(games.stream().noneMatch(g -> new ArrayList<>(g.getTeams().values()).get(0).getMaxPlayers() >= maxTeamSize))
       throw new Exception("At least one map has to support the group size");
   }
 

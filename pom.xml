@@ -40,6 +40,7 @@
     <module>v1_8_r3</module>
     <module>common</module>
     <module>plugin</module>
+    <module>WebSocketCom</module>
   </modules>
 
   <repositories>

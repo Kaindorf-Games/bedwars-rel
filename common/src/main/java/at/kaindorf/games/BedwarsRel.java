@@ -710,6 +710,8 @@ public class BedwarsRel extends JavaPlugin {
       this.holographicInteraction.unloadHolograms();
     }
 
+    MinecraftWebSocketServer.stopServer();
+
   }
 
   @Override
@@ -795,6 +797,9 @@ public class BedwarsRel extends JavaPlugin {
     // Tournament mode
     loadTournamentProps();
     Tournament.getInstance();
+
+    // websocket
+    MinecraftWebSocketServer.startServer();
   }
 
   @SneakyThrows
