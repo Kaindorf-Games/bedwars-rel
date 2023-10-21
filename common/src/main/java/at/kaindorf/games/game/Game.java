@@ -1527,16 +1527,15 @@ public class Game {
   }
 
   public void setLobby(Player sender) {
-    Location lobby = sender.getLocation();
+//    Location lobby = sender.getLocation();
+//    if (this.region != null && this.region.getWorld().equals(lobby.getWorld())) {
+//      sender.sendMessage(
+//          ChatWriter
+//              .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.lobbyongameworld")));
+//      return;
+//    }
 
-    if (this.region != null && this.region.getWorld().equals(lobby.getWorld())) {
-      sender.sendMessage(
-          ChatWriter
-              .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.lobbyongameworld")));
-      return;
-    }
-
-    this.lobby = lobby;
+    this.lobby = sender.getLocation();
     sender.sendMessage(
         ChatWriter.pluginMessage(ChatColor.GREEN + BedwarsRel._l(sender, "success.lobbyset")));
   }
