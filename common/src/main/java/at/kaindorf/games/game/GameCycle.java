@@ -1,6 +1,7 @@
 package at.kaindorf.games.game;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.communication.dto.Leaderboard;
 import at.kaindorf.games.events.BedwarsGameOverEvent;
 import at.kaindorf.games.events.BedwarsPlayerKilledEvent;
 import at.kaindorf.games.shop.Specials.RescuePlatform;
@@ -22,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class GameCycle {
 
@@ -125,6 +127,8 @@ public abstract class GameCycle {
     if (BedwarsRel.getInstance().statisticsEnabled()) {
       diePlayer = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(player);
 
+      if(BedwarsRel.getInstance().isLeaderBoardActive()) Leaderboard.getInstance().addAttribute(String.valueOf(player.getUniqueId()), "Deaths");
+
       boolean onlyOnBedDestroy =
           BedwarsRel.getInstance().getBooleanConfig("statistics.bed-destroyed-kills", false);
 
@@ -134,7 +138,13 @@ public abstract class GameCycle {
             .getInstance().getIntConfig("statistics.scores.die", 0));
       }
 
-      if (killer != null) {
+      if (BedwarsRel.getInstance().isLeaderBoardActive() && killer != null) {
+        if(teamIsDead) {
+          Leaderboard.getInstance().addAttribute(String.valueOf(killer.getUniqueId()), "Final Kills");
+        } else {
+          Leaderboard.getInstance().addAttribute(String.valueOf(killer.getUniqueId()), "Kills");
+        }
+
         if ((onlyOnBedDestroy && teamIsDead) || !onlyOnBedDestroy) {
           killerPlayer = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(killer);
           if (killerPlayer != null) {
@@ -305,6 +315,12 @@ public abstract class GameCycle {
 
     if (overEvent.isCancelled()) {
       return;
+    }
+
+    // Leaderboard Stats
+    if(BedwarsRel.getInstance().isLeaderBoardActive() && winner != null) {
+      List<String> uuids = winner.getPlayers().stream().map(p -> String.valueOf(p.getUniqueId())).collect(Collectors.toList());
+      Leaderboard.getInstance().addAttribute(uuids, "Wins");
     }
 
     this.getGame().stopWorkers();

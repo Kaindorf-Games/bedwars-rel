@@ -1,5 +1,6 @@
 package at.kaindorf.games.game;
 
+import at.kaindorf.games.communication.dto.Leaderboard;
 import at.kaindorf.games.shop.NewItemShop;
 import at.kaindorf.games.shop.Specials.SpecialItem;
 import at.kaindorf.games.tournament.Tournament;
@@ -766,16 +767,6 @@ public class Game {
       return false;
     }
 
-    // add destroyed Bed to teamstatistics
-    if (this.getMatch() != null) {
-      Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
-      if (tourneyTeam.isPresent()) {
-        Optional<TourneyGameStatistic> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
-        statistics.ifPresent(TourneyGameStatistic::addDestroyedBed);
-        TournamentLogger.info().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
-      }
-    }
-
     Team bedDestroyTeam = null;
     Block bedBlock = team.getHeadTarget();
 
@@ -817,6 +808,18 @@ public class Game {
       }
 
       this.dropTargetBlock(block);
+    }
+
+    Leaderboard.getInstance().addAttribute(String.valueOf(p.getUniqueId()), "Beds Destroyed");
+
+    // add destroyed Bed to teamstatistics
+    if (this.getMatch() != null) {
+      Optional<TourneyTeam> tourneyTeam = Tournament.getInstance().getTourneyTeamOfPlayer(p);
+      if (tourneyTeam.isPresent()) {
+        Optional<TourneyGameStatistic> statistics = tourneyTeam.get().getStatistics().stream().filter(st -> st.getMatch() == this.getMatch()).findFirst();
+        statistics.ifPresent(TourneyGameStatistic::addDestroyedBed);
+        TournamentLogger.info().logBedDestroyed(p.getDisplayName(), team.getDisplayName());
+      }
     }
 
     // set statistics

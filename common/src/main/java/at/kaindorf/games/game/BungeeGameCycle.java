@@ -1,5 +1,6 @@
 package at.kaindorf.games.game;
 
+import at.kaindorf.games.communication.dto.Leaderboard;
 import at.kaindorf.games.events.BedwarsGameEndEvent;
 import at.kaindorf.games.utils.ChatWriter;
 import at.kaindorf.games.utils.Utils;
@@ -12,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -289,6 +292,10 @@ public class BungeeGameCycle extends GameCycle {
       }
     }
 
+    if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+      Leaderboard.getInstance().newJoinedGame(String.valueOf(player.getUniqueId()), true);
+    }
+
     return true;
   }
 
@@ -300,6 +307,10 @@ public class BungeeGameCycle extends GameCycle {
 
     if (this.getGame().getState() == GameState.RUNNING && !this.getGame().isStopping()) {
       this.checkGameOver();
+    }
+
+    if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+      Leaderboard.getInstance().newJoinedGame(String.valueOf(player.getUniqueId()), false);
     }
   }
 

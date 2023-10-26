@@ -76,9 +76,12 @@ public class BedwarsRel extends JavaPlugin {
   @Getter
   private BukkitTask gameLoopTask = null;
   @Getter
-  private Mode mode = Mode.TOURNAMENT;
+  private Mode mode = Mode.NORMAL;
   @Getter
   private final boolean isDevMode = false;
+  @Getter
+  @Setter
+  private boolean leaderBoardActive = false;
 
 
   public static String _l(CommandSender commandSender, String key, String singularValue,
@@ -856,6 +859,11 @@ public class BedwarsRel extends JavaPlugin {
     this.bwCommands.add(new ShowBedwarsModeCommand(this));
     this.bwCommands.add(new MovePlayersIntoGame(this));
     this.bwCommands.add(new SpectateGameCommand(this));
+    this.bwCommands.add(new StartLeaderboardCommand(this));
+    this.bwCommands.add(new StopLeaderboardCommand(this));
+    this.bwCommands.add(new ClearLeaderboardCommand(this));
+    this.bwCommands.add(new LeaderboardWaitCommand(this));
+    this.bwCommands.add(new UpdateLeaderboardCommand(this));
     this.getCommand("bw").setExecutor(executor);
 
     // Tournament Commands
