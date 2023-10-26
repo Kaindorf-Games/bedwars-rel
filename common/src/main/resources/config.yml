@@ -971,3 +971,8 @@ tourney:
   pointsForBed: 2
 
   playerInRounds: false
+
+leaderboard:
+  api-url: http://192.168.0.130:8000
+  username: game
+  password: 1234

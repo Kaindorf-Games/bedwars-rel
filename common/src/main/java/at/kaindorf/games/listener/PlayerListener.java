@@ -1,6 +1,8 @@
 package at.kaindorf.games.listener;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.communication.dto.Leaderboard;
+import at.kaindorf.games.communication.dto.LeaderboardPlayer;
 import at.kaindorf.games.events.BedwarsOpenShopEvent;
 import at.kaindorf.games.events.BedwarsPlayerSetNameEvent;
 import at.kaindorf.games.game.BungeeGameCycle;
@@ -663,6 +665,10 @@ public class PlayerListener extends BaseListener {
 
     if (BedwarsRel.getInstance().statisticsEnabled()) {
       BedwarsRel.getInstance().getPlayerStatisticManager().loadStatistic(player.getUniqueId());
+    }
+
+    if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+      Leaderboard.getInstance().addMember(String.valueOf(player.getUniqueId()), player.getName());
     }
 
     if (BedwarsRel.getInstance().isHologramsEnabled()
