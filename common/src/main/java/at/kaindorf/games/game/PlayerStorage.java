@@ -1,13 +1,14 @@
 package at.kaindorf.games.game;
 
 import at.kaindorf.games.events.BedwarsOpenTeamSelectionEvent;
-import at.kaindorf.games.events.BedwarsPlayerSetNameEvent;
 import at.kaindorf.games.BedwarsRel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+
+import at.kaindorf.games.utils.NameTagHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -79,39 +80,16 @@ public class PlayerStorage {
     boolean teamnameOnTab = BedwarsRel.getInstance().getBooleanConfig("teamname-on-tab", true);
     boolean overwriteNames = BedwarsRel.getInstance().getBooleanConfig("overwrite-names", false);
 
-    String displayName = this.player.getDisplayName();
-    String playerListName = this.player.getPlayerListName();
-
     if (overwriteNames || teamnameOnTab) {
       Game game = BedwarsRel.getInstance().getGameManager().getGameOfPlayer(this.player);
       if (game != null) {
         game.setPlayerGameMode(player);
         Team team = game.getPlayerTeam(this.player);
 
-        if (overwriteNames) {
-          if (team != null) {
-            displayName = team.getChatColor() + ChatColor.stripColor(this.player.getName());
-          } else {
-            displayName = ChatColor.stripColor(this.player.getName());
-          }
-        }
-
-        if (teamnameOnTab) {
-          if (team != null) {
-            playerListName = team.getChatColor() + team.getName() + ChatColor.WHITE + " | "
-                + team.getChatColor() + ChatColor.stripColor(this.player.getDisplayName());
-          } else {
-            playerListName = ChatColor.stripColor(this.player.getDisplayName());
-          }
-        }
-
-        BedwarsPlayerSetNameEvent playerSetNameEvent =
-            new BedwarsPlayerSetNameEvent(team, displayName, playerListName, player);
-        BedwarsRel.getInstance().getServer().getPluginManager().callEvent(playerSetNameEvent);
-
-        if (!playerSetNameEvent.isCancelled()) {
-          this.player.setDisplayName(playerSetNameEvent.getDisplayName());
-          this.player.setPlayerListName(playerSetNameEvent.getPlayerListName());
+        if (team != null) {
+          NameTagHandler.getInstance().changeNameColor(player, team.getChatColor());
+        } else {
+          NameTagHandler.getInstance().changeNameColor(player, NameTagHandler.DEFAULT_NAME_COLOR);
         }
       }
     }

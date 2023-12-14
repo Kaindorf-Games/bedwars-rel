@@ -63,8 +63,8 @@ public class ConfigUpdater {
     BedwarsRel.getInstance().getConfig().addDefault("specials.rescue-platform.block", "GLASS");
     BedwarsRel.getInstance().getConfig().addDefault("specials.rescue-platform.block", "BLAZE_ROD");
     BedwarsRel.getInstance().getConfig().addDefault("ingame-chatformat-all",
-        "[$all$] <$team$>$player$: $msg$");
-    BedwarsRel.getInstance().getConfig().addDefault("ingame-chatformat", "<$team$>$player$: $msg$");
+        "[$all$] $player$: $msg$");
+    BedwarsRel.getInstance().getConfig().addDefault("ingame-chatformat", "$player$: $msg$");
     // </1.1.13>
 
     // <1.1.14>
@@ -286,5 +286,11 @@ public class ConfigUpdater {
     BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForFinalKill", 1);
     BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForBed", 2);
     BedwarsRel.getInstance().getConfig().addDefault("tourney.pointsForWin", 5);
+    BedwarsRel.getInstance().getConfig().addDefault("tourney.playerInRounds", false);
+    BedwarsRel.getInstance().getConfig().addDefault("tourney.showTeamNames", true);
+
+    BedwarsRel.getInstance().getConfig().addDefault("leaderboard.api-url", "http://localhost:1010");
+    BedwarsRel.getInstance().getConfig().addDefault("leaderboard.username", "game");
+    BedwarsRel.getInstance().getConfig().addDefault("leaderboard.password", "1234");
   }
 }

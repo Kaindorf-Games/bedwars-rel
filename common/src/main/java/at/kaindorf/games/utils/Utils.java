@@ -846,6 +846,7 @@ public final class Utils {
     Map<String, Object> map = new HashMap<>();
     map.put("id", team.getId());
     map.put("name", team.getName());
+    map.put("shortname", team.getShortname());
 
     Map<String, Object> players = new HashMap<>();
     for (TourneyPlayer player : team.getPlayers()) {

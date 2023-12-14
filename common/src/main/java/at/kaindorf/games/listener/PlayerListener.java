@@ -2,7 +2,6 @@ package at.kaindorf.games.listener;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.communication.dto.Leaderboard;
-import at.kaindorf.games.communication.dto.LeaderboardPlayer;
 import at.kaindorf.games.events.BedwarsOpenShopEvent;
 import at.kaindorf.games.events.BedwarsPlayerSetNameEvent;
 import at.kaindorf.games.game.BungeeGameCycle;
@@ -10,17 +9,12 @@ import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.GameState;
 import at.kaindorf.games.game.Team;
 import at.kaindorf.games.shop.NewItemShop;
+import at.kaindorf.games.tournament.Tournament;
+import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.utils.ChatWriter;
+import at.kaindorf.games.utils.NameTagHandler;
 import at.kaindorf.games.villager.MerchantCategory;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Arrow;
@@ -38,23 +32,15 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class PlayerListener extends BaseListener {
 
@@ -93,7 +79,7 @@ public class PlayerListener extends BaseListener {
           || iee.getPlayer().getInventory().getItemInHand().getType()
           .equals(Material.MONSTER_EGGS)
           || iee.getPlayer().getInventory().getItemInHand().getType()
-          .equals(Material.DRAGON_EGG) ) {
+          .equals(Material.DRAGON_EGG)) {
         iee.setCancelled(true);
         return;
       }
@@ -181,39 +167,6 @@ public class PlayerListener extends BaseListener {
     String message = ce.getMessage();
     boolean isSpectator = game.isSpectator(player);
 
-    String displayName = player.getDisplayName();
-    String playerListName = player.getPlayerListName();
-
-    if (BedwarsRel.getInstance().getBooleanConfig("overwrite-names", false)) {
-      if (team == null) {
-        displayName = ChatColor.stripColor(player.getName());
-
-        playerListName = ChatColor.stripColor(player.getName());
-      } else {
-        displayName = team.getChatColor() + ChatColor.stripColor(player.getName());
-        playerListName = team.getChatColor() + ChatColor.stripColor(player.getName());
-      }
-
-    }
-
-    if (BedwarsRel.getInstance().getBooleanConfig("teamname-on-tab", false)) {
-      if (team == null || isSpectator) {
-        playerListName = ChatColor.stripColor(player.getDisplayName());
-      } else {
-        playerListName = team.getChatColor() + team.getName() + ChatColor.WHITE + " | "
-            + team.getChatColor() + ChatColor.stripColor(player.getDisplayName());
-      }
-    }
-
-    BedwarsPlayerSetNameEvent playerSetNameEvent =
-        new BedwarsPlayerSetNameEvent(team, displayName, playerListName, player);
-    BedwarsRel.getInstance().getServer().getPluginManager().callEvent(playerSetNameEvent);
-
-    if (!playerSetNameEvent.isCancelled()) {
-      player.setDisplayName(playerSetNameEvent.getDisplayName());
-      player.setPlayerListName(playerSetNameEvent.getPlayerListName());
-    }
-
     if (game.getState() != GameState.RUNNING && game.getState() == GameState.WAITING) {
       String format = null;
       if (team == null) {
@@ -224,7 +177,7 @@ public class PlayerListener extends BaseListener {
       } else {
         format = this.getChatFormat(
             BedwarsRel.getInstance()
-                .getStringConfig("ingame-chatformat", "<$team$>$player$: $msg$"),
+                .getStringConfig("ingame-chatformat", "$player$: $msg$"),
             team, false, true);
       }
 
@@ -256,7 +209,8 @@ public class PlayerListener extends BaseListener {
         toAllPrefix = oneToAllPrefix;
       }
     }
-
+    Bukkit.getLogger().info(toAllPrefix);
+    toAllPrefix = null;
     if (toAllPrefix != null || isSpectator || (game.getCycle().isEndGameRunning()
         && BedwarsRel.getInstance().getBooleanConfig("global-chat-after-end", true))) {
       boolean seperateSpectatorChat =
@@ -269,12 +223,12 @@ public class PlayerListener extends BaseListener {
         ce.setMessage(message.substring(toAllPrefix.length(), message.length()).trim());
         format = this
             .getChatFormat(BedwarsRel.getInstance().getStringConfig("ingame-chatformat-all",
-                "[$all$] <$team$>$player$: $msg$"), team, false, true);
+                "[$all$] $player$: $msg$"), team, false, true);
       } else {
         ce.setMessage(message);
         format = this.getChatFormat(
             BedwarsRel.getInstance()
-                .getStringConfig("ingame-chatformat", "<$team$>$player$: $msg$"),
+                .getStringConfig("ingame-chatformat", "$player$: $msg$"),
             team, isSpectator, true);
       }
 
@@ -305,7 +259,7 @@ public class PlayerListener extends BaseListener {
       message = message.trim();
       ce.setMessage(message);
       ce.setFormat(this.getChatFormat(
-          BedwarsRel.getInstance().getStringConfig("ingame-chatformat", "<$team$>$player$: $msg$"),
+          BedwarsRel.getInstance().getStringConfig("ingame-chatformat", "$player$: $msg$"),
           team,
           false, false));
 
@@ -662,12 +616,18 @@ public class PlayerListener extends BaseListener {
   public void onJoin(PlayerJoinEvent je) {
 
     final Player player = je.getPlayer();
+    if (BedwarsRel.getInstance().getMode() == BedwarsRel.Mode.TOURNAMENT && Tournament.getInstance().getPlayers() != null) {
+      Optional<TourneyPlayer> tp = Tournament.getInstance().getPlayers().stream().filter(p -> p.getUuid().equalsIgnoreCase(String.valueOf(player.getUniqueId()))).findFirst();
+      if (tp.isPresent() && tp.get().getTeam() != null) {
+        NameTagHandler.getInstance().addTagToPlayer(player, tp.get().getTeam().getShortname());
+      }
+    }
 
     if (BedwarsRel.getInstance().statisticsEnabled()) {
       BedwarsRel.getInstance().getPlayerStatisticManager().loadStatistic(player.getUniqueId());
     }
 
-    if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+    if (BedwarsRel.getInstance().isLeaderBoardActive()) {
       Leaderboard.getInstance().addMember(String.valueOf(player.getUniqueId()), player.getName());
     }
 
@@ -1039,6 +999,8 @@ public class PlayerListener extends BaseListener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(PlayerQuitEvent pqe) {
     Player player = pqe.getPlayer();
+
+    NameTagHandler.getInstance().remove(player);
 
     if (BedwarsRel.getInstance().isBungee()) {
       pqe.setQuitMessage(null);

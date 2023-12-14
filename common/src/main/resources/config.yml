@@ -140,12 +140,12 @@ lobby-chatformat: "$player$: $msg$"
 # type: string
 # The chat format for messages which will be sent to all ingame players
 # if player is spectator $team$ will be "Spectator" (translated, of course!)
-ingame-chatformat-all: "[$all$] <$team$>$player$: $msg$"
+ingame-chatformat-all: "[$all$] $player$: $msg$"
 
 # Chat format
 # type: string
 # The chat format for the normal ingame chat between team-players
-ingame-chatformat: "<$team$>$player$: $msg$"
+ingame-chatformat: "$player$: $msg$"
 
 # The main game block
 # type: string or int
@@ -971,6 +971,8 @@ tourney:
   pointsForBed: 2
 
   playerInRounds: false
+
+  showTeamNames: true
 
 leaderboard:
   api-url: http://192.168.0.130:8000

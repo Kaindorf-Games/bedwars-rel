@@ -30,7 +30,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    if(Tournament.getInstance().getTeams().size() == 0) {
+    if (Tournament.getInstance().getTeams().size() == 0) {
       sender.sendMessage(ChatColor.RED + "No Teams found");
       return true;
     }
@@ -55,7 +55,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
     List<TourneyTeam> teams = Tournament.getInstance().getTeams();
     for (TourneyTeam team : teams) {
       for (TourneyPlayer player : team.getPlayers()) {
-        if(player.getPlayer() == null) {
+        if (player.getPlayer() == null) {
           player.initPlayer();
         }
       }
@@ -66,9 +66,9 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
       String paused = "";
       if (team.isPaused()) paused = " (paused)";
 
-      sb.append(ChatColor.YELLOW + "" + team.getName() + paused + "\n");
+      sb.append(ChatColor.YELLOW + team.getName() + " [" + team.getShortname() + "]" + paused + "\n");
       team.getPlayers().forEach(p -> {
-        sb.append(ChatColor.YELLOW + "  " + (p.getPlayer() == null?p.getUuid():p.getPlayer().getName()) + "\n");
+        sb.append(ChatColor.YELLOW + "  " + (p.getPlayer() == null ? p.getUuid() : p.getPlayer().getName()) + "\n");
       });
       sb.append(ChatColor.YELLOW + "  Points group stage: " + team.calculatePoints(CurrentState.GROUP_STAGE) + "\n");
       sb.append(ChatColor.YELLOW + "  Points ko stage: " + team.calculatePoints(CurrentState.KO_STAGE) + "\n\n");

@@ -127,7 +127,9 @@ public abstract class GameCycle {
     if (BedwarsRel.getInstance().statisticsEnabled()) {
       diePlayer = BedwarsRel.getInstance().getPlayerStatisticManager().getStatistic(player);
 
-      if(BedwarsRel.getInstance().isLeaderBoardActive()) Leaderboard.getInstance().addAttribute(String.valueOf(player.getUniqueId()), "Deaths");
+      if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+        Leaderboard.getInstance().addAttribute(String.valueOf(player.getUniqueId()), "Deaths");
+      }
 
       boolean onlyOnBedDestroy =
           BedwarsRel.getInstance().getBooleanConfig("statistics.bed-destroyed-kills", false);

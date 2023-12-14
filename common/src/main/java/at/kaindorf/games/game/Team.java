@@ -2,6 +2,7 @@ package at.kaindorf.games.game;
 
 import at.kaindorf.games.events.BedwarsPlayerJoinTeamEvent;
 import at.kaindorf.games.events.BedwarsPlayerSetNameEvent;
+import at.kaindorf.games.utils.NameTagHandler;
 import at.kaindorf.games.utils.Utils;
 import at.kaindorf.games.BedwarsRel;
 
@@ -88,26 +89,12 @@ public class Team implements ConfigurationSerializable {
       }
     }
 
-    String displayName = player.getDisplayName();
-    String playerListName = player.getPlayerListName();
-
     if (BedwarsRel.getInstance().getBooleanConfig("overwrite-names", false)) {
-      displayName = this.getChatColor() + ChatColor.stripColor(player.getName());
-      playerListName = this.getChatColor() + ChatColor.stripColor(player.getName());
+      NameTagHandler.getInstance().changeNameColor(player, this.getChatColor());
     }
 
     if (BedwarsRel.getInstance().getBooleanConfig("teamname-on-tab", true)) {
-      playerListName = this.getChatColor() + this.getName() + ChatColor.WHITE + " | "
-          + this.getChatColor() + ChatColor.stripColor(player.getDisplayName());
-    }
-
-    BedwarsPlayerSetNameEvent playerSetNameEvent =
-        new BedwarsPlayerSetNameEvent(this, displayName, playerListName, player);
-    BedwarsRel.getInstance().getServer().getPluginManager().callEvent(playerSetNameEvent);
-
-    if (!playerSetNameEvent.isCancelled()) {
-      player.setDisplayName(playerSetNameEvent.getDisplayName());
-      player.setPlayerListName(playerSetNameEvent.getPlayerListName());
+      NameTagHandler.getInstance().addTagToPlayerWithoutColorUpdate(player, this.getName());
     }
 
     if (BedwarsRel.getInstance().isSpigot()) {
@@ -241,7 +228,6 @@ public class Team implements ConfigurationSerializable {
     }
   }
 
-  @SuppressWarnings("deprecation")
   public void removePlayer(Player player) {
     if (BedwarsRel.getInstance().isSpigot()) {
       if (this.getScoreboardTeam().hasEntry(player.getName())) {
@@ -252,11 +238,8 @@ public class Team implements ConfigurationSerializable {
         this.getScoreboardTeam().removePlayer(player);
       }
     }
-
-    if (BedwarsRel.getInstance().getBooleanConfig("overwrite-names", false) && player.isOnline()) {
-      player.setDisplayName(ChatColor.RESET + ChatColor.stripColor(player.getName()));
-      player.setPlayerListName(ChatColor.RESET + player.getPlayer().getName());
-    }
+    NameTagHandler.getInstance().resetColors(player);
+    NameTagHandler.getInstance().removeTagFromPlayer(player, this.getName());
   }
 
   @Override

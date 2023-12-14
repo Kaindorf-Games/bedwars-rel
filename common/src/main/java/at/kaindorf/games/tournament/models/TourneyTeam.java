@@ -3,42 +3,50 @@ package at.kaindorf.games.tournament.models;
 import at.kaindorf.games.game.Game;
 import at.kaindorf.games.game.TeamColor;
 import at.kaindorf.games.tournament.TourneyProperties;
+import at.kaindorf.games.utils.NameTagHandler;
 import lombok.Data;
-import org.bukkit.Bukkit;
-import org.bukkit.util.io.BukkitObjectInputStream;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class TourneyTeam {
+  public static Set<String> usedShortNames = new HashSet<>();
+
   private int id;
   private List<TourneyPlayer> players;
   private TourneyGroup group;
   private List<TourneyGameStatistic> statistics;
   private String name;
+  private String shortname;
   private Game game;
   private boolean paused = false;
+
   private TeamColor teamColor;
 
   public static int currentId = 0;
 
-  public TourneyTeam(int id, String name) {
+  public TourneyTeam(int id, String name, String shortname) {
     this.id = id;
     this.name = name;
     this.players = new LinkedList<>();
     this.statistics = new LinkedList<>();
     this.game = null;
     this.group = null;
+    this.shortname = shortname;
 
     if(this.id > currentId) {
       currentId = this.id;
+    }
+
+    if(this.shortname == null) {
+      this.shortname = generateShortName(this.name);
     }
   }
 
   public void addPlayer(TourneyPlayer player) {
     this.players.add(player);
     player.setTeam(this);
+    NameTagHandler.getInstance().addTagToPlayerUUID(Collections.singletonList(player.getUuid()), this.shortname);
   }
 
   public void addStatistic(TourneyGameStatistic teamStatistics) {
@@ -74,6 +82,39 @@ public class TourneyTeam {
     }
 
     return points;
+  }
+
+  private String generateShortName(String name) {
+    Random r = new Random();
+    name = name.toUpperCase().replaceAll("[^a-zA-Z0-9]", "");
+
+    if(name.length() <= 5) {
+      while(name.length() < 6) {
+        name += (char)(r.nextInt(26) + 'A');
+      }
+    }
+
+    String sn = null;
+
+    int index = 0;
+    do {
+      String tmp = name.substring(index, index+3);
+      if(!usedShortNames.contains(tmp)) {
+        sn = tmp;
+        usedShortNames.add(tmp);
+      }
+
+      index++;
+    } while (sn == null && index < name.length()-3);
+
+    while(sn == null) {
+      String tmp = ""+(char)(r.nextInt(26) + 'A') + (char)(r.nextInt(26) + 'A') + (char)(r.nextInt(26) + 'A');
+      if(!usedShortNames.contains(tmp)) {
+        sn = tmp;
+        usedShortNames.add(tmp);
+      }
+    }
+    return sn;
   }
 
   public int calculatePoints() {

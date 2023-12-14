@@ -158,21 +158,21 @@ public class Game {
 
   public static String getPlayerWithTeamString(Player player, Team team, ChatColor before) {
     if (BedwarsRel.getInstance().getBooleanConfig("teamname-in-chat", true)) {
-      return player.getDisplayName() + before + " (" + team.getChatColor() + team.getDisplayName()
+      return team.getChatColor() + player.getName() + before + " (" + team.getChatColor() + team.getDisplayName()
           + before + ")";
     }
 
-    return player.getDisplayName() + before;
+    return team.getChatColor() + player.getName() + before;
   }
 
   public static String getPlayerWithTeamString(Player player, Team team, ChatColor before,
                                                String playerAdding) {
     if (BedwarsRel.getInstance().getBooleanConfig("teamname-in-chat", true)) {
-      return player.getDisplayName() + before + playerAdding + before + " (" + team.getChatColor()
+      return team.getChatColor() + player.getName() + before + playerAdding + before + " (" + team.getChatColor()
           + team.getDisplayName() + before + ")";
     }
 
-    return player.getDisplayName() + before + playerAdding + before;
+    return team.getChatColor() + player.getName() + before + playerAdding + before;
   }
 
   /*
@@ -810,7 +810,9 @@ public class Game {
       this.dropTargetBlock(block);
     }
 
-    Leaderboard.getInstance().addAttribute(String.valueOf(p.getUniqueId()), "Beds Destroyed");
+    if(BedwarsRel.getInstance().isLeaderBoardActive()) {
+      Leaderboard.getInstance().addAttribute(String.valueOf(p.getUniqueId()), "Beds Destroyed");
+    }
 
     // add destroyed Bed to teamstatistics
     if (this.getMatch() != null) {

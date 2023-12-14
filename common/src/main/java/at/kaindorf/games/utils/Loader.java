@@ -21,8 +21,8 @@ import java.util.*;
 public class Loader {
 
   @SneakyThrows
-  public static List<String> loadSavedTeams() {
-    List<String> teams = new LinkedList<>();
+  public static List<Map<String, String>> loadSavedTeams() {
+    List<Map<String, String>> teams = new LinkedList<>();
     // load Teams
     if (TourneyProperties.teamsFile.exists() && TourneyProperties.teamsFile.canRead()) {
       YamlConfiguration yaml = new YamlConfiguration();
@@ -32,8 +32,12 @@ public class Loader {
       Set<String> keys = yaml.getKeys(false);
       if (keys.size() > 0) {
         for (String key : keys) {
-          String teamName = yaml.getString(key + ".name");
-          teams.add(teamName);
+          Map<String, String> map = new HashMap<>();
+          String name = yaml.getString(key + ".name");
+          String shortname = yaml.getString(key + ".shortname");
+          map.put("name", name);
+          map.put("shortname", shortname);
+          teams.add(map);
         }
       } else {
         BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(ChatColor.RED + "No team config found");
@@ -190,7 +194,8 @@ public class Loader {
     for (String teamKey : teamKeys) {
       ConfigurationSection section = yaml.getConfigurationSection(path + "teams." + teamKey);
       String name = section.getString("name");
-      Tournament.getInstance().addTeam(section.getInt("id"), name, groupName);
+      String shortname = section.getString("shortname");
+      Tournament.getInstance().addTeam(section.getInt("id"), name, shortname, groupName);
       loadPlayers(yaml, path + "teams." + teamKey + ".", name);
     }
   }

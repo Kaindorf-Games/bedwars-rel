@@ -12,6 +12,7 @@ import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.utils.Loader;
+import at.kaindorf.games.utils.NameTagHandler;
 import at.kaindorf.games.utils.Pair;
 import at.kaindorf.games.utils.Saver;
 import lombok.Data;
@@ -62,8 +63,8 @@ public class Tournament {
     Bukkit.getLogger().info("Loading Tournament Saves ...");
     try {
       // load Teams
-      for (String team : Loader.loadSavedTeams()) {
-        addTeam(team);
+      for (Map<String, String> team : Loader.loadSavedTeams()) {
+        addTeam(team.get("name"), team.get("shortname"));
       }
 
       // load Player
@@ -95,19 +96,21 @@ public class Tournament {
   }
 
   public TourneyTeam addTeam(String name) throws  TournamentEntityExistsException {
-    return this.addTeam(name, "");
+    return this.addTeam(name, null);
   }
 
-  public TourneyTeam addTeam(String name, String groupName) throws TournamentEntityExistsException {
-    return this.addTeam(TourneyTeam.currentId+1, name, groupName);
+  public TourneyTeam addTeam(String name, String shortname) throws TournamentEntityExistsException {
+    return this.addTeam(TourneyTeam.currentId+1, name, shortname, "");
   }
 
-  public TourneyTeam addTeam(int id, String name, String groupName) throws TournamentEntityExistsException {
+  public TourneyTeam addTeam(int id, String name, String shortname, String groupName) throws TournamentEntityExistsException {
     Optional<TourneyTeam> optional = teams.stream().filter(t -> t.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
       throw new TourneyTeamExistsException(name);
     }
-    TourneyTeam team = new TourneyTeam(id, name);
+    TourneyTeam team = new TourneyTeam(id, name, shortname);
+
+    BedwarsRel.getInstance().getScoreboardManager();
     teams.add(team);
     if (!groupName.isEmpty()) {
       this.getGroup(groupName).addTeam(team);
@@ -151,6 +154,8 @@ public class Tournament {
     this.players.clear();
     this.teams.clear();
     this.groups.clear();
+    NameTagHandler.getInstance().clearAllTags();
+    TourneyTeam.usedShortNames.clear();
 
     this.hardStop = false;
     this.softStop = false;
@@ -306,6 +311,7 @@ public class Tournament {
 
     TourneyTeam team = optional.get();
     this.teams.remove(team);
+    TourneyTeam.usedShortNames.remove(team.getShortname());
 
     // remove from the group
     if (groupStage != null) {

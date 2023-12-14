@@ -76,7 +76,7 @@ public class BedwarsRel extends JavaPlugin {
   @Getter
   private BukkitTask gameLoopTask = null;
   @Getter
-  private Mode mode = Mode.NORMAL;
+  private Mode mode = Mode.TOURNAMENT;
   @Getter
   private final boolean isDevMode = false;
   @Getter
