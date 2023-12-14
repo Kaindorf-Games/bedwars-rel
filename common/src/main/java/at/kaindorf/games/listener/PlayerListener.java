@@ -209,8 +209,7 @@ public class PlayerListener extends BaseListener {
         toAllPrefix = oneToAllPrefix;
       }
     }
-    Bukkit.getLogger().info(toAllPrefix);
-    toAllPrefix = null;
+
     if (toAllPrefix != null || isSpectator || (game.getCycle().isEndGameRunning()
         && BedwarsRel.getInstance().getBooleanConfig("global-chat-after-end", true))) {
       boolean seperateSpectatorChat =
