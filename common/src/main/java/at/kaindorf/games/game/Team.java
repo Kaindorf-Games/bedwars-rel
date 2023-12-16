@@ -1,7 +1,6 @@
 package at.kaindorf.games.game;
 
 import at.kaindorf.games.events.BedwarsPlayerJoinTeamEvent;
-import at.kaindorf.games.events.BedwarsPlayerSetNameEvent;
 import at.kaindorf.games.utils.NameTagHandler;
 import at.kaindorf.games.utils.Utils;
 import at.kaindorf.games.BedwarsRel;
