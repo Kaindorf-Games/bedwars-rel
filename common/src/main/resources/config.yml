@@ -975,6 +975,7 @@ tourney:
   showTeamNames: true
 
 leaderboard:
-  api-url: http://192.168.0.130:8000
+  api-url: http://192.168.0.130:8001
+  name: profi-bedwars
   username: game
   password: 1234

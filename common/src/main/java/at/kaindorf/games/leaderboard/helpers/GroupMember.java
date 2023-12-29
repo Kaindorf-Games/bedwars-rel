@@ -1,22 +1,21 @@
-package at.kaindorf.games.communication.dto;
+package at.kaindorf.games.leaderboard.helpers;
 
+import at.kaindorf.games.tournament.models.TourneyTeamSorter;
 import lombok.Data;
-import org.bukkit.Bukkit;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class LeaderboardPlayer implements Serializable {
+public class GroupMember implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private transient static Map<String, Integer> attributePoints;
-    private transient static List<String> additionalAttributes;
+    private static Map<String, Integer> attributePoints;
+    private static List<String> additionalAttributes;
 
     static {
         attributePoints = new HashMap<>();
@@ -30,40 +29,40 @@ public class LeaderboardPlayer implements Serializable {
         additionalAttributes = Arrays.asList("Points", "Points/Game", "Win Ratio");
     }
 
+    private int id;
     private String name;
+    private String shortName;
     private Map<String, Double> attributes;
     private transient boolean joinedNew;
 
-    public LeaderboardPlayer() {
+    public GroupMember() {
         this.attributes = new HashMap<>();
 
-        for(String attribute: additionalAttributes) {
+        for (String attribute : additionalAttributes) {
             attributes.put(attribute, 0.0);
         }
-        for(String attribute: attributePoints.keySet()) {
+        for (String attribute : attributePoints.keySet()) {
             attributes.put(attribute, 0.0);
         }
     }
 
-    //Fake
-    public LeaderboardPlayer(String name, double kills, double finalKills, double bedsDestroyed, double deaths, double wins, double points, double games) {
-        this.attributes = new HashMap<>();
+    public GroupMember(String name, String shortName, TourneyTeamSorter ts) {
+        this.id = ts.getId();
         this.name = name;
-        this.attributes.put("Kills", kills);
-        this.attributes.put("Final Kills", finalKills);
-        this.attributes.put("Beds Destroyed", bedsDestroyed);
-        this.attributes.put("Deaths", deaths);
-        this.attributes.put("Games Played", games);
-        this.attributes.put("Wins", wins);
-        this.attributes.put("Points", points);
-        this.attributes.put("Points/Game", (points/games));
-        this.attributes.put("Win Ratio", (wins/games));
+        this.shortName = shortName;
+        this.attributes = new HashMap<>();
+        this.attributes.put("Final Kills", ts.getFinalKills());
+        this.attributes.put("Beds Destroyed", ts.getDestroyedBeds());
+        this.attributes.put("Games Played", ts.getGamesPlayed());
+        this.attributes.put("Wins", ts.getWins());
+        this.attributes.put("Points", ts.getPoints());
+        this.attributes.put("Extra Points", ts.getExtraPoints());
     }
 
     public void addAttribute(String attr) {
-        if(attributePoints.containsKey(attr)) {
+        if (attributePoints.containsKey(attr)) {
             double games = attributes.get("Games Played");
-            if(joinedNew) {
+            if (joinedNew) {
                 this.attributes.put("Games Played", ++games);
                 joinedNew = false;
             }
@@ -73,11 +72,11 @@ public class LeaderboardPlayer implements Serializable {
 
             double points = this.attributes.get("Points") + attributePoints.get(attr);
             this.attributes.put("Points", points);
-            if(games > 0) {
-                this.attributes.put("Points/Game", points/games);
+            if (games > 0) {
+                this.attributes.put("Points/Game", points / games);
 
-                double wins  = attributes.get("Wins");
-                this.attributes.put("Win Ratio", wins/games);
+                double wins = attributes.get("Wins");
+                this.attributes.put("Win Ratio", wins / games);
             }
         }
     }

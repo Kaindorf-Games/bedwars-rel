@@ -18,15 +18,19 @@ public class StopLeaderboardCommand extends BaseCommand implements ICommand {
         if (!sender.hasPermission("bw." + this.getPermission())) {
             return false;
         }
-        BedwarsRel.getInstance().setLeaderBoardActive(false);
+        if (BedwarsRel.getInstance().getActiveLeaderboard() != null) {
+            BedwarsRel.getInstance().getActiveLeaderboard().setActive(false);
+            sender.sendMessage(ChatColor.GREEN + "Leaderboard stopped");
+            return true;
+        }
 
-        sender.sendMessage(ChatColor.GREEN + "Leaderboard stopped");
+        sender.sendMessage(ChatColor.RED + "No Leaderboard found to stop");
         return true;
     }
 
     @Override
     public String[] getArguments() {
-        return new String[] {};
+        return new String[]{};
     }
 
     @Override

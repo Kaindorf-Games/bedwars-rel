@@ -3,15 +3,10 @@ package at.kaindorf.games.commands.Bedwars;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.communication.dto.Leaderboard;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.material.Bed;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 public class ClearLeaderboardCommand extends BaseCommand implements ICommand {
 
@@ -25,14 +20,8 @@ public class ClearLeaderboardCommand extends BaseCommand implements ICommand {
             return false;
         }
 
-        Map<UUID, String> uuids = new HashMap<>();
-        if(BedwarsRel.getInstance().isLeaderBoardActive()) {
-            uuids = BedwarsRel.getInstance().getServer().getOnlinePlayers().stream().collect(Collectors.toMap(Player::getUniqueId, Player::getName));
-        }
-        Leaderboard.setInstance(new Leaderboard(uuids, false));
-        Leaderboard.getInstance().updateDataToLeaderboard(Leaderboard.getInstance());
-
-        sender.sendMessage(ChatColor.GREEN+"Leaderboard has been cleared!!!");
+        BedwarsRel.getInstance().setActiveLeaderboard(null);
+        sender.sendMessage(ChatColor.GREEN + "Leaderboard has been cleared!!!");
         return true;
     }
 

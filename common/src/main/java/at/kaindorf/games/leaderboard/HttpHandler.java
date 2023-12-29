@@ -1,24 +1,23 @@
-package at.kaindorf.games.communication;
+package at.kaindorf.games.leaderboard;
 
 import at.kaindorf.games.BedwarsRel;
-import at.kaindorf.games.communication.dto.Leaderboard;
-import at.kaindorf.games.communication.observer.IObserver;
+import at.kaindorf.games.leaderboard.observer.IObserver;
+import at.kaindorf.games.leaderboard.observer.LeaderboardBase;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Base64;
 import java.util.logging.Level;
-
-import java.net.URL;
 
 public class HttpHandler implements IObserver {
 
     private LocalDateTime lastTimeSent;
-
 
     private String getBasicAuthenticationHeader() {
         String username = BedwarsRel.getInstance().getConfig().getString("leaderboard.username");
@@ -28,26 +27,26 @@ public class HttpHandler implements IObserver {
     }
 
     @Override
-    public void updateCasualLeaderBoard(Leaderboard leaderboard, boolean force) {
-        if(!force && lastTimeSent != null && ChronoUnit.SECONDS.between(lastTimeSent, LocalDateTime.now()) < leaderboard.getWaitDuration()) {
+    public void updateLeaderBoard(LeaderboardBase leaderboard, boolean force) {
+        if (!leaderboard.isActive() || (!force && lastTimeSent != null && ChronoUnit.SECONDS.between(lastTimeSent, LocalDateTime.now()) < leaderboard.getWaitBetweenUpdates())) {
             Bukkit.getLogger().info("Skip leaderboard update");
             return;
         }
 
-        String hostname = BedwarsRel.getInstance().getConfig().getString("leaderboard.api-url");
+        String hostname = BedwarsRel.getInstance().getConfig().getString("leaderboard.api-url", "http://localhost:8000");
 
         try {
-            URL url = new URL(hostname+"/leaderboard/"+leaderboard.getName());
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            URL url = new URL(hostname + "/leaderboard/" + leaderboard.getName());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("Authorization", getBasicAuthenticationHeader());
             con.setRequestMethod("PUT");
             con.setRequestProperty("Content-Type", "application/json");
             con.setDoOutput(true);
 
             Gson gson = new Gson();
-            String json = gson.toJson(leaderboard, Leaderboard.class);
-            try(OutputStream os = con.getOutputStream()) {
-                byte[] input = json.getBytes("utf-8");
+            String json = gson.toJson(leaderboard, leaderboard.getClass());
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = json.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 

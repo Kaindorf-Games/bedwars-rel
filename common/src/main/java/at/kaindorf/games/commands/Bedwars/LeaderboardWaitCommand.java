@@ -3,17 +3,11 @@ package at.kaindorf.games.commands.Bedwars;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.communication.dto.Leaderboard;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
     public LeaderboardWaitCommand(BedwarsRel plugin) {
@@ -26,11 +20,16 @@ public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
             return false;
         }
 
-        if(!args.isEmpty() && StringUtils.isNumeric(args.get(0))) {
-            Leaderboard.getInstance().setWaitDuration(Integer.parseInt(args.get(0)));
-            sender.sendMessage(ChatColor.GREEN+"Duration has been set");
-        } else if(!StringUtils.isNumeric(args.get(0))) {
-            sender.sendMessage(ChatColor.RED+"Argument duration has to be an int!");
+        if (BedwarsRel.getInstance().getActiveLeaderboard() == null) {
+            sender.sendMessage(ChatColor.RED + "No Leaderboard found");
+            return true;
+        }
+
+        if (!args.isEmpty() && StringUtils.isNumeric(args.get(0))) {
+            BedwarsRel.getInstance().getActiveLeaderboard().setWaitBetweenUpdates(Integer.parseInt(args.get(0)));
+            sender.sendMessage(ChatColor.GREEN + "Duration has been set");
+        } else if (!StringUtils.isNumeric(args.get(0))) {
+            sender.sendMessage(ChatColor.RED + "Argument duration has to be an int!");
         } else {
             sender.sendMessage(ChatColor.RED + "Argument duration required!");
         }
@@ -40,7 +39,7 @@ public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
 
     @Override
     public String[] getArguments() {
-        return new String[] {"duration"};
+        return new String[]{"duration"};
     }
 
     @Override
