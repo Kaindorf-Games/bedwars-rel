@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class HttpHandler implements IObserver {
@@ -32,6 +34,9 @@ public class HttpHandler implements IObserver {
             Bukkit.getLogger().info("Skip leaderboard update");
             return;
         }
+
+        Map<String, Double> map = new HashMap<>();
+        map.keySet().stream().map(k -> k + " -> "+map.get(k)).reduce((e1, e2) -> e1+e2).orElse("");
 
         String hostname = BedwarsRel.getInstance().getConfig().getString("leaderboard.api-url", "http://localhost:8000");
 

@@ -147,7 +147,19 @@ public class GameLoop extends BukkitRunnable {
                 // throw players into their team
                 Optional<TourneyTeam> teamOfPlayer = Tournament.getInstance().getTourneyTeamOfPlayer(tourneyPlayer.getPlayer());
                 if (teamOfPlayer.isPresent()) {
-                    Team team = game.getTeam(teamOfPlayer.get().getTeamColor().name().toLowerCase());
+                    Team team = null;
+                    List<String> teamNames = Arrays.asList(teamOfPlayer.get().getTeamColor().name().toLowerCase(),
+                            teamOfPlayer.get().getTeamColor().name().toUpperCase(),
+                            teamOfPlayer.get().getTeamColor().name().toUpperCase().charAt(0) + teamOfPlayer.get().getTeamColor().name().toUpperCase().substring(1));
+                    for(String teamName : teamNames) {
+                        try {
+                            team = game.getTeam(teamName);
+                        } catch(Exception ignored) {
+                        }
+                    }
+                    if(team == null) {
+                        throw new RuntimeException("Team not found!");
+                    }
                     game.playerJoinTeam(tourneyPlayer.getPlayer(), team);
                 }
             }

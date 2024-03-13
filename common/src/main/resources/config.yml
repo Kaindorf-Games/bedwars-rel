@@ -966,9 +966,9 @@ player-settings:
   old-shop-as-default: false
 
 tourney:
-  pointsForFinalKill: 1
+  pointsForFinalKill: 2
   pointsForWin: 5
-  pointsForBed: 2
+  pointsForBed: 3
 
   playerInRounds: false
 

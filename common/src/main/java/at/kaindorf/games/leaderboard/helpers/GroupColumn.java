@@ -34,7 +34,6 @@ public class GroupColumn implements Serializable {
         List<GroupColumn> columns = new LinkedList<>();
 
         columns.add(GroupColumn.builder().columnName("Name").name("name").attribute(false).isFloat(false).build());
-        columns.add(GroupColumn.builder().columnName("Shortname").name("shortname").attribute(false).isFloat(false).build());
         columns.add(GroupColumn.builder().columnName("Final Kills").name("Final Kills").attribute(true).isFloat(false).build());
         columns.add(GroupColumn.builder().columnName("Beds Destroyed").name("Beds Destroyed").attribute(true).isFloat(false).build());
         columns.add(GroupColumn.builder().columnName("Games Played").name("Games Played").attribute(true).isFloat(false).build());

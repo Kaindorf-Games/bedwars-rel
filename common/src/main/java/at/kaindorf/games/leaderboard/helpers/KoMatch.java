@@ -14,9 +14,11 @@ public class KoMatch implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<GroupMember> teams;
+    private String status;
 
-    public KoMatch(TourneyKoMatch match) {
+    public KoMatch(TourneyKoMatch match, String status) {
         this.teams = new LinkedList<>();
+        this.status = status;
         for (TourneyTeam tourneyTeam : match.getTeams()) {
             List<Integer> matchIds = new LinkedList<>();
             matchIds.add(match.getId());

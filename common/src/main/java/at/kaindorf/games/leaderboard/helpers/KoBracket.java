@@ -39,7 +39,14 @@ public class KoBracket implements Serializable {
                     continue;
                 }
 
-                this.matches.add(new KoMatch(match));
+                String status = "not played";
+                if(koRound.getMatchesDone().contains(match)) {
+                    status = "finished";
+                } else if(match.isRunning()) {
+                    status = "ongoing";
+                }
+
+                this.matches.add(new KoMatch(match, status));
             }
         }
     }

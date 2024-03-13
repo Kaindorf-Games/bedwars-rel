@@ -50,7 +50,7 @@ public class TourneyTeamSorter implements Comparable<TourneyTeamSorter> {
         this.gamesPlayed += 1d;
         this.wins += statistic.isWin() ? 1d : 0d;
         this.extraPoints += statistic.getExtraPoints();
-        this.points = statistic.calculatePoints();
+        this.points += statistic.calculatePoints();
     }
 
     @Override
