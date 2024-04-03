@@ -6,6 +6,7 @@ import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.material.Bed;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +31,9 @@ public class AddPointsCommand extends BaseCommand {
     boolean res = Tournament.getInstance().addPointsToTeam(team, points);
 
     if(res) {
-      sender.sendMessage(ChatColor.GREEN+"Points were added");
+      sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.pointsadded"));
     } else {
-      sender.sendMessage(ChatColor.RED+"Either the team doesn't exist or the team hasn't played any matches so far");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.cantaddpoints"));
     }
 
     return true;
@@ -50,12 +51,12 @@ public class AddPointsCommand extends BaseCommand {
 
   @Override
   public String getDescription() {
-    return "add points to the team";
+    return BedwarsRel._l("commands.tourney.addpoints.description");
   }
 
   @Override
   public String getName() {
-    return "addpoints";
+    return BedwarsRel._l("commands.tourney.addpoints.name");
   }
 
   @Override

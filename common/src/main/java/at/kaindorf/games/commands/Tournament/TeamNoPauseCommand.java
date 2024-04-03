@@ -15,12 +15,12 @@ public class TeamNoPauseCommand extends TeamPauseCommand {
 
   @Override
   public String getDescription() {
-    return "removes pause status of the team";
+    return BedwarsRel._l("commands.tourney.nopause.description");
   }
 
   @Override
   public String getName() {
-    return "nopause";
+    return BedwarsRel._l("commands.tourney.nopause.name");
   }
 
   @Override

@@ -27,7 +27,7 @@ public class LoadTourneyEntitiesCommand extends BaseCommand implements ICommand 
 
     Tournament.getInstance().clear();
     Tournament.getInstance().loadSaves();
-    sender.sendMessage(ChatColor.GREEN + "Loaded Tournament Entities");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.loadedentities"));
     return true;
   }
 
@@ -43,12 +43,12 @@ public class LoadTourneyEntitiesCommand extends BaseCommand implements ICommand 
 
   @Override
   public String getDescription() {
-    return "Loads all the Entities from yml files";
+    return BedwarsRel._l("commands.tourney.loadentities.description");
   }
 
   @Override
   public String getName() {
-    return "load the Tournament Entities";
+    return BedwarsRel._l("commands.tourney.loadentities.name");
   }
 
   @Override

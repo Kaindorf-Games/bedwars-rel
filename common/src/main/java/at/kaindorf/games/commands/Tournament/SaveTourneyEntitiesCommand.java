@@ -27,7 +27,7 @@ public class SaveTourneyEntitiesCommand extends BaseCommand implements ICommand 
     }
 
     Tournament.getInstance().save();
-    sender.sendMessage(ChatColor.GREEN+"Entities are saved");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.entitiessaved"));
     return true;
   }
 
@@ -43,12 +43,12 @@ public class SaveTourneyEntitiesCommand extends BaseCommand implements ICommand 
 
   @Override
   public String getDescription() {
-    return "Saves all the Entities to yml files";
+    return BedwarsRel._l("commands.tourney.saveentities.description");
   }
 
   @Override
   public String getName() {
-    return "save Tournament Entities";
+    return BedwarsRel._l("commands.tourney.saveentities.name");
   }
 
   @Override

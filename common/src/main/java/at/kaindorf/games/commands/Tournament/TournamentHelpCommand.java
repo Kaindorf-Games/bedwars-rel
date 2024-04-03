@@ -48,14 +48,14 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
   private String generateMessage(List<BaseCommand> commands) {
     StringBuilder sb = new StringBuilder();
-    sb.append(ChatColor.GREEN+"--------- Tourney Help ---------\n");
+    sb.append(ChatColor.GREEN+"--------- " + BedwarsRel._l("tourney.others.tourneyhelp") + " ---------\n");
     for (BaseCommand command : commands.stream().filter(c -> !c.getPermission().equalsIgnoreCase("manage")).collect(Collectors.toList())) {
       generateLine(command, sb);
     }
 
     List<BaseCommand> adminCommands = commands.stream().filter(c -> c.getPermission().equalsIgnoreCase("manage")).collect(Collectors.toList());
     if(adminCommands.size() > 0) {
-      sb.append(ChatColor.BLUE+"---------- Admin Help ----------\n");
+      sb.append(ChatColor.BLUE+"---------- " + BedwarsRel._l("tourney.others.adminhelp") + " ----------\n");
       for (BaseCommand command : adminCommands) {
         generateLine(command, sb);
 
@@ -101,12 +101,12 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Base command for all Tournament commands";
+    return BedwarsRel._l("commands.tourney.help.description");
   }
 
   @Override
   public String getName() {
-    return "Help for Tourney";
+    return BedwarsRel._l("commands.tourney.help.name");
   }
 
   @Override

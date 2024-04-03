@@ -21,10 +21,10 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
         if(BedwarsRel.getInstance().getActiveLeaderboard() !=  null) {
             BedwarsRel.getInstance().getActiveLeaderboard().updateDataToLeaderboard(BedwarsRel.getInstance().getActiveLeaderboard(), true);
-            sender.sendMessage(ChatColor.GREEN + "Leaderboard updated");
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.updated"));
             return true;
         }
-        sender.sendMessage(ChatColor.GREEN + "Leaderboard not found");
+        sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.errors.notfound"));
         return true;
     }
 
@@ -40,12 +40,12 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Forces leaderboard update";
+        return BedwarsRel._l("commands.updateleaderboard.description");
     }
 
     @Override
     public String getName() {
-        return "update-leaderboard";
+        return BedwarsRel._l("commands.updateleaderboard.name");
     }
 
     @Override

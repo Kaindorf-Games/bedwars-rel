@@ -26,11 +26,11 @@ public class StopLeaderboardCommand extends BaseCommand implements ICommand {
 
         if (BedwarsRel.getInstance().getActiveLeaderboard() != null) {
             BedwarsRel.getInstance().getActiveLeaderboard().setActive(false);
-            sender.sendMessage(ChatColor.GREEN + "Leaderboard stopped");
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.stopped"));
             return true;
         }
 
-        sender.sendMessage(ChatColor.RED + "No Leaderboard found to stop");
+        sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.notfound"));
         return true;
     }
 
@@ -46,12 +46,12 @@ public class StopLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "stop the leaderboard";
+        return BedwarsRel._l("commands.stopleaderboard.description");
     }
 
     @Override
     public String getName() {
-        return "stop-leaderboard";
+        return BedwarsRel._l("commands.stopleaderboard.name");
     }
 
     @Override

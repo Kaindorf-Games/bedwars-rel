@@ -4,6 +4,7 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.leaderboard.observer.LeaderboardBase;
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -27,9 +28,9 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
             if (activeLeaderboard != null && activeLeaderboard.getName().equalsIgnoreCase(name)) {
                 activeLeaderboard.setActive(true);
-                sender.sendMessage(ChatColor.GREEN + "Leaderboard " + name + " is active again");
+                sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.errors.alreadyactive", ImmutableMap.of("name", name)));
             } else {
-                sender.sendMessage(ChatColor.RED + "Leaderboard " + name + " doesn't exist!");
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.notfoundlong", ImmutableMap.of("name", name)));
             }
         } else if (args.size() == 2) { // start new Leaderboard
             String name = args.get(0);
@@ -39,13 +40,13 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
             activeLeaderboard = LeaderboardBase.findLeaderboard(type, name);
             if (activeLeaderboard == null) {
                 activeLeaderboard = prev;
-                sender.sendMessage(ChatColor.RED + "Leaderboard with type " + type + " cannot be created");
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.cannotbecreated", ImmutableMap.of("type", type)));
             } else {
                 activeLeaderboard.setActive(true);
-                sender.sendMessage(ChatColor.GREEN + "Leaderboard " + name + " started");
+                sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.started", ImmutableMap.of("name", name)));
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "Too few or too many arguments");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("invalidparamCount"));
         }
 
         BedwarsRel.getInstance().setActiveLeaderboard(activeLeaderboard);
@@ -64,12 +65,12 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "start or continue leaderboard";
+        return BedwarsRel._l("commands.startleaderboard.description");
     }
 
     @Override
     public String getName() {
-        return "start-leaderboard";
+        return BedwarsRel._l("commands.startleaderboard.name");
     }
 
     @Override

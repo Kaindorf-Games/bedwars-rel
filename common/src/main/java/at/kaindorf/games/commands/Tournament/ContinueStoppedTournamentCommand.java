@@ -26,7 +26,7 @@ public class ContinueStoppedTournamentCommand extends BaseCommand implements ICo
     }
 
     if(Tournament.getInstance().isTournamentRunning()) {
-      sender.sendMessage(ChatColor.RED+"Tournament is already running");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentalreadyrunning"));
       return true;
     }
 
@@ -46,12 +46,12 @@ public class ContinueStoppedTournamentCommand extends BaseCommand implements ICo
 
   @Override
   public String getDescription() {
-    return "Continues a stopped tournament";
+    return BedwarsRel._l("commands.tourney.continuestopped.description");
   }
 
   @Override
   public String getName() {
-    return "continue";
+    return BedwarsRel._l("commands.tourney.continuestopped.name");
   }
 
   @Override

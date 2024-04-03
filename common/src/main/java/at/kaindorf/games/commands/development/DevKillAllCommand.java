@@ -34,11 +34,11 @@ public class DevKillAllCommand extends DevBaseCommand implements ICommand {
 
         Game game = BedwarsRel.getInstance().getGameManager().getGame(args.get(0));
         if(game.getState() != GameState.RUNNING) {
-            return ChatWriter.errorMessage(sender, "Game has to be running");
+            return ChatWriter.errorMessage(sender, BedwarsRel._l("dev.gamenotrun"));
         } else if(game.getMatch() == null) {
-            return ChatWriter.errorMessage(sender, "Game  has to be a tourney match");
+            return ChatWriter.errorMessage(sender, BedwarsRel._l("dev.gamenottourney"));
         } else if(game.getTeam(args.get(1)) == null) {
-            return ChatWriter.errorMessage(sender, "Team has to play in the games match");
+            return ChatWriter.errorMessage(sender, BedwarsRel._l("dev.teamnotinmatch"));
         }
 
 
@@ -79,11 +79,11 @@ public class DevKillAllCommand extends DevBaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "make a team win a match instant";
+        return BedwarsRel._l("commands.dev.killall.description");
     }
 
     @Override
     public String getName() {
-        return "killall";
+        return BedwarsRel._l("commands.dev.killall.name");
     }
 }

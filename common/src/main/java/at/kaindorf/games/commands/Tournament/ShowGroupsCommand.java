@@ -28,7 +28,7 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
         }
 
         if (Tournament.getInstance().getGroups().size() == 0) {
-            sender.sendMessage(ChatColor.RED + "No Groups found");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nogroups"));
             return true;
         }
 
@@ -37,7 +37,7 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
             try {
                 page = Integer.parseInt(args.get(0));
             } catch (NumberFormatException ex) {
-                sender.sendMessage(ChatColor.RED + "Not a number!!!");
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nonum"));
                 return false;
             }
         }
@@ -57,8 +57,8 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
             sb.append(ChatColor.YELLOW + "" + group.getName() + "\n");
             group.getTeams().forEach(t -> {
                 String paused = "";
-                if (t.isPaused()) paused = " (paused)";
-                sb.append(ChatColor.YELLOW + "  " + t.getName() + paused + " - " + t.calculatePoints(CurrentState.GROUP_STAGE) + " points\n");
+                if (t.isPaused()) paused = " ("+BedwarsRel._l("tourney.others.paused")+")";
+                sb.append(ChatColor.YELLOW + "  " + t.getName() + paused + " - " + t.calculatePoints(CurrentState.GROUP_STAGE) + " "+BedwarsRel._l("tourney.others.points")+"\n");
             });
         }
 
@@ -78,12 +78,12 @@ public class ShowGroupsCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Print all groups into the chat";
+        return BedwarsRel._l("commands.tourney.showgroups.description");
     }
 
     @Override
     public String getName() {
-        return "Show Groups";
+        return BedwarsRel._l("commands.tourney.showgroups.name");
     }
 
     @Override

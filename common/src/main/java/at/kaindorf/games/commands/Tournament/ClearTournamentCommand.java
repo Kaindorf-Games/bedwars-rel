@@ -40,7 +40,7 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
       }
     }
 
-    sender.sendMessage(ChatColor.GREEN + "Clearing done!");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.cleardone"));
     return true;
   }
 
@@ -56,12 +56,12 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Clears all tournament configuration (teams, players, matches, ...)";
+    return BedwarsRel._l("commands.tourney.cleartournament.description");
   }
 
   @Override
   public String getName() {
-    return "Clear Tournament";
+    return BedwarsRel._l("commands.tourney.cleartournament.name");
   }
 
   @Override

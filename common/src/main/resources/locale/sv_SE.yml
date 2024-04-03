@@ -295,3 +295,198 @@ commands:
   itemspaste:
     name: "Skicka ditt inventory till en fil"
     desc: "Detta kommer att återvända en länk där du kan se ditt nuvarande inventory som ett exempel för din shop.yml"
+  leaderboardclear:
+    name: "Clear Leaderboard"
+    description: "Clear the Bedwars Leaderboard"
+  leaderboardwait:
+    name: "Leaderboard Wait Duration"
+    description: "Periodic duration of the leaderboard update to the server"
+  moveplayers:
+    name: "Move players"
+    description: "Moves all non op players on the server into the game"
+  showmode:
+    name: "Show Bedwars Mode"
+    description: "Show the current Bedwars Mode (LAN, Tournament, Normal)"
+  spectate:
+    name: "Spectate"
+    description: "Spectate a game, player or team"
+  startleaderboard:
+    name: "Start Leaderboard"
+    description: "Start the Bedwars Leaderboard"
+  stopleaderboard:
+    name: "Stop Leaderboard"
+    description: "Stop the Bedwars Leaderboard"
+  switchmode:
+    name: "Switch Bedwars Mode"
+    description: "Switches the Bedwars Mode between LAN, Tournament or Normal"
+  updateleaderboard:
+    name: "Update Leaderboard"
+    description: "Forces the leaderboard to update to the server"
+  tourney:
+    addpoints:
+      name: "add Points"
+      description: "add points to the team"
+    addteams:
+      name: "Add Teams"
+      description: "Add teams to the Tournament"
+    cleartournament:
+      name: "Clear Tournament"
+      description: "Clears all tournament configuration (teams, players, matches, ...)"
+    continuestopped:
+      name: "Continue"
+      description: "Continues a stopped tournament"
+    lancreateteam:
+      name: "Create Team LAN"
+      description: "Create your own custom LAN team"
+    lanjointeam:
+      name: "Join Team LAN"
+      description: "Join another LAN team manually"
+    lanleaveteam:
+      name: "Leave Team LAN"
+      description: "Leave the team manually"
+    lansetteamsize:
+      name: "LAN set Team size"
+      description: "Sets the size of a LAN team (current=$current$)"
+    loadentities:
+      name: "Load Entities"
+      description: "Loads all the tournament Entities from .yml files"
+    removemissing:
+      name: "Remove Missing"
+      description: "Removes all missing teams"
+    removeteam:
+      name: "Remove team"
+      description: "Removes a team"
+    saveentities:
+      name: "Save Entities"
+      description: "Save all the tournament Entities to .yml files"
+    showgroups:
+      name: "Show Groups"
+      description: "Print all groups into the chat"
+    showmatchestodo:
+      name: "Get ToDo Matches"
+      description: "Returns all matches that are still To Do"
+    showteams:
+      name: "Show Teams"
+      description: "Print all teams into the chat"
+    skipmatch:
+      name: "Skip match"
+      description: "Moves a match from todo to done"
+    starttournament:
+      name: "Start Tournament"
+      description: "Command to start the tournament"
+    stoptournament:
+      name: "Stop Tournament"
+      description: "Command to stop the tournament"
+    nopause:
+      name: "No pause"
+      description: "Removes pause status of the team"
+    pause:
+      name: "Pause"
+      description: "Pauses the team"
+    help:
+      name: "Tourney Help"
+      description: "Help command for all Tournament commands"
+  dev:
+    help:
+      name: "Dev Help"
+      description: "Help command for all Dev commands"
+    killall:
+      name: "Kill All"
+      description: "Make a team win a match instant"
+dev:
+  help: "Dev help"
+  gamenotrun: "Game has to be running"
+  gamenottourney: "Game has to be a tourney match"
+  teamnotinmatch: "Team has to play in the games match"
+tourney:
+  wrongPermission: "You don't have the required permissions"
+  others:
+    paused: "paused"
+    points: "points"
+    match: "Match"
+    running: "running"
+    pointsgroup: "Points group stage:"
+    pointsko: "Points ko stage:"
+    tourneyhelp: "Tourney Help"
+    adminhelp: "Admin Help"
+  info:
+    pointsadded: "Points were added"
+    teamsadded: "All teams are added"
+    cleardone: "Clearing done"
+    teamcreated: "Team created"
+    teamjoined: "Team joined"
+    teamleft: "You left the team"
+    teamsizeset: "Team size set to $size$"
+    loadedentities: "Loaded Tournament Entities"
+    teamsremoved: "Missing teams removed"
+    teamremoved: "Team removed"
+    entitiessaved: "Tournament Entities are saved"
+    started: "Tournament started"
+    softstop: "The Tournament will stop and will not start new matches"
+    hardstop: "The Tournament will immediately stop and terminate all running matches"
+    teampaused: "The team is paused"
+    teamnotpaused: "The team is not paused anymore"
+  errors:
+    nonum: "Not a number!"
+    invalidinput: "Invalid Input!"
+    invalidparams: "Invalid Parameters!"
+    cantaddpoints: "Either the team doesn't exist or the team hasn't played any matches so far!"
+    filenamereq: "Filename is required!"
+    filenamejson: "File has to be .json!"
+    filenotfound: "File not found!"
+    invalidfile: "Invalid File!"
+    tournamentalreadyrunning: "Tournament is already running!"
+    tournamentalreadystarted: "Tournament is already started!"
+    tournamentnotrunning: "Tournament isn't running!"
+    tournamentalreadyrunningteamcreation: "Tournament has already started! Creating a team is not possible anymore!"
+    tournamentalreadyrunningteamjoin: "Tournament has already started! Joining a team is not possible anymore!"
+    tournamentalreadyrunningteamleave: "Tournament has already started! Leaving a team is not possible anymore!"
+    playerexists: "Player $name$ is already in a team!"
+    teamexists: "Team $name$ exists already!"
+    groupexists: "Group $name$ exists already!"
+    teamnotexistslong: "Team $name$ doesn't exist!"
+    teamnotexists: "Team doesn't exist!"
+    teamfull: "Team is full!"
+    arentinteam: "You aren't in any team!"
+    teamsizeint: "Team size must be a positive integer!"
+    nogroups: "No Groups found!"
+    tournamentintrans: "Tournament is in Transition!"
+    nomatchestodo: "No Matches to do!"
+    nomatches: "No Matches!"
+    teamsnotfound: "No Teams found!"
+    matchnotexist: "Match with ID $id$ does not exist!"
+    cantdeleterunningmatch: "Running matches can't be deleted!"
+    generationgroupfailed: "Generating Group Stage failed!"
+    addteamsfirst: "You have to add teams first!"
+    nomapwithsize: "At least one map has to support the group size!"
+    teamnameinvalid: "Team name is invalid!"
+    notallowed: "You are not allowed to do that!"
+    notinanyteam: "You are not in any team!"
+invalidparamCount: "Too few or too many arguments"
+mode:
+  wrong: "Wrong Mode supplied!"
+  same: "Mode is already set"
+  success: "Mode changed to $mode$"
+spectate:
+  pnamemissing: "Player name missing"
+  pnotfound: "Player not found"
+  pnogame: "Player is in no game"
+  tnamemissing: "Team name missing"
+  tnotfound: "Team not found"
+  tnogame: "Team is in no game"
+  gamenotrun: "Game must be running to join as spectator"
+leaderboard:
+  info:
+    bedwarsmode: "Bedwars Mode: $bwmode$"
+    cleared: "Leaderboard has been cleared"
+    durset: "Duration has been set"
+    started: "Leaderboard $name$ started"
+    stopped: "Leaderboard stopped"
+    updated: "Leaderboard updated"
+  errors:
+    durargumentint: "Argument duration has to be an int!"
+    durargumentreq: "Argument duration required!"
+    notfound: "No Leaderboard found!"
+    alreadyactive: "Leaderboard $name$ is active again!"
+    notfoundlong: "Leaderboard $name$ doesn't exist!"
+    cannotbecreated: "Leaderboard with type $type$ cannot be created"

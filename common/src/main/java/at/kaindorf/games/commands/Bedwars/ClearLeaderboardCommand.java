@@ -5,6 +5,7 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.material.Bed;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class ClearLeaderboardCommand extends BaseCommand implements ICommand {
         }
 
         BedwarsRel.getInstance().setActiveLeaderboard(null);
-        sender.sendMessage(ChatColor.GREEN + "Leaderboard has been cleared!!!");
+        sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.cleared"));
         return true;
     }
 
@@ -37,12 +38,12 @@ public class ClearLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "clear leaderboard";
+        return BedwarsRel._l("commands.leaderboardclear.description");
     }
 
     @Override
     public String getName() {
-        return "clear-leaderboard";
+        return BedwarsRel._l("commands.leaderboardclear.name");
     }
 
     @Override

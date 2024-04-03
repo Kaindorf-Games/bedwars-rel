@@ -15,6 +15,7 @@ import at.kaindorf.games.utils.Loader;
 import at.kaindorf.games.utils.NameTagHandler;
 import at.kaindorf.games.utils.Pair;
 import at.kaindorf.games.utils.Saver;
+import com.google.common.collect.ImmutableMap;
 import lombok.Data;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
@@ -89,7 +90,7 @@ public class Tournament {
   public void addGroup(int id, String name) throws TournamentEntityExistsException {
     Optional<TourneyGroup> optional = groups.stream().filter(g -> g.getName().equals(name)).findFirst();
     if (optional.isPresent()) {
-      throw new TournamentEntityExistsException("Group "+ name + "exists already!!!");
+      throw new TournamentEntityExistsException(BedwarsRel._l("tourney.errors.groupexists", ImmutableMap.of("name", name)));
     }
     TourneyGroup group = new TourneyGroup(id, name);
     groups.add(group);
@@ -137,7 +138,7 @@ public class Tournament {
       team.get().addPlayer(player);
       players.add(player);
     } else {
-      throw new TournamentEntityMissingException("Team "+ teamName+ " doesn't exist");
+      throw new TournamentEntityMissingException(BedwarsRel._l("tourney.errors.teamnotexistslong", ImmutableMap.of("name", teamName)));
     }
   }
 
@@ -406,7 +407,7 @@ public class Tournament {
 
   public void removeMissingTeams() throws Exception {
     if(groupStage != null || koStage != null) {
-      throw new Exception("Tournament is already running!!!");
+      throw new Exception(BedwarsRel._l("tourney.errors.tournamentalreadyrunning"));
     }
     this.identifyOnlinePlayers();
     teams.removeIf(t -> t.numberOfPlayersOnline() == 0);

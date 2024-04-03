@@ -21,17 +21,17 @@ public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
         }
 
         if (BedwarsRel.getInstance().getActiveLeaderboard() == null) {
-            sender.sendMessage(ChatColor.RED + "No Leaderboard found");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.notfound"));
             return true;
         }
 
         if (!args.isEmpty() && StringUtils.isNumeric(args.get(0))) {
             BedwarsRel.getInstance().getActiveLeaderboard().setWaitBetweenUpdates(Integer.parseInt(args.get(0)));
-            sender.sendMessage(ChatColor.GREEN + "Duration has been set");
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.errors.durset"));
         } else if (!StringUtils.isNumeric(args.get(0))) {
-            sender.sendMessage(ChatColor.RED + "Argument duration has to be an int!");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.durargumentint"));
         } else {
-            sender.sendMessage(ChatColor.RED + "Argument duration required!");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.durargumentreq"));
         }
 
         return true;
@@ -49,12 +49,12 @@ public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "After which duration the leaderboard should only be updated";
+        return BedwarsRel._l("commands.leaderboardwait.description");
     }
 
     @Override
     public String getName() {
-        return "wait-leaderboard";
+        return BedwarsRel._l("commands.leaderboardwait.name");
     }
 
     @Override

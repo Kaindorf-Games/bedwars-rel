@@ -7,6 +7,7 @@ import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
 import at.kaindorf.games.tournament.rounds.KoStage;
 import at.kaindorf.games.utils.ChatWriter;
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -30,7 +31,7 @@ public class SkipMatchCommand extends BaseCommand {
     }
 
     if (!Tournament.getInstance().isTournamentRunning()) {
-      sender.sendMessage(ChatColor.RED + "Tournament isn't running");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentnotrunning"));
       return true;
     }
 
@@ -43,7 +44,7 @@ public class SkipMatchCommand extends BaseCommand {
     try {
       matchId = Integer.parseInt(args.get(0));
     } catch (NumberFormatException ex) {
-      sender.sendMessage("Not a Number");
+      sender.sendMessage(BedwarsRel._l("tourney.errors.nonum"));
       return false;
     }
 
@@ -53,12 +54,12 @@ public class SkipMatchCommand extends BaseCommand {
   }
 
   private void sendMatchDoesNotExist(CommandSender sender, int id) {
-    sender.sendMessage("Match with ID " + id + " does not exist");
+    sender.sendMessage(BedwarsRel._l("tourney.errors.matchnotexist", ImmutableMap.of("id", ""+id)));
   }
 
   private void verifyIfMatchIsRunning(List<TourneyMatch> matches, int id, CommandSender sender) {
     if (matches.stream().anyMatch(m -> m.getId() == id && m.isRunning())) {
-      sender.sendMessage(ChatColor.RED + "Running matches can't be deleted");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.cantdeleterunningmatch"));
     }
   }
 
@@ -85,7 +86,7 @@ public class SkipMatchCommand extends BaseCommand {
         ks.currentKoRound().addDoneMatch(match);
       }
     } else {
-      sender.sendMessage(ChatColor.RED + "Tournament is in Transition");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentintrans"));
     }
   }
 
@@ -118,7 +119,7 @@ public class SkipMatchCommand extends BaseCommand {
       }
       verifyIfMatchIsRunning(ks.currentKoRound().getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), id, sender);
     } else {
-      sender.sendMessage(ChatColor.RED + "Tournament is in Transition");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentintrans"));
     }
   }
 
@@ -134,12 +135,12 @@ public class SkipMatchCommand extends BaseCommand {
 
   @Override
   public String getDescription() {
-    return "Moves a match from todo to done";
+    return BedwarsRel._l("commands.tourney.skipmatch.description");
   }
 
   @Override
   public String getName() {
-    return "skip match";
+    return BedwarsRel._l("commands.tourney.skipmatch.name");
   }
 
   @Override

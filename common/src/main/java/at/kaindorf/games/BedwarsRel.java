@@ -118,6 +118,10 @@ public class BedwarsRel extends JavaPlugin {
         return BedwarsRel._l(BedwarsRel.getInstance().getConfig().getString("locale"), key);
     }
 
+    public static String _l(String key, Map<String, String> params) {
+        return BedwarsRel._l(BedwarsRel.getInstance().getConfig().getString("locale"), key, params);
+    }
+
     public static String _l(String locale, String key) {
         if (!BedwarsRel.getInstance().localization.containsKey(locale)) {
             BedwarsRel.getInstance().loadLocalization(locale);

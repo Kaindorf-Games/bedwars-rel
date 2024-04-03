@@ -31,7 +31,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
     }
 
     if (Tournament.getInstance().getTeams().size() == 0) {
-      sender.sendMessage(ChatColor.RED + "No Teams found");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.teamsnotfound"));
       return true;
     }
 
@@ -40,7 +40,7 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
       try {
         page = Integer.parseInt(args.get(0));
       } catch (NumberFormatException ex) {
-        sender.sendMessage(ChatColor.RED + "Not a number");
+        sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nonum"));
         return false;
       }
     }
@@ -64,14 +64,14 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
 
     for (TourneyTeam team : teams) {
       String paused = "";
-      if (team.isPaused()) paused = " (paused)";
+      if (team.isPaused()) paused = " ("+BedwarsRel._l("tourney.others.paused")+")";
 
       sb.append(ChatColor.YELLOW + team.getName() + " [" + team.getShortname() + "]" + paused + "\n");
       team.getPlayers().forEach(p -> {
         sb.append(ChatColor.YELLOW + "  " + (p.getPlayer() == null ? p.getUuid() : p.getPlayer().getName()) + "\n");
       });
-      sb.append(ChatColor.YELLOW + "  Points group stage: " + team.calculatePoints(CurrentState.GROUP_STAGE) + "\n");
-      sb.append(ChatColor.YELLOW + "  Points ko stage: " + team.calculatePoints(CurrentState.KO_STAGE) + "\n\n");
+      sb.append(ChatColor.YELLOW + "  "+BedwarsRel._l("tourney.others.pointsgroup")+" " + team.calculatePoints(CurrentState.GROUP_STAGE) + "\n");
+      sb.append(ChatColor.YELLOW + "  "+BedwarsRel._l("tourney.others.pointsko")+" " + team.calculatePoints(CurrentState.KO_STAGE) + "\n\n");
     }
     return sb.toString();
   }
@@ -88,12 +88,12 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Print all teams into the chat";
+    return BedwarsRel._l("commands.tourney.showteams.description");
   }
 
   @Override
   public String getName() {
-    return "Show Teams";
+    return BedwarsRel._l("commands.tourney.showteams.name");
   }
 
   @Override
