@@ -129,16 +129,17 @@ public class GameLoop extends BukkitRunnable {
     }
 
     private void assignTeamColors(List<TourneyTeam> teams, Game game) {
-        List<Team> teamColors = new ArrayList<>(game.getTeams().values());
+        List<String> teamColors = new ArrayList<String>(game.getTeams().keySet());
         Collections.shuffle(teamColors); // ensure that not always the same colors are used
 
         for (int i = 0; i < teams.size(); i++) {
-            teams.get(i).setTeamColor(teamColors.get(i).getColor());
+            teams.get(i).setTeamColor(teamColors.get(i));
         }
     }
 
     private void throwPlayersIntoTheGame(List<TourneyPlayer> players, Game game) {
         game.kickAllPlayers();
+        game.getTeams().keySet().forEach(Bukkit.getLogger()::info);
 
         for (TourneyPlayer tourneyPlayer : players) {
             if (tourneyPlayer.getPlayer() != null && tourneyPlayer.getPlayer().isOnline()) {
@@ -147,19 +148,7 @@ public class GameLoop extends BukkitRunnable {
                 // throw players into their team
                 Optional<TourneyTeam> teamOfPlayer = Tournament.getInstance().getTourneyTeamOfPlayer(tourneyPlayer.getPlayer());
                 if (teamOfPlayer.isPresent()) {
-                    Team team = null;
-                    List<String> teamNames = Arrays.asList(teamOfPlayer.get().getTeamColor().name().toLowerCase(),
-                            teamOfPlayer.get().getTeamColor().name().toUpperCase(),
-                            teamOfPlayer.get().getTeamColor().name().toUpperCase().charAt(0) + teamOfPlayer.get().getTeamColor().name().toUpperCase().substring(1));
-                    for(String teamName : teamNames) {
-                        try {
-                            team = game.getTeam(teamName);
-                        } catch(Exception ignored) {
-                        }
-                    }
-                    if(team == null) {
-                        throw new RuntimeException("Team not found!");
-                    }
+                    Team team = game.getTeam(teamOfPlayer.get().getTeamColor());
                     game.playerJoinTeam(tourneyPlayer.getPlayer(), team);
                 }
             }

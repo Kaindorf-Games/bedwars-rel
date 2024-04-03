@@ -22,7 +22,7 @@ public class TourneyTeam implements Serializable {
     private Game game;
     private boolean paused = false;
 
-    private TeamColor teamColor;
+    private String teamColor;
 
     public static int currentId = 0;
 
