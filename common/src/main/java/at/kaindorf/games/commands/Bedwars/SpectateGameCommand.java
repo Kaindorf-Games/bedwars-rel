@@ -44,37 +44,37 @@ public class SpectateGameCommand extends BaseCommand implements ICommand {
         Game game = this.getPlugin().getGameManager().getGame(args.get(0));
         if(args.get(0).equalsIgnoreCase("player")) {
             if(args.size() < 2) {
-                sender.sendMessage(ChatColor.RED + "Player name missing");
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("spectate.pnamemissing"));
                 return true;
             }
 
             Player p = this.getPlugin().getServer().getPlayer(args.get(1));
             if (p == null) {
-                sender.sendMessage(ChatColor.RED+"Player not found");
+                sender.sendMessage(ChatColor.RED+BedwarsRel._l("spectate.pnotfound"));
                 return true;
             }
 
             Game g = this.getPlugin().getGameManager().getGameOfPlayer(p);
             if (g == null) {
-                sender.sendMessage(ChatColor.RED+"Player is in no game");
+                sender.sendMessage(ChatColor.RED+BedwarsRel._l("spectate.pnogame"));
                 return true;
             }
             game = g;
         } else if(args.get(0).equalsIgnoreCase("team")) {
             if(args.size() < 2) {
-                sender.sendMessage(ChatColor.RED + "Team name missing");
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("spectate.tnamemissing"));
                 return true;
             }
 
             Optional<TourneyTeam> t = Tournament.getInstance().getTeamPerName(args.get(1));
             if (!t.isPresent()) {
-                sender.sendMessage(ChatColor.RED+"Team not found");
+                sender.sendMessage(ChatColor.RED+BedwarsRel._l("spectate.tnotfound"));
                 return true;
             }
 
             Optional<Game> g = this.getPlugin().getGameManager().getGameWithTeam(t.get());
             if (!g.isPresent()) {
-                sender.sendMessage(ChatColor.RED+"Player is in no game");
+                sender.sendMessage(ChatColor.RED+BedwarsRel._l("spectate.tnogame"));
                 return true;
             }
             game = g.get();
@@ -82,13 +82,13 @@ public class SpectateGameCommand extends BaseCommand implements ICommand {
 
         if(game != null) {
             if(game.getState() != GameState.RUNNING) {
-                sender.sendMessage(ChatColor.RED+"Game must be running to join as spectator");
+                sender.sendMessage(ChatColor.RED+BedwarsRel._l("spectate.gamenotrun"));
                 return true;
             }
             game.toSpectator(player);
 
         } else {
-            sender.sendMessage(ChatColor.RED+"Game not found 404");
+            sender.sendMessage(ChatColor.RED+BedwarsRel._l("errors.gamenotfoundsimple"));
         }
 
 
@@ -107,12 +107,12 @@ public class SpectateGameCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Spectate a game";
+        return BedwarsRel._l("commands.spectate.description");
     }
 
     @Override
     public String getName() {
-        return "spectate";
+        return BedwarsRel._l("commands.spectate.name");
     }
 
     @Override

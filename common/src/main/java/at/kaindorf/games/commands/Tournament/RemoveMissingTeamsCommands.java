@@ -30,7 +30,7 @@ public class RemoveMissingTeamsCommands extends BaseCommand implements ICommand 
       sender.sendMessage(ChatColor.RED + e.getMessage());
       return true;
     }
-    sender.sendMessage(ChatColor.GREEN + "Missing teams removed");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamsremoved"));
 
     return true;
   }
@@ -47,12 +47,12 @@ public class RemoveMissingTeamsCommands extends BaseCommand implements ICommand 
 
   @Override
   public String getDescription() {
-    return "removes all missing teams";
+    return BedwarsRel._l("commands.tourney.removemissing.description");
   }
 
   @Override
   public String getName() {
-    return "removeMissing";
+    return BedwarsRel._l("commands.tourney.removemissing.name");
   }
 
   @Override

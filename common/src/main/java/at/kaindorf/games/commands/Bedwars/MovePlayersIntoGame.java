@@ -30,10 +30,10 @@ public class MovePlayersIntoGame extends BaseCommand implements ICommand {
     String name = args.get(0);
     Game game = BedwarsRel.getInstance().getGameManager().getGame(name);
     if (game == null) {
-      sender.sendMessage(ChatColor.RED + "404 - Game not found!");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("errors.gamenotfoundsimple"));
       return false;
     } else if (game.getState() != GameState.WAITING && game.getPlayers().size() != 0) {
-      sender.sendMessage(ChatColor.RED + "Game is not empty");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.notwhileingame"));
       return false;
     }
 
@@ -56,12 +56,12 @@ public class MovePlayersIntoGame extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "move players into game";
+    return BedwarsRel._l("commands.moveplayers.description");
   }
 
   @Override
   public String getName() {
-    return "command.move.players";
+    return BedwarsRel._l("commands.moveplayers.name");
   }
 
   @Override

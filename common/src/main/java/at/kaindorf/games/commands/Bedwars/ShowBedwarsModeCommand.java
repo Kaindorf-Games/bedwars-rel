@@ -4,6 +4,7 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -22,7 +23,8 @@ public class ShowBedwarsModeCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    sender.sendMessage(ChatColor.GREEN + "Bedwars Mode: " + BedwarsRel.getInstance().getMode().toString().toLowerCase());
+//    sender.sendMessage(ChatColor.GREEN + "Bedwars Mode: " + BedwarsRel.getInstance().getMode().toString().toLowerCase());
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.bedwarsmode", ImmutableMap.of("bwmode", BedwarsRel.getInstance().getMode().toString().toLowerCase())));
     return true;
   }
 
@@ -38,12 +40,12 @@ public class ShowBedwarsModeCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Show the current Bedwars Mode";
+    return BedwarsRel._l("commands.showmode.description");
   }
 
   @Override
   public String getName() {
-    return "showMode";
+    return BedwarsRel._l("commands.showmode.name");
   }
 
   @Override

@@ -13,6 +13,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -104,6 +106,9 @@ public class LocalizationConfig extends YamlConfiguration {
       reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
       this.load(reader);
     } catch (Exception e) {
+      e.printStackTrace();
+      Bukkit.getLogger().info(e.getMessage());
+      Bukkit.getLogger().info(e.toString());
       BedwarsRel.getInstance().getServer().getConsoleSender().sendMessage(
           ChatWriter.pluginMessage(ChatColor.RED + "Failed to load localization language!"));
       return;

@@ -39,19 +39,19 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
     }
 
     if(args.size() == 0) {
-      sender.sendMessage(ChatColor.RED + "Filename is required");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.filenamereq"));
       return false;
     }
 
     String fileName = args.get(0);
     if (!fileName.endsWith(".json")) {
-      sender.sendMessage(ChatColor.RED + "File has to be .json");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.filenamejson"));
       return false;
     }
     File teamFile = new File(getPlugin().getDataFolder()+"/tournament/", fileName);
 
     if (!teamFile.exists()) {
-      sender.sendMessage(ChatColor.RED + "File not found");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.filenotfound"));
       return false;
     }
     JSONParser parser = new JSONParser();
@@ -83,12 +83,12 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
       sender.sendMessage(ChatColor.RED + e.getMessage());
       return false;
     } catch (Exception e) {
-      sender.sendMessage(ChatColor.RED + "Invalid file");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.invalidfile"));
       return false;
     }
 
     tourney.show();
-    sender.sendMessage(ChatColor.GREEN + "All teams are added");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamsadded"));
     return true;
   }
 
@@ -104,12 +104,12 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Add teams to the Tournament";
+    return BedwarsRel._l("commands.tourney.addteams.description");
   }
 
   @Override
   public String getName() {
-    return "Add Teams";
+    return BedwarsRel._l("commands.tourney.addteams.name");
   }
 
   @Override

@@ -28,9 +28,9 @@ public class RemoveTourneyTeamCommand extends BaseCommand implements ICommand {
       String name = args.stream().reduce((n1, n2) -> n1 + " " + n2).get();
 
       if (Tournament.getInstance().deleteTourneyTeamByName(name)) {
-        sender.sendMessage(ChatColor.GREEN+"Team deleted");
+        sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamremoved"));
       } else {
-        sender.sendMessage(ChatColor.RED+"Team not found (404)");
+        sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.teamnotexists"));
       }
       return true;
     }
@@ -50,12 +50,12 @@ public class RemoveTourneyTeamCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "removes a team";
+    return BedwarsRel._l("commands.tourney.removeteam.description");
   }
 
   @Override
   public String getName() {
-    return "remove team";
+    return BedwarsRel._l("commands.tourney.removeteam.name");
   }
 
   @Override

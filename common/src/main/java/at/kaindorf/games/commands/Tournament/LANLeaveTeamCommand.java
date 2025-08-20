@@ -29,7 +29,7 @@ public class LANLeaveTeamCommand extends BaseCommand implements ICommand {
         }
 
         if (Tournament.getInstance().getGroups().size() > 0) {
-            sender.sendMessage(ChatColor.RED + "Tournament has already started! Leaving a team is not possible anymore");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentalreadyrunningteamleave"));
             return true;
         }
 
@@ -45,9 +45,9 @@ public class LANLeaveTeamCommand extends BaseCommand implements ICommand {
             } else {
                 player.getTeam().getPlayers().remove(player);
             }
-            sender.sendMessage(ChatColor.GREEN + "You left the team");
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamleft"));
         } else {
-            sender.sendMessage(ChatColor.RED + "You aren't in any team");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.arentinteam"));
         }
 
 
@@ -66,12 +66,12 @@ public class LANLeaveTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "leave team manually";
+        return BedwarsRel._l("commands.tourney.lanleaveteam.description");
     }
 
     @Override
     public String getName() {
-        return "leaveTeam";
+        return BedwarsRel._l("commands.tourney.lanleaveteam.name");
     }
 
     @Override

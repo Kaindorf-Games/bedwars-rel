@@ -295,3 +295,198 @@ commands:
   itemspaste:
     name: "Cole seu inventário para um arquivo"
     desc: "Isso retornará um link onde você pode ver seu inventário atual que será usado como um exemplo para seu shop.yml"
+  leaderboardclear:
+    name: "Limpar o Leaderboard"
+    description: "Limpar o quadro de liderança das guerras de cama"
+  leaderboardwait:
+    name: "Prazo de espera do Leaderboard"
+    description: "Duração periódica da atualização da tabela de classificação para o servidor"
+  moveplayers:
+    name: "Mover jogadores"
+    description: "Move todos os jogadores não op no servidor para o jogo"
+  showmode:
+    name: "Mostrar modo de guerras de cama"
+    description: "Mostrar o modo atual de guerras de cama (LAN, Torneio, Normal)"
+  spectate:
+    name: "Espectáculo"
+    description: "Espeta um jogo, jogador ou equipe"
+  startleaderboard:
+    name: "Iniciar Leaderboard"
+    description: "Inicie a Tabela de Líderes de Bedwars"
+  stopleaderboard:
+    name: "Pare de Liderar"
+    description: "Pare a Tabela de Líderes de Bedwars"
+  switchmode:
+    name: "Alterar modo de guerras de cama"
+    description: "Alterna o modo de guerras entre LAN, Torneio ou Normal"
+  updateleaderboard:
+    name: "Actualizar o Leaderboard"
+    description: "Força a tabela de classificação para atualizar para o servidor"
+  tourney:
+    addpoints:
+      name: "adicionar pontos"
+      description: "adicionar pontos à equipe"
+    addteams:
+      name: "Adicionar equipes"
+      description: "Adicionar equipas ao Torneio"
+    cleartournament:
+      name: "Torneio claro"
+      description: "Limpa toda a configuração do torneio (teams, jogadores, jogos, ...)"
+    continuestopped:
+      name: "Continue"
+      description: "Continua um torneio parado"
+    lancreateteam:
+      name: "Criar LAN de equipe"
+      description: "Crie sua própria equipe de LAN personalizada"
+    lanjointeam:
+      name: "Junte-se a equipe LAN"
+      description: "Junte-se a outra equipe LAN manualmente"
+    lanleaveteam:
+      name: "Deixe a LAN da equipe"
+      description: "Deixe a equipe manualmente"
+    lansetteamsize:
+      name: "Conjunto de LAN Tamanho da equipa"
+      description: "Define o tamanho de uma equipe LAN (current=$current$)"
+    loadentities:
+      name: "Entidades de Carga"
+      description: "Carrega todo o torneio Entidades de arquivos .yml"
+    removemissing:
+      name: "Remover Falta"
+      description: "Remove todas as equipes em falta"
+    removeteam:
+      name: "Remover a equipe"
+      description: "Remove uma equipe"
+    saveentities:
+      name: "Salvar entidades"
+      description: "Salvar todo o torneio Entidades para arquivos .yml"
+    showgroups:
+      name: "Mostrar grupos"
+      description: "Imprima todos os grupos no chat"
+    showmatchestodo:
+      name: "Fazer jogos"
+      description: "Retorna todas as partidas que ainda estão a fazer"
+    showteams:
+      name: "Mostrar equipes"
+      description: "Imprima todas as equipes no chat"
+    skipmatch:
+      name: "Skip match"
+      description: "Move uma partida de todo para feito"
+    starttournament:
+      name: "Torneio de início"
+      description: "Comando para iniciar o torneio"
+    stoptournament:
+      name: "Torneio de Stop"
+      description: "Comando para parar o torneio"
+    nopause:
+      name: "Sem pausa"
+      description: "Remove o status de pausa da equipe"
+    pause:
+      name: "Pausa"
+      description: "Pausa a equipe"
+    help:
+      name: "Ajuda de Tourney"
+      desdescription: "Pausa a equipe"
+  dev:
+    help:
+      name: "Ajuda de Dev"
+      description: "Comando de ajuda para todos os comandos Dev"
+    killall:
+      name: "Matar tudo"
+      description: "Faça uma equipe ganhar um jogo instantâneo"
+dev:
+  help: "Ajuda de Dev"
+  gamenotrun: "O jogo tem de ser executado"
+  gamenottourney: "O jogo tem de ser um jogo de torneio"
+  teamnotinmatch: "Equipe tem que jogar no jogo de jogos"
+tourney:
+  wrongPermission: "Você não tem as permissões necessárias"
+  others:
+    paused: "paused"
+    points: "pontos"
+    match: "Jogo"
+    running: "correndo"
+    pointsgroup: "Fase do grupo de pontos:"
+    pointsko: "Pontos ko estágio:"
+    tourneyhelp: "Ajuda de Tourney"
+    adminhelp: "Ajuda de administrador"
+  info:
+    pointsadded: "Pontos foram adicionados"
+    teamsadded: "Todas as equipes são adicionadas"
+    cleardone: "Limpar feito"
+    teamcreated: "Equipe criada"
+    teamjoined: "Equipe juntada"
+    teamleft: "Deixaste a equipa"
+    teamsizeset: "Tamanho da equipe definido para $size$"
+    loadedentities: "Entidades de Torneio Carregadas"
+    teamsremoved: "Equipes desaparecidas removidas"
+    teamremoved: "Equipe removida"
+    entitiessaved: "Entidades de Torneio são salvas"
+    started: "Torneio começou"
+    softstop: "O Torneio vai parar e não vai começar novas partidas"
+    hardstop: "O Torneio irá imediatamente parar e terminar todas as partidas em execução"
+    teampaused: "A equipe está pausada"
+    teamnotpaused: "A equipe não está mais pausada"
+  errors:
+    nonum: "Nem um número!"
+    invalidinput: "Entrada inválida!"
+    invalidparams: "Parâmetros inválidos!"
+    cantaddpoints: "Ou a equipe não existe ou a equipe não jogou nenhuma partida até agora!"
+    filenamereq: "Nome de arquivo é necessário!"
+    filenamejson: "O arquivo tem de ser .json!"
+    filenotfound: "Arquivo não encontrado!"
+    invalidfile: "Arquivo inválido!"
+    tournamentalreadyrunning: "O torneio já está a correr!"
+    tournamentalreadystarted: "O torneio já começou!"
+    tournamentnotrunning: "O torneio não está a correr!"
+    tournamentalreadyrunningteamcreation: "Torneio já começou! Criar uma equipe já não é possível!"
+    tournamentalreadyrunningteamjoin: "Torneio já começou! Juntar-se a uma equipa já não é possível!"
+    tournamentalreadyrunningteamleave: "Torneio já começou! Deixar uma equipa já não é possível!"
+    playerexists: "Jogador $name$ já está em uma equipe!"
+    teamexists: "Team $name$ já existe!"
+    groupexists: "Grupo $name$ já existe!"
+    teamnotexistslong: "Team $name$ não existe!"
+    teamnotexists: "A equipa não existe!"
+    teamfull: "A equipa está cheia!"
+    arentinteam: "Não estás em nenhuma equipa!"
+    teamsizeint: "O tamanho da equipe deve ser um inteiro positivo!"
+    nogroups: "Não foram encontrados grupos!"
+    tournamentintrans: "O torneio está na Transição!"
+    nomatchestodo: "Não há correspondências para fazer!"
+    nomatches: "Sem fósforos!"
+    teamsnotfound: "Nenhuma equipa encontrada!"
+    matchnotexist: "Combinar com ID $id$ não existe!"
+    cantdeleterunningmatch: "Correr jogos não pode ser excluído!"
+    generationgroupfailed: "Grupo gerador O palco falhou!"
+    addteamsfirst: "Você tem que adicionar equipes primeiro!"
+    nomapwithsize: "Pelo menos um mapa tem de suportar o tamanho do grupo!"
+    teamnameinvalid: "O nome da equipa é inválido!"
+    notallowed: "Não podes fazer isso!"
+    notinanyteam: "Não estás em nenhuma equipa!"
+invalidparamCount: "Alguns ou muitos argumentos"
+mode:
+  wrong: "Modo errado fornecido!"
+  same: "Modo já está definido"
+  success: "Modo alterado para $mode$"
+spectate:
+  pnamemissing: "Nome do jogador ausente"
+  pnotfound: "Jogador não encontrado"
+  pnogame: "Jogador não está em jogo"
+  tnamemissing: "Nome da equipa desaparecido"
+  tnotfound: "Equipe não encontrada"
+  tnogame: "Equipe não está em jogo"
+  gamenotrun: "Jogo deve estar correndo para se juntar como espectador"
+leaderboard:
+  info:
+    bedwarsmode: "Modo de guerra: $bwmode$"
+    cleared: "O Leaderboard foi autorizado"
+    durset: "A duração foi definida"
+    started: "Leaderboard $name$ começou"
+    stopped: "Leaderboard parou"
+    updated: "Leaderboard actualizado"
+  errors:
+    durargumentint: "A duração do argumento tem de ser uma int!"
+    durargumentreq: "Duração do argumento necessário!"
+    notfound: "Nenhuma tabela de classificação encontrada!"
+    alreadyactive: "Leaderboard $name$ está ativo novamente!"
+    notfoundlong: "Leaderboard $name$ não existe!"
+    cannotbecreated: "Leaderboard com tipo $type$ não pode ser criado"

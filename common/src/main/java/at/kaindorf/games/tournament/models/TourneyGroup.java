@@ -2,28 +2,31 @@ package at.kaindorf.games.tournament.models;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Data
-public class TourneyGroup {
-  private String name;
-  private ArrayList<TourneyTeam> teams;
-  private int id;
+public class TourneyGroup implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-  public static int currentId = 0;
+    private String name;
+    private ArrayList<TourneyTeam> teams;
+    private int id;
 
-  public TourneyGroup(int id, String name) {
-    this.name = name;
-    this.id = id;
-    this.teams = new ArrayList<>();
+    public static int currentId = 0;
 
-    if(this.id > currentId) {
-      currentId = this.id;
+    public TourneyGroup(int id, String name) {
+        this.name = name;
+        this.id = id;
+        this.teams = new ArrayList<>();
+
+        if (this.id > currentId) {
+            currentId = this.id;
+        }
     }
-  }
 
-  public void addTeam(TourneyTeam team) {
-    teams.add(team);
-    team.setGroup(this);
-  }
+    public void addTeam(TourneyTeam team) {
+        teams.add(team);
+        team.setGroup(this);
+    }
 }

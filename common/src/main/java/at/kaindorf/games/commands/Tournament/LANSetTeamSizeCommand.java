@@ -5,6 +5,7 @@ import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.v1_8_R3.ExceptionInvalidNumber;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -33,11 +34,11 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
                 throw new Exception();
             }
         } catch (Exception ex) {
-            sender.sendMessage(ChatColor.RED+"Team size must be a positive integer");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.teamsizeint"));
             return true;
         }
         Tournament.getInstance().setLanTeamSizes(teams);
-        sender.sendMessage(ChatColor.GREEN+"Team size set to "+teams);
+        sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamsizeset", ImmutableMap.of("size", ""+teams)));
 
         return true;
     }
@@ -54,12 +55,12 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "current="+ Tournament.getInstance().getLanTeamSizes();
+        return BedwarsRel._l("commands.tourney.lansetteamsize.description");
     }
 
     @Override
     public String getName() {
-        return "lanTeamSize";
+        return BedwarsRel._l("commands.tourney.lansetteamsize.name");
     }
 
     @Override

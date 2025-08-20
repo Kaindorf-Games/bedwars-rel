@@ -13,7 +13,7 @@ public class TourneyProperties {
 
   public static File logFile = new File(BedwarsRel.getInstance().getDataFolder().getAbsolutePath()+"/tournament/log.txt");
 
-  public static int pointsForFinalKill = 1, pointsForWin = 5, pointsForBed = 2;
+  public static int pointsForFinalKill = 2, pointsForWin = 5, pointsForBed = 3;
   public static boolean playInRounds = false;
 
   @SneakyThrows

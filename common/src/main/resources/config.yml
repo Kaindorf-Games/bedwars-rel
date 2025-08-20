@@ -966,15 +966,16 @@ player-settings:
   old-shop-as-default: false
 
 tourney:
-  pointsForFinalKill: 1
+  pointsForFinalKill: 2
   pointsForWin: 5
-  pointsForBed: 2
+  pointsForBed: 3
 
   playerInRounds: false
 
   showTeamNames: true
 
 leaderboard:
-  api-url: http://192.168.0.130:8000
+  api-url: http://192.168.0.130:8001
+  name: profi-bedwars
   username: game
   password: 1234

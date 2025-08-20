@@ -4,6 +4,7 @@ import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -36,17 +37,17 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
       try {
         mode = BedwarsRel.Mode.valueOf(in.toUpperCase());
       } catch (IllegalArgumentException ex) {
-        sender.sendMessage(ChatColor.RED + "Wrong Mode supplied!");
+        sender.sendMessage(ChatColor.RED + BedwarsRel._l("mode.wrong"));
         return false;
       }
 
       if (mode == BedwarsRel.getInstance().getMode()) {
-        sender.sendMessage(ChatColor.YELLOW + "Mode is already set");
+        sender.sendMessage(ChatColor.YELLOW + BedwarsRel._l("mode.same"));
         return true;
       }
 
       BedwarsRel.getInstance().changeModeTo(mode);
-      sender.sendMessage(ChatColor.GREEN + "Mode changed to "+mode.toString().toLowerCase());
+      sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("mode.success", ImmutableMap.of("mode", mode.toString().toLowerCase())));
       return true;
     }
 
@@ -65,12 +66,12 @@ public class SwitchBedwarsModeCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "switches between modes";
+    return BedwarsRel._l("commands.switchmode.description");
   }
 
   @Override
   public String getName() {
-    return "switch";
+    return BedwarsRel._l("commands.switchmode.name");
   }
 
   @Override

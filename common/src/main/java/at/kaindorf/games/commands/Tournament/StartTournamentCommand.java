@@ -9,7 +9,6 @@ import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.TourneyProperties;
 import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.utils.ChatWriter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -50,10 +49,10 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
 
     boolean res = Tournament.getInstance().generateGroupMatches(groupSize, groupStageRounds);
     if(!res) {
-      sender.sendMessage(ChatColor.RED + "Generating Group Stage failed!!!");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.generationgroupfailed"));
     }
 
-    sender.sendMessage(ChatColor.GREEN+"Tournament started");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.started"));
 
     Tournament.getInstance().setQualifiedTeams(qualifiedTeams);
     Tournament.getInstance().setRematchFinal(rematchFinal);
@@ -66,12 +65,12 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
 
   private boolean checkIfTournamentCanBeStarted(CommandSender sender) {
     if(Tournament.getInstance().getTeams().size() == 0) {
-      sender.sendMessage(ChatColor.YELLOW +"You have to add teams first");
+      sender.sendMessage(ChatColor.YELLOW + BedwarsRel._l("tourney.errors.addteamsfirst"));
       return false;
     }
 
     if(Tournament.getInstance().isTournamentRunning()) {
-      sender.sendMessage(ChatColor.YELLOW +"Tournament has already started");
+      sender.sendMessage(ChatColor.YELLOW + BedwarsRel._l("tourney.errors.tournamentalreadystarted"));
       return false;
     }
 
@@ -80,10 +79,10 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
 
   private void validateInput(int rounds, int qualifiedTeams, int groupSize, int groupStageRounds) throws Exception {
     if(rounds <= 0 || qualifiedTeams <=0 || groupSize < 2 || groupStageRounds < 1)
-      throw new Exception("Invalid Inputs");
+      throw new Exception(BedwarsRel._l("tourney.errors.invalidinput"));
 
     if(BedwarsRel.getInstance().getGameManager().getGames().stream().filter(g -> g.getState() != GameState.STOPPED).map(g -> g.getTeams().size()).noneMatch(s -> s >= groupSize))
-      throw new Exception("At least one map has to support the group size");
+      throw new Exception(BedwarsRel._l("tourney.errors.nomapwithsize"));
   }
 
   private void resetTournament() {
@@ -120,12 +119,12 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Command to start the tournament";
+    return BedwarsRel._l("commands.tourney.starttournament.description");
   }
 
   @Override
   public String getName() {
-    return "Start Tournament";
+    return BedwarsRel._l("commands.tourney.starttournament.name");
   }
 
   @Override

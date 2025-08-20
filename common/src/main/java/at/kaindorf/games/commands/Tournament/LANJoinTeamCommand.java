@@ -31,25 +31,25 @@ public class LANJoinTeamCommand extends BaseCommand implements ICommand {
         }
 
         if (Tournament.getInstance().getGroups().size() > 0) {
-            sender.sendMessage(ChatColor.RED + "Tournament has already started! Joining a team is not possible anymore");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentalreadyrunningteamjoin"));
             return true;
         }
 
         Optional<TourneyTeam> team = Tournament.getInstance().getTeamPerName(args.get(0));
         if (!team.isPresent()) {
-            sender.sendMessage(ChatColor.RED+"Team doesn't exist");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.teamnotexists"));
             return true;
         }
 
         if (team.get().getPlayers().size() >= Tournament.getInstance().getLanTeamSizes()) {
-            sender.sendMessage(ChatColor.RED+"Team is full");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.teamfull"));
             return true;
         }
 
         try
         {
             Tournament.getInstance().addPlayer(Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString(), args.get(0));
-            sender.sendMessage(ChatColor.GREEN+ "Team joined");
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.errors.teamjoined"));
         } catch (TournamentEntityExistsException | TournamentEntityMissingException ex) {
             sender.sendMessage(ChatColor.RED+ex.getMessage());
         }
@@ -69,12 +69,12 @@ public class LANJoinTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "join other team manually";
+        return BedwarsRel._l("commands.tourney.lanjointeam.description");
     }
 
     @Override
     public String getName() {
-        return "joinTeam";
+        return BedwarsRel._l("commands.tourney.lanjointeam.name");
     }
 
     @Override

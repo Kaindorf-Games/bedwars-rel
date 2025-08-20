@@ -41,7 +41,7 @@ public class DevHelpCommand extends DevBaseCommand implements ICommand {
 
     private String generateMessage(List<BaseCommand> commands) {
         StringBuilder sb = new StringBuilder();
-        sb.append(ChatColor.GREEN + "--------- Dev Help ---------\n");
+        sb.append(ChatColor.GREEN + "--------- " + BedwarsRel._l("dev.help") + " ---------\n");
         for (BaseCommand command : commands) {
             generateLine(command, sb);
         }
@@ -75,11 +75,11 @@ public class DevHelpCommand extends DevBaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "HELP!!!";
+        return BedwarsRel._l("commands.dev.help.description");
     }
 
     @Override
     public String getName() {
-        return "help";
+        return BedwarsRel._l("commands.dev.help.name");
     }
 }

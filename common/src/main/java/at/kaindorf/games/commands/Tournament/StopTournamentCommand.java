@@ -33,7 +33,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
       return hardStop(sender);
     }
 
-    sender.sendMessage(ChatColor.RED+"Invalid parameters");
+    sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.invalidparams"));
     return true;
   }
 
@@ -42,7 +42,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
     Tournament.getInstance().setSoftStop(true);
     Tournament.getInstance().setHardStop(false);
 
-    sender.sendMessage(ChatColor.GREEN+"The Tournament will stop and will not start new matches");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.softstop"));
     return true;
   }
 
@@ -51,7 +51,7 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
     Tournament.getInstance().setHardStop(true);
     Tournament.getInstance().setSoftStop(false);
 
-    sender.sendMessage(ChatColor.GREEN+"The Tournament will immediately stop and terminate all running matches");
+    sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.hardstop"));
     return true;
   }
 
@@ -67,12 +67,12 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Stops a tournament";
+    return BedwarsRel._l("commands.tourney.stoptournament.description");
   }
 
   @Override
   public String getName() {
-    return "Stop";
+    return BedwarsRel._l("commands.tourney.stoptournament.name");
   }
 
   @Override

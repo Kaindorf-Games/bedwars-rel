@@ -3,7 +3,6 @@ package at.kaindorf.games.commands.Bedwars;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.ICommand;
-import at.kaindorf.games.communication.dto.Leaderboard;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -20,8 +19,12 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
             return false;
         }
 
-        Leaderboard.getInstance().updateDataToLeaderboard(Leaderboard.getInstance() , true);
-        sender.sendMessage(ChatColor.GREEN + "Leaderboard updated");
+        if(BedwarsRel.getInstance().getActiveLeaderboard() !=  null) {
+            BedwarsRel.getInstance().getActiveLeaderboard().updateDataToLeaderboard(BedwarsRel.getInstance().getActiveLeaderboard(), true);
+            sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.updated"));
+            return true;
+        }
+        sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.errors.notfound"));
         return true;
     }
 
@@ -37,12 +40,12 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Forces leaderboard update";
+        return BedwarsRel._l("commands.updateleaderboard.description");
     }
 
     @Override
     public String getName() {
-        return "update-leaderboard";
+        return BedwarsRel._l("commands.updateleaderboard.name");
     }
 
     @Override

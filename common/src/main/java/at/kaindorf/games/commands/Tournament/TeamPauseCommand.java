@@ -36,13 +36,13 @@ public class TeamPauseCommand extends BaseCommand implements ICommand {
     if (sender.hasPermission("tourney.manage") && args.size() > 0) {
       String teamName = args.stream().reduce((p1, p2) -> p1 + " " + p2).get();
       team = Tournament.getInstance().getTeamPerName(teamName);
-      err = "Team name is invalid";
+      err = BedwarsRel._l("tourney.errors.teamnameinvalid");
     } else if (!sender.hasPermission("tourney.manage") && args.size() > 0) {
-      err = "you are not allowed to do that";
+      err = BedwarsRel._l("tourney.errors.notallowed");
     } else {
       Player player = BedwarsRel.getInstance().getServer().getPlayer(sender.getName());
       team = Tournament.getInstance().getTourneyTeamOfPlayer(player);
-      err = "you are not in any team";
+      err = BedwarsRel._l("tourney.errors.notinanyteam");
     }
 
     if (!team.isPresent()) {
@@ -50,8 +50,8 @@ public class TeamPauseCommand extends BaseCommand implements ICommand {
       return true;
     }
 
-    if (pauseValue()) sender.sendMessage(ChatColor.GREEN + "The team is paused");
-    else sender.sendMessage(ChatColor.GREEN + "The team is not paused anymore");
+    if (pauseValue()) sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teampaused"));
+    else sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("tourney.info.teamnotpaused"));
 
     team.get().setPaused(pauseValue());
 
@@ -70,12 +70,12 @@ public class TeamPauseCommand extends BaseCommand implements ICommand {
 
   @Override
   public String getDescription() {
-    return "Pauses the team";
+    return BedwarsRel._l("commands.tourney.pause.description");
   }
 
   @Override
   public String getName() {
-    return "pause";
+    return BedwarsRel._l("commands.tourney.pause.name");
   }
 
   @Override

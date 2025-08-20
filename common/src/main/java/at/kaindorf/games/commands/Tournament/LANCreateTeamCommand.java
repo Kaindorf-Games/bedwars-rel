@@ -31,7 +31,7 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
         }
 
         if (Tournament.getInstance().getGroups().size() > 0) {
-            sender.sendMessage(ChatColor.RED + "Tournament has already started! Creating a team is not possible anymore");
+            sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentalreadyrunningteamcreation"));
             return true;
         }
 
@@ -39,7 +39,7 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
         try {
             team = Tournament.getInstance().addTeam(args.get(0));
             Tournament.getInstance().addPlayer(Bukkit.getServer().getPlayer(sender.getName()).getUniqueId().toString(), team.getName());
-            sender.sendMessage(ChatColor.GREEN + "Team created");
+            sender.sendMessage(ChatColor.GREEN +  BedwarsRel._l("tourney.info.teamcreated"));
         } catch (TourneyPlayerExistsException ex) {
             Tournament.getInstance().removeTeam(team.getName());
             sender.sendMessage(ChatColor.RED+ex.getMessage());
@@ -63,12 +63,12 @@ public class LANCreateTeamCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Create your own custom team";
+        return BedwarsRel._l("commands.tourney.lancreateteam.description");
     }
 
     @Override
     public String getName() {
-        return "create";
+        return BedwarsRel._l("commands.tourney.lancreateteam.name");
     }
 
     @Override

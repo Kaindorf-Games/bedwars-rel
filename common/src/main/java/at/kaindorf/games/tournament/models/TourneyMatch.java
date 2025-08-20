@@ -47,4 +47,9 @@ public class TourneyMatch {
   public int getMaxPlayersOfTeam() {
     return this.teams.stream().mapToInt(t -> t.getPlayers().size()).max().orElse(0);
   }
+
+
+  public void setGame(Game game) {
+    this.game = game;
+  }
 }

@@ -31,7 +31,7 @@ public class ShowMatchesToDoCommand extends BaseCommand {
     }
 
     if (!Tournament.getInstance().isTournamentRunning()) {
-      sender.sendMessage(ChatColor.RED + "Tournament isn't running");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentnotrunning"));
       return true;
     }
 
@@ -40,7 +40,7 @@ public class ShowMatchesToDoCommand extends BaseCommand {
       try {
         page = Integer.parseInt(args.get(0));
       } catch (NumberFormatException ex) {
-        sender.sendMessage(ChatColor.RED + "Not a number");
+        sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nonum"));
         return false;
       }
     }
@@ -54,16 +54,16 @@ public class ShowMatchesToDoCommand extends BaseCommand {
     } else if (Tournament.getInstance().getCurrentState() == CurrentState.KO_STAGE) {
       matches = ks.currentKoRound().getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList());
     } else {
-      sender.sendMessage(ChatColor.RED + "Tournament is in Transition");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentintrans"));
       return true;
     }
 
     if(matches.size() == 0) {
-      sender.sendMessage(ChatColor.RED + "No Matches to do!!!");
+      sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nomatchestodo"));
       return true;
     }
 
-    String out = matches.stream().map(this::buildChatOutput).reduce((m1, m2) -> m1 + m2).orElse("No matches");
+    String out = matches.stream().map(this::buildChatOutput).reduce((m1, m2) -> m1 + m2).orElse(BedwarsRel._l("tourney.errors.nomatches"));
 
     ChatWriter.paginateOutput(sender, out, page);
 
@@ -73,8 +73,8 @@ public class ShowMatchesToDoCommand extends BaseCommand {
   private String buildChatOutput(TourneyMatch match) {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("Match " + match.getId() + ": " + ((match.isRunning()) ? " (running)\n" : "\n"));
-    sb.append("  " + match.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", " + t2).get() + "\n");
+    sb.append(BedwarsRel._l("tourney.others.match")+" " + match.getId() + ": " + ((match.isRunning()) ? " ("+BedwarsRel._l("tourney.others.running")+")\n" : "\n"));
+    sb.append("  " + match.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", " + t2).orElse("") + "\n");
 
     return sb.toString();
   }
@@ -91,12 +91,12 @@ public class ShowMatchesToDoCommand extends BaseCommand {
 
   @Override
   public String getDescription() {
-    return "returns all matches that are still To Do";
+    return BedwarsRel._l("commands.tourney.showmatchestodo.description");
   }
 
   @Override
   public String getName() {
-    return "Get ToDo Matches";
+    return BedwarsRel._l("commands.tourney.showmatchestodo.name");
   }
 
   @Override
