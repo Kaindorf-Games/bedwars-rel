@@ -25,3 +25,5 @@ out/
 CraftBukkit/
 
 BedwarsRel.jar
+
+build.sh

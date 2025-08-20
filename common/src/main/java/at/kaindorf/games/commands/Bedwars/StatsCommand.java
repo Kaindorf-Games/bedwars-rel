@@ -130,6 +130,9 @@ public class StatsCommand extends BaseCommand implements ICommand {
   }
 
   private void sendStats(Player player, PlayerStatistic statistic) {
+    if(this.getPlugin().getMode() != BedwarsRel.Mode.NORMAL) {
+      return;
+    }
     for (String line : BedwarsRel.getInstance().getPlayerStatisticManager()
         .createStatisticLines(statistic, false, ChatColor.GRAY, ChatColor.YELLOW)) {
       player.sendMessage(line);
