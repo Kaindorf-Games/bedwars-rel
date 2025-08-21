@@ -36,7 +36,7 @@ public class GroupLeaderboard extends LeaderboardBase implements Serializable {
         sortedBy.put(5, "Kills");
 
         this.name = BedwarsRel.getInstance().getConfig().getString("leaderboard.name", "bedwars");
-        this.type = "Group";
+        this.type = LeaderBoardType.GROUP;
     }
 
     public GroupLeaderboard() {

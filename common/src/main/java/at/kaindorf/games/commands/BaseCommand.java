@@ -25,6 +25,11 @@ public abstract class BaseCommand implements ICommand {
   public abstract String[] getArguments();
 
   @Override
+  public CommandArgument[] getNewArguments() {
+    return null;
+  }
+
+  @Override
   public abstract String getCommand();
 
   @Override

@@ -1,7 +1,8 @@
-package at.kaindorf.games.commands.Bedwars;
+package at.kaindorf.games.commands.Leaderboard;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,7 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public boolean execute(CommandSender sender, ArrayList<String> args) {
-        if (!sender.hasPermission("bw." + this.getPermission())) {
+        if (!sender.hasPermission("leaderboard." + this.getPermission())) {
             return false;
         }
 
@@ -31,6 +32,11 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
     @Override
     public String[] getArguments() {
         return new String[]{};
+    }
+
+    @Override
+    public CommandArgument[] getNewArguments() {
+        return new CommandArgument[0];
     }
 
     @Override
@@ -50,6 +56,6 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getPermission() {
-        return "setup";
+        return "manager";
     }
 }

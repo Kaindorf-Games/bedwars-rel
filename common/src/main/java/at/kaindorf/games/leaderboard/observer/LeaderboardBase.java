@@ -3,6 +3,7 @@ package at.kaindorf.games.leaderboard.observer;
 import at.kaindorf.games.leaderboard.HttpHandler;
 import at.kaindorf.games.leaderboard.leaderboards.GroupLeaderboard;
 import at.kaindorf.games.leaderboard.leaderboards.KoLeaderboard;
+import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import lombok.Data;
 import org.bukkit.Bukkit;
 
@@ -20,11 +21,10 @@ public abstract class LeaderboardBase {
         leaderboards.add(new KoLeaderboard());
     }
 
-    public static LeaderboardBase findLeaderboard(String type, String name) {
+    public static LeaderboardBase findLeaderboard(LeaderBoardType type, String name) {
         try {
-
             for (LeaderboardBase l : leaderboards) {
-                if (l.getType().equalsIgnoreCase(type)) {
+                if (l.getType() == type) {
                     LeaderboardBase newLeaderboard = l.getClass().newInstance();
                     newLeaderboard.setName(name);
                     return newLeaderboard;
@@ -36,7 +36,7 @@ public abstract class LeaderboardBase {
         return null;
     }
 
-    protected String type;
+    protected LeaderBoardType type;
     protected String name;
     protected transient int waitBetweenUpdates;
     protected transient boolean active;

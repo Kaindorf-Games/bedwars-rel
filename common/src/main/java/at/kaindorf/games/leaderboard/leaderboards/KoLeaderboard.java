@@ -29,7 +29,7 @@ public class KoLeaderboard extends LeaderboardBase implements Serializable {
     private int groupStageQualifiedTeams;
 
     public KoLeaderboard() {
-        this.type = "KoGroup";
+        this.type = LeaderBoardType.KOGROUP;
         this.columns = GroupColumn.initKoLeaderboardColumns();
 
         this.sortedBy = new HashMap<>();

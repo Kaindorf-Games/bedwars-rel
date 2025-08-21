@@ -1,8 +1,10 @@
-package at.kaindorf.games.commands.Bedwars;
+package at.kaindorf.games.commands.Leaderboard;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
+import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import at.kaindorf.games.leaderboard.observer.LeaderboardBase;
 import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
@@ -17,7 +19,7 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public boolean execute(CommandSender sender, ArrayList<String> args) {
-        if (!sender.hasPermission("bw." + this.getPermission())) {
+        if (!sender.hasPermission("leaderboard." + this.getPermission())) {
             return false;
         }
         LeaderboardBase activeLeaderboard = BedwarsRel.getInstance().getActiveLeaderboard();
@@ -34,13 +36,15 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
             }
         } else if (args.size() == 2) { // start new Leaderboard
             String name = args.get(0);
-            String type = args.get(1);
+            String typeName = args.get(1);
 
             LeaderboardBase prev = activeLeaderboard;
+
+            LeaderBoardType type = LeaderBoardType.fromValue(typeName);
             activeLeaderboard = LeaderboardBase.findLeaderboard(type, name);
             if (activeLeaderboard == null) {
                 activeLeaderboard = prev;
-                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.cannotbecreated", ImmutableMap.of("type", type)));
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.cannotbecreated", ImmutableMap.of("type", type.value)));
             } else {
                 activeLeaderboard.setActive(true);
                 sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.started", ImmutableMap.of("name", name)));
@@ -56,6 +60,11 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
     @Override
     public String[] getArguments() {
         return new String[]{"name <type>"};
+    }
+
+    @Override
+    public CommandArgument[] getNewArguments() {
+        return new CommandArgument[]{new CommandArgument("name", String.class), new CommandArgument("type", true, LeaderBoardType.class)};
     }
 
     @Override
@@ -75,6 +84,6 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getPermission() {
-        return "setup";
+        return "manager";
     }
 }

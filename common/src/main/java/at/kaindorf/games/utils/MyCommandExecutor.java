@@ -36,6 +36,8 @@ public class MyCommandExecutor implements CommandExecutor {
                 sender.sendMessage(ChatColor.BLUE + "Dev mode is disabled");
                 return true;
             }
+        } else if(cmd.getName().equals("leaderboard")) {
+            return execute(sender, args, this.plugin.getLeaderboardCommands());
         }
         return false;
     }

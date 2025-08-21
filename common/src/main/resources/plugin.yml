@@ -32,6 +32,13 @@ commands:
     permission-message: You ain't a dev
     permission: dev.developer
 
+  leaderboard:
+    description: Base command for all Leaderboard commands
+    usage: /<command> help
+    permission: leaderboard.user
+    aliases:
+      - l
+
 permissions:
   bw.base:
     description: Allows you to show to play games
@@ -65,5 +72,11 @@ permissions:
     default: true
   dev.developer:
     description: Makes you a dev
+    default: op
+  leaderboard.user:
+    description: Allows players to show the leaderboard
+    default: true
+  leaderboard.manager:
+    description: Allows players to manage the leaderboards
     default: op
 

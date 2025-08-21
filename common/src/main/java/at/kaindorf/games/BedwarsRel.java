@@ -2,6 +2,7 @@ package at.kaindorf.games;
 
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.Bedwars.*;
+import at.kaindorf.games.commands.Leaderboard.*;
 import at.kaindorf.games.commands.Tournament.*;
 import at.kaindorf.games.commands.development.DevHelpCommand;
 import at.kaindorf.games.commands.development.DevKillAllCommand;
@@ -56,6 +57,7 @@ public class BedwarsRel extends JavaPlugin {
     private ArrayList<BaseCommand> bwCommands = new ArrayList<>();
     private ArrayList<BaseCommand> tourneyCommands = new ArrayList<>();
     private ArrayList<BaseCommand> devCommands = new ArrayList<>();
+    private ArrayList<BaseCommand> leaderboardCommands = new ArrayList<>();
     private Package craftbukkit = null;
     private DatabaseManager dbManager = null;
     @Getter
@@ -298,6 +300,11 @@ public class BedwarsRel extends JavaPlugin {
     @SuppressWarnings("unchecked")
     public ArrayList<BaseCommand> getTourneyCommands() {
         return (ArrayList<BaseCommand>) this.tourneyCommands.clone();
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList<BaseCommand> getLeaderboardCommands() {
+        return (ArrayList<BaseCommand>) this.leaderboardCommands.clone();
     }
 
     @SuppressWarnings("unchecked")
@@ -864,11 +871,6 @@ public class BedwarsRel extends JavaPlugin {
         this.bwCommands.add(new ShowBedwarsModeCommand(this));
         this.bwCommands.add(new MovePlayersIntoGame(this));
         this.bwCommands.add(new SpectateGameCommand(this));
-        this.bwCommands.add(new StartLeaderboardCommand(this));
-        this.bwCommands.add(new StopLeaderboardCommand(this));
-        this.bwCommands.add(new ClearLeaderboardCommand(this));
-        this.bwCommands.add(new LeaderboardWaitCommand(this));
-        this.bwCommands.add(new UpdateLeaderboardCommand(this));
         this.getCommand("bw").setExecutor(executor);
 
         // Tournament Commands
@@ -900,6 +902,14 @@ public class BedwarsRel extends JavaPlugin {
             this.devCommands.add(new DevKillAllCommand(this));
         }
         this.getCommand("dev").setExecutor(executor);
+
+        this.leaderboardCommands.add(new StartLeaderboardCommand(this));
+        this.leaderboardCommands.add(new StopLeaderboardCommand(this));
+        this.leaderboardCommands.add(new ClearLeaderboardCommand(this));
+        this.leaderboardCommands.add(new LeaderboardWaitCommand(this));
+        this.leaderboardCommands.add(new UpdateLeaderboardCommand(this));
+        this.leaderboardCommands.add(new LeaderboardHelpCommand(this));
+        this.getCommand("leaderboard").setExecutor(executor);
     }
 
     private void registerConfigurationClasses() {

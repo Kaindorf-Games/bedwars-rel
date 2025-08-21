@@ -1,6 +1,7 @@
 package at.kaindorf.games.commands;
 
 import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 
 public interface ICommand {
@@ -8,6 +9,8 @@ public interface ICommand {
   public boolean execute(CommandSender sender, ArrayList<String> args);
 
   public String[] getArguments();
+
+  public CommandArgument[] getNewArguments();
 
   public String getCommand();
 

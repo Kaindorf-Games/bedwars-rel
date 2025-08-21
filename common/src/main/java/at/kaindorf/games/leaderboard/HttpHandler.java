@@ -42,6 +42,7 @@ public class HttpHandler implements IObserver {
 
         try {
             URL url = new URL(hostname + "/leaderboard/" + leaderboard.getName());
+            Bukkit.getLogger().info(url.toString());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestProperty("Authorization", getBasicAuthenticationHeader());
             con.setRequestMethod("PUT");
@@ -50,6 +51,7 @@ public class HttpHandler implements IObserver {
 
             Gson gson = new Gson();
             String json = gson.toJson(leaderboard, leaderboard.getClass());
+            Bukkit.getLogger().info(json);
             try (OutputStream os = con.getOutputStream()) {
                 byte[] input = json.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
