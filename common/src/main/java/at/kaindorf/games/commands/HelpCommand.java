@@ -3,7 +3,9 @@ package at.kaindorf.games.commands;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import at.kaindorf.games.utils.ChatWriter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -13,15 +15,13 @@ import java.util.stream.Stream;
 
 public abstract class HelpCommand extends BaseCommand implements ICommand {
 
-    private List<BaseCommand> commands;
-
-    public HelpCommand(BedwarsRel plugin, List<BaseCommand> commands) {
+    public HelpCommand(BedwarsRel plugin) {
         super(plugin);
-        this.commands = commands;
     }
 
     @Override
     public boolean execute(CommandSender sender, ArrayList<String> args) {
+        List<BaseCommand> commands = getCommandList();
         Map<PermissionType, String> commandPermission = availablePermissions();
 
         String msg = "";
@@ -29,7 +29,7 @@ public abstract class HelpCommand extends BaseCommand implements ICommand {
         if (commandPermission.containsKey(PermissionType.MANAGER) && sender.hasPermission(commandPermission.get(PermissionType.MANAGER))) {
             msg = generateMessage(commands);
         } else if (commandPermission.containsKey(PermissionType.USER) && sender.hasPermission(commandPermission.get(PermissionType.USER))) {
-            String userPermission = Arrays.stream(commandPermission.get(PermissionType.USER).split(".")).skip(1).findFirst().orElse("");
+            String userPermission = Arrays.stream(commandPermission.get(PermissionType.USER).split("\\.")).skip(1).findFirst().orElse("");
             msg = generateMessage(commands.stream().filter(c -> StringUtils.equals(c.getPermission(), userPermission)).collect(Collectors.toList()));
         } else {
             ChatWriter.wrongPermissionMessage(sender);
@@ -86,13 +86,37 @@ public abstract class HelpCommand extends BaseCommand implements ICommand {
         return "help";
     }
 
-    public enum PermissionType {
-        MANAGER, USER
+    @Override
+    public String getName() {
+        return "help";
     }
 
+    @Override
+    public String getDescription() {
+        return BedwarsRel._l("commands.help.desc");
+    }
+
+    @Override
+    public String getPermission() {
+        String permission = "";
+        if(availablePermissions().containsKey(PermissionType.USER)) {
+            permission = availablePermissions().get(PermissionType.USER);
+        } else {
+            permission = availablePermissions().get(PermissionType.MANAGER);
+        }
+        return Stream.of(permission.split("\\.")).skip(1).findFirst().orElse("");
+    }
+
+
+
+    public enum PermissionType {
+        MANAGER, USER;
+    }
     public abstract Map<PermissionType, String> availablePermissions();
 
     public abstract String getMainCommand();
+
+    public abstract List<BaseCommand> getCommandList();
 
     private String buildArguments(BaseCommand command) {
         CommandArgument[] arguments = command.getNewArguments();

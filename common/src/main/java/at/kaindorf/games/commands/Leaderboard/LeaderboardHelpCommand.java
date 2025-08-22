@@ -1,6 +1,7 @@
 package at.kaindorf.games.commands.Leaderboard;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.HelpCommand;
 
 import java.util.*;
@@ -8,22 +9,7 @@ import java.util.*;
 public class LeaderboardHelpCommand extends HelpCommand {
 
     public LeaderboardHelpCommand(BedwarsRel plugin) {
-        super(plugin, plugin.getLeaderboardCommands());
-    }
-
-    @Override
-    public String getDescription() {
-        return "Test";
-    }
-
-    @Override
-    public String getName() {
-        return "help";
-    }
-
-    @Override
-    public String getPermission() {
-        return "user";
+        super(plugin);
     }
 
     @Override
@@ -37,5 +23,10 @@ public class LeaderboardHelpCommand extends HelpCommand {
     @Override
     public String getMainCommand() {
         return "leaderboard";
+    }
+
+    @Override
+    public List<BaseCommand> getCommandList() {
+        return this.getPlugin().getLeaderboardCommands();
     }
 }
