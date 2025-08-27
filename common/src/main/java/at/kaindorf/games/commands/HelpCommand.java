@@ -1,11 +1,12 @@
 package at.kaindorf.games.commands;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.commands.arguments.ClearType;
+import at.kaindorf.games.commands.arguments.CommandArgument;
+import at.kaindorf.games.commands.arguments.StopType;
 import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import at.kaindorf.games.utils.ChatWriter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -69,11 +70,6 @@ public abstract class HelpCommand extends BaseCommand implements ICommand {
 
         sb.append(ChatColor.LIGHT_PURPLE + "/" + getMainCommand() + ChatColor.GOLD
                 + " " + command.getCommand() + buildArguments(command) + " - " + ChatColor.YELLOW + command.getDescription() + "\n");
-    }
-
-    @Override
-    public String[] getArguments() {
-        return new String[]{};
     }
 
     @Override
@@ -163,6 +159,10 @@ public abstract class HelpCommand extends BaseCommand implements ICommand {
             return "bool";
         } else if (type.equals(LeaderBoardType.class)) {
             return Stream.of(LeaderBoardType.values()).map(t -> t.value).reduce((e1, e2) -> e1 + "|" + e2).orElse("");
+        } else if(type.equals(ClearType.class)) {
+            return Stream.of(ClearType.values()).map(t -> t.value).reduce((e1, e2) -> e1 + "|" + e2).orElse("");
+        } else if(type.equals(StopType.class)) {
+            return Stream.of(StopType.values()).map(t -> t.value).reduce((e1, e2) -> e1 + "|" + e2).orElse("");
         }
 
         return "N/A";

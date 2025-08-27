@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
@@ -126,6 +127,11 @@ public class SkipMatchCommand extends BaseCommand {
   @Override
   public String[] getArguments() {
     return new String[]{"matchID|*"};
+  }
+
+  @Override
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("matchID", Integer.class)};
   }
 
   @Override

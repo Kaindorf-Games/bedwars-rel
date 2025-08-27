@@ -2,11 +2,11 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.server.v1_8_R3.ExceptionInvalidNumber;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -44,8 +44,8 @@ public class LANSetTeamSizeCommand extends BaseCommand implements ICommand {
     }
 
     @Override
-    public String[] getArguments() {
-        return new String[0];
+    public CommandArgument[] getNewArguments() {
+        return new CommandArgument[0];
     }
 
     @Override

@@ -2,17 +2,15 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.CurrentState;
 import at.kaindorf.games.tournament.models.TourneyPlayer;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.utils.ChatWriter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,8 +75,8 @@ public class ShowTeamsCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("page", true)};
   }
 
   @Override

@@ -2,7 +2,7 @@ package at.kaindorf.games.commands.Leaderboard;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
-import at.kaindorf.games.commands.CommandArgument;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import at.kaindorf.games.leaderboard.observer.LeaderboardBase;

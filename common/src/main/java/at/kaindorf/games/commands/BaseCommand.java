@@ -1,9 +1,9 @@
 package at.kaindorf.games.commands;
 
 import at.kaindorf.games.BedwarsRel;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.utils.ChatWriter;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import org.bukkit.ChatColor;
@@ -22,7 +22,9 @@ public abstract class BaseCommand implements ICommand {
   public abstract boolean execute(CommandSender sender, ArrayList<String> args);
 
   @Override
-  public abstract String[] getArguments();
+  public String[] getArguments() {
+    return new String[]{};
+  }
 
   @Override
   public CommandArgument[] getNewArguments() {

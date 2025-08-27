@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.HelpCommand;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.utils.ChatWriter;
 import com.avaje.ebeaninternal.server.transaction.BulkEventListenerMap;
@@ -9,18 +10,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class TournamentHelpCommand extends BaseCommand implements ICommand {
+public class TournamentHelpCommand extends HelpCommand{
 
   public TournamentHelpCommand(BedwarsRel plugin) {
     super(plugin);
   }
 
-  @Override
-  public boolean execute(CommandSender sender, ArrayList<String> args) {
+  public boolean execute1(CommandSender sender, ArrayList<String> args) {
 
     ArrayList<BaseCommand> commands = BedwarsRel.getInstance().getTourneyCommands();
     String msg = "";
@@ -90,27 +89,21 @@ public class TournamentHelpCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{};
+  public Map<PermissionType, String> availablePermissions() {
+    Map<PermissionType, String> permissions = new HashMap<>();
+    permissions.put(PermissionType.MANAGER, "tourney.manage");
+    permissions.put(PermissionType.USER, "tourney.player");
+    return permissions;
   }
 
   @Override
-  public String getCommand() {
-    return "help";
+  public String getMainCommand() {
+    return "tourney";
   }
 
   @Override
-  public String getDescription() {
-    return BedwarsRel._l("commands.tourney.help.description");
+  public List<BaseCommand> getCommandList() {
+    return this.getPlugin().getTourneyCommands();
   }
 
-  @Override
-  public String getName() {
-    return BedwarsRel._l("commands.tourney.help.name");
-  }
-
-  @Override
-  public String getPermission() {
-    return "player";
-  }
 }

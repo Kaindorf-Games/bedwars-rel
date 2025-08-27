@@ -2,17 +2,18 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
+import at.kaindorf.games.commands.arguments.StopType;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
-import com.avaje.ebean.validation.NotNull;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class StopTournamentCommand extends BaseCommand implements ICommand {
 
@@ -27,10 +28,17 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    if(args.size() == 0 || (args.size() == 1 && args.get(0).equals("soft"))) {
-      return softStop(sender);
-    } else if(args.size() == 1 && args.get(0).equals("hard")) {
-      return hardStop(sender);
+    Optional<StopType> stopType = Optional.of(StopType.SOFT);
+    if(!args.isEmpty()) {
+      stopType = StopType.fromValue(args.get(0));
+    }
+
+    if(stopType.isPresent()) {
+      if(stopType.get() == StopType.SOFT) {
+        return softStop(sender);
+      } else if(stopType.get() == StopType.HARD) {
+        return hardStop(sender);
+      }
     }
 
     sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.invalidparams"));
@@ -56,8 +64,8 @@ public class StopTournamentCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[0];
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("type", StopType.class)};
   }
 
   @Override

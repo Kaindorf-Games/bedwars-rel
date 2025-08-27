@@ -2,15 +2,14 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.material.Bed;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class AddPointsCommand extends BaseCommand {
@@ -40,8 +39,10 @@ public class AddPointsCommand extends BaseCommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{"points<int>", "teamName"};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{
+            new CommandArgument("points", Integer.class),
+            new CommandArgument("teamName", String.class)};
   }
 
   @Override

@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.CurrentState;
 import at.kaindorf.games.tournament.models.TourneyMatch;
@@ -80,8 +81,8 @@ public class ShowMatchesToDoCommand extends BaseCommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[0];
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("page", true)};
   }
 
   @Override

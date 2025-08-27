@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
@@ -35,8 +36,8 @@ public class ContinueStoppedTournamentCommand extends BaseCommand implements ICo
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[0];
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[0];
   }
 
   @Override

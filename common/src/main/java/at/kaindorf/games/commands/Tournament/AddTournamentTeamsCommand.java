@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.exceptions.exist.TournamentEntityExistsException;
 import at.kaindorf.games.tournament.Tournament;
@@ -93,8 +94,9 @@ public class AddTournamentTeamsCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{"fileName"};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{
+            new CommandArgument("fileName", String.class)};
   }
 
   @Override

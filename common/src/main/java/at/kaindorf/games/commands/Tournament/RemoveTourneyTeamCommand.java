@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
@@ -39,8 +40,8 @@ public class RemoveTourneyTeamCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{"teamName"};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("teamName", String.class)};
   }
 
   @Override

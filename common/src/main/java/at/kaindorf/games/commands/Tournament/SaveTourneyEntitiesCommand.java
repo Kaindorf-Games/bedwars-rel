@@ -2,13 +2,13 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,8 +32,8 @@ public class SaveTourneyEntitiesCommand extends BaseCommand implements ICommand 
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[] {};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[0];
   }
 
   @Override

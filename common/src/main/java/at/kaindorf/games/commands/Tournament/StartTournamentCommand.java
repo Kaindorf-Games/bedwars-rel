@@ -2,6 +2,7 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.events.TournamentStartEvent;
 import at.kaindorf.games.game.GameState;
@@ -110,6 +111,15 @@ public class StartTournamentCommand extends BaseCommand implements ICommand {
   @Override
   public String[] getArguments() {
     return new String[]{"groupSize<int>","groupStageRounds<int>","qualifiedTeams<int>", "rematchKo<bool>", "rematchFinal<bool>"};
+  }
+
+  @Override
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{new CommandArgument("groupSize", Integer.class),
+    new CommandArgument("groupStageRounds", Integer.class),
+    new CommandArgument("qualifiedTeams", Integer.class),
+    new CommandArgument("rematchKo", Boolean.class),
+    new CommandArgument("rematchFinal", Boolean.class)};
   }
 
   @Override

@@ -2,6 +2,8 @@ package at.kaindorf.games.commands.Tournament;
 
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
+import at.kaindorf.games.commands.arguments.ClearType;
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import at.kaindorf.games.commands.ICommand;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.utils.ChatWriter;
@@ -12,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ClearTournamentCommand extends BaseCommand implements ICommand {
   public ClearTournamentCommand(BedwarsRel plugin) {
@@ -24,18 +27,22 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
       ChatWriter.wrongPermissionMessage(sender);
       return false;
     }
-    if (args.size() == 0) {
+    if (args.isEmpty()) {
       Tournament.getInstance().clear();
       Saver.clear();
       Tournament.getInstance().clearRunningTournament();
-    }
-
-    if (args.size() > 0) {
-      if (args.get(0).equalsIgnoreCase("saves")) {
+    } else {
+      Optional<ClearType> optionalC = ClearType.fromValue(args.get(0));
+      if(!optionalC.isPresent()) {
+        sender.sendMessage(ChatColor.RED + "Type not known");
+        return true;
+      }
+      ClearType ct = optionalC.get();
+      if (ct == ClearType.SAVES) {
         Saver.clear();
-      } else if (args.get(0).equalsIgnoreCase("config")) {
+      } else if (ct == ClearType.CONFIG) {
         Tournament.getInstance().clear();
-      } else if (args.get(0).equalsIgnoreCase("runningTournament")) {
+      } else if (ct == ClearType.RUNNING_TOURNAMENT) {
         Tournament.getInstance().clearRunningTournament();
       }
     }
@@ -45,8 +52,10 @@ public class ClearTournamentCommand extends BaseCommand implements ICommand {
   }
 
   @Override
-  public String[] getArguments() {
-    return new String[]{};
+  public CommandArgument[] getNewArguments() {
+    return new CommandArgument[]{
+            new CommandArgument("type", true, ClearType.class),
+    };
   }
 
   @Override

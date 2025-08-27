@@ -2,6 +2,7 @@ package at.kaindorf.games.commands;
 
 import java.util.ArrayList;
 
+import at.kaindorf.games.commands.arguments.CommandArgument;
 import org.bukkit.command.CommandSender;
 
 public interface ICommand {

@@ -1,4 +1,4 @@
-package at.kaindorf.games.commands;
+package at.kaindorf.games.commands.arguments;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
