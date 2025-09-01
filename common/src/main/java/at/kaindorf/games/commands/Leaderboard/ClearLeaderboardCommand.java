@@ -38,7 +38,7 @@ public class ClearLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "clear-leaderboard";
+        return "clear";
     }
 
     @Override

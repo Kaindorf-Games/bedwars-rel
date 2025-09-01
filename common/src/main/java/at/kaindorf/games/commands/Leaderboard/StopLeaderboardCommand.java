@@ -46,7 +46,7 @@ public class StopLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "stop-leaderboard";
+        return "stop";
     }
 
     @Override

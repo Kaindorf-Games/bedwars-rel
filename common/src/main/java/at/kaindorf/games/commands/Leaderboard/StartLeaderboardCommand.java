@@ -76,7 +76,7 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "start-leaderboard";
+        return "start";
     }
 
     @Override

@@ -41,7 +41,7 @@ public class UpdateLeaderboardCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "update-leaderboard";
+        return "update";
     }
 
     @Override

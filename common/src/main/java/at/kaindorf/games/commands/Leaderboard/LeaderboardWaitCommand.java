@@ -50,7 +50,7 @@ public class LeaderboardWaitCommand extends BaseCommand implements ICommand {
 
     @Override
     public String getCommand() {
-        return "wait-leaderboard";
+        return "wait";
     }
 
     @Override
