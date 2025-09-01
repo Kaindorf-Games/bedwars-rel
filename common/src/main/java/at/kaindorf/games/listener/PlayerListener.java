@@ -799,6 +799,11 @@ public class PlayerListener extends BaseListener {
                 return;
             }
 
+            if(BedwarsRel.getInstance().getMode() == BedwarsRel.Mode.TOURNAMENT) {
+                player.sendMessage(ChatColor.RED + BedwarsRel._l(player, "signs.disabled"));
+                return;
+            }
+
             Game game = BedwarsRel.getInstance().getGameManager()
                     .getGameBySignLocation(clicked.getLocation());
             if (game == null) {

@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class StartLeaderboardCommand extends BaseCommand implements ICommand {
     public StartLeaderboardCommand(BedwarsRel plugin) {
@@ -40,11 +41,17 @@ public class StartLeaderboardCommand extends BaseCommand implements ICommand {
 
             LeaderboardBase prev = activeLeaderboard;
 
-            LeaderBoardType type = LeaderBoardType.fromValue(typeName);
-            activeLeaderboard = LeaderboardBase.findLeaderboard(type, name);
+            Optional<LeaderBoardType> type = LeaderBoardType.fromValue(typeName);
+
+            if(!type.isPresent()) {
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.invalidleaderboardtype", ImmutableMap.of("typename", typeName)));
+                return true;
+            }
+
+            activeLeaderboard = LeaderboardBase.findLeaderboard(type.get(), name);
             if (activeLeaderboard == null) {
                 activeLeaderboard = prev;
-                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.cannotbecreated", ImmutableMap.of("type", type.value)));
+                sender.sendMessage(ChatColor.RED + BedwarsRel._l("leaderboard.errors.cannotbecreated", ImmutableMap.of("type", type.get().value)));
             } else {
                 activeLeaderboard.setActive(true);
                 sender.sendMessage(ChatColor.GREEN + BedwarsRel._l("leaderboard.info.started", ImmutableMap.of("name", name)));

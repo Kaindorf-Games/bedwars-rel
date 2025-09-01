@@ -37,7 +37,7 @@ public class ShowMatchesToDoCommand extends BaseCommand {
     }
 
     int page = 1;
-    if (args.size() > 0) {
+    if (!args.isEmpty()) {
       try {
         page = Integer.parseInt(args.get(0));
       } catch (NumberFormatException ex) {
@@ -59,11 +59,11 @@ public class ShowMatchesToDoCommand extends BaseCommand {
       return true;
     }
 
-    if(matches.size() == 0) {
+
+    if(matches.isEmpty()) {
       sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.nomatchestodo"));
       return true;
     }
-
     String out = matches.stream().map(this::buildChatOutput).reduce((m1, m2) -> m1 + m2).orElse(BedwarsRel._l("tourney.errors.nomatches"));
 
     ChatWriter.paginateOutput(sender, out, page);

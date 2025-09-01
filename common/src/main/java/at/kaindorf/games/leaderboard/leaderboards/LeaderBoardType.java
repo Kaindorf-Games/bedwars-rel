@@ -1,11 +1,16 @@
 package at.kaindorf.games.leaderboard.leaderboards;
 
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum LeaderBoardType {
-    GROUP("Group"), KOGROUP("KoGroup");
+    @SerializedName("Group")
+    GROUP("Group"),
+    @SerializedName("KoGroup")
+    KOGROUP("KoGroup");
 
     public String value;
 
@@ -13,7 +18,7 @@ public enum LeaderBoardType {
         this.value = value;
     }
 
-    public static LeaderBoardType fromValue(String value) {
-        return Stream.of(values()).filter(t -> StringUtils.equalsIgnoreCase(t.value, value)).findFirst().orElse(null);
+    public static Optional<LeaderBoardType> fromValue(String value) {
+        return Stream.of(values()).filter(t -> StringUtils.equalsIgnoreCase(t.value, value)).findFirst();
     }
 }
