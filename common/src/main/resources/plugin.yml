@@ -19,6 +19,9 @@ commands:
     description: Base command for all Test-Plugin commands
     usage: /<command> help
     permission: bw.base
+    aliases:
+      - b
+      - marco
   # commands for tournaments
   tourney:
     description: Base command for all Tournament commands
@@ -26,11 +29,15 @@ commands:
     permission: tourney.player
     aliases:
       - t
+      - christoph
   dev:
     description: Command for development purposes
     usage: /<command> help
     permission-message: You ain't a dev
     permission: dev.developer
+    aliases:
+      - d
+      - felix
 
   leaderboard:
     description: Base command for all Leaderboard commands
@@ -38,6 +45,7 @@ commands:
     permission: leaderboard.user
     aliases:
       - l
+      - simon
 
 permissions:
   bw.base:
