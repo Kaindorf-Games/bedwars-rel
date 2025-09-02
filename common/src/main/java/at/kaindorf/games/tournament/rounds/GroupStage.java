@@ -1,15 +1,13 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.Tournament;
-import at.kaindorf.games.tournament.models.TourneyGroup;
-import at.kaindorf.games.tournament.models.TourneyGroupMatch;
-import at.kaindorf.games.tournament.models.TourneyTeam;
-import at.kaindorf.games.tournament.models.TourneyTeamSorter;
+import at.kaindorf.games.tournament.models.*;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,11 +62,16 @@ public class GroupStage {
     }
 
     public void addToDoMatch(TourneyGroupMatch match) {
-        matchesToDo.add(match);
+        matchesToDo = addAndSortMatches(match, matchesToDo);
     }
 
     public void addDoneMatch(TourneyGroupMatch match) {
-        matchesDone.add(match);
+        matchesDone = addAndSortMatches(match, matchesDone);
+    }
+
+    private List<TourneyGroupMatch> addAndSortMatches(TourneyGroupMatch newMatch, List<TourneyGroupMatch> matches) {
+        matches.add(newMatch);
+        return matches.stream().sorted(Comparator.comparingInt(TourneyMatch::getId)).collect(Collectors.toList());
     }
 
     @SneakyThrows

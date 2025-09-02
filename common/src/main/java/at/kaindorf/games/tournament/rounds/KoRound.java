@@ -1,6 +1,7 @@
 package at.kaindorf.games.tournament.rounds;
 
 import at.kaindorf.games.tournament.models.TourneyKoMatch;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.models.TourneyTeam;
 import at.kaindorf.games.tournament.models.TourneyTeamSorter;
 import lombok.Data;
@@ -86,11 +87,17 @@ public class KoRound implements Serializable {
     }
 
     public void addToDoMatch(TourneyKoMatch match) {
-        matchesTodo.add(match);
+        matchesTodo = addAndSortMatches(match, matchesTodo);
+
     }
 
     public void addDoneMatch(TourneyKoMatch match) {
-        matchesDone.add(match);
+        matchesDone = addAndSortMatches(match, matchesDone);
+    }
+
+    private List<TourneyKoMatch> addAndSortMatches(TourneyKoMatch newMatch, List<TourneyKoMatch> matches) {
+        matches.add(newMatch);
+        return matches.stream().sorted(Comparator.comparingInt(TourneyMatch::getId)).collect(Collectors.toList());
     }
 
     public TourneyKoMatch getMatchPerId(int id) {

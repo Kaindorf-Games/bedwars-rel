@@ -75,7 +75,6 @@ public class KoStage implements Serializable {
             startKoRound();
             return;
         }
-        Collections.shuffle(teams);
 
         KoRound firstKoRound = new KoRound(null, rematch);
         firstKoRound.generateMatches(teams);

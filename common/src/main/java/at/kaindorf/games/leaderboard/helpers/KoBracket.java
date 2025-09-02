@@ -2,10 +2,12 @@ package at.kaindorf.games.leaderboard.helpers;
 
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.TourneyKoMatch;
+import at.kaindorf.games.tournament.models.TourneyMatch;
 import at.kaindorf.games.tournament.rounds.KoRound;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +50,7 @@ public class KoBracket implements Serializable {
 
                 this.matches.add(new KoMatch(match, status));
             }
+            this.matches = this.matches.stream().sorted(Comparator.comparingInt(KoMatch::getId)).collect(Collectors.toList());
         }
     }
 }

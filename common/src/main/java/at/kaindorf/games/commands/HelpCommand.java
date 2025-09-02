@@ -3,6 +3,7 @@ package at.kaindorf.games.commands;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.arguments.ClearType;
 import at.kaindorf.games.commands.arguments.CommandArgument;
+import at.kaindorf.games.commands.arguments.ManyInt;
 import at.kaindorf.games.commands.arguments.StopType;
 import at.kaindorf.games.leaderboard.leaderboards.LeaderBoardType;
 import at.kaindorf.games.utils.ChatWriter;
@@ -155,6 +156,8 @@ public abstract class HelpCommand extends BaseCommand implements ICommand {
             return "string";
         } else if (type.equals(Integer.class) || type.equals(Long.class)) {
             return "int";
+        } else if(type.equals(ManyInt.class)) {
+            return "int|*";
         } else if (type.equals(Boolean.class)) {
             return "bool";
         } else if (type.equals(LeaderBoardType.class)) {

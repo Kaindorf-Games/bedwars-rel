@@ -3,6 +3,7 @@ package at.kaindorf.games.commands.Tournament;
 import at.kaindorf.games.BedwarsRel;
 import at.kaindorf.games.commands.BaseCommand;
 import at.kaindorf.games.commands.arguments.CommandArgument;
+import at.kaindorf.games.commands.arguments.ManyInt;
 import at.kaindorf.games.tournament.Tournament;
 import at.kaindorf.games.tournament.models.*;
 import at.kaindorf.games.tournament.rounds.GroupStage;
@@ -12,10 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SkipMatchCommand extends BaseCommand {
@@ -70,19 +68,30 @@ public class SkipMatchCommand extends BaseCommand {
 
     if (Tournament.getInstance().getCurrentState() == CurrentState.GROUP_STAGE) {
       // remove matches from to do list
-      List<TourneyGroupMatch> matches = gs.getMatchesToDo().stream().filter(m -> !m.isRunning()).collect(Collectors.toList());
-      gs.setMatchesToDo(gs.getMatchesToDo().stream().filter(TourneyMatch::isRunning).collect(Collectors.toList()));
+      List<TourneyGroupMatch> matches = new ArrayList<>(gs.getMatchesToDo());
+      gs.setMatchesToDo(new LinkedList<>());
+
       // add skipped matches to done matches and add Statistics object to each team
       for (TourneyGroupMatch match : matches) {
+        if (match.isRunning()) {
+          // TODO:
+          stopRunningMatch(match);
+        }
+
         match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false, 0)));
         gs.addDoneMatch(match);
       }
     } else if (Tournament.getInstance().getCurrentState() == CurrentState.KO_STAGE) {
       // remove matches from to do list
-      List<TourneyKoMatch> matches = ks.currentKoRound().getMatchesTodo().stream().filter(m -> !m.isRunning()).collect(Collectors.toList());
-      ks.currentKoRound().setMatchesTodo(ks.currentKoRound().getMatchesTodo().stream().filter(TourneyMatch::isRunning).collect(Collectors.toList()));
+      List<TourneyKoMatch> matches = new ArrayList<>(ks.currentKoRound().getMatchesTodo());
+      ks.currentKoRound().setMatchesTodo(new LinkedList<>());
+
       // add skipped matches to done matches and add Statistics object to each team
       for (TourneyKoMatch match : matches) {
+        if (match.isRunning()) {
+          // TODO:
+          stopRunningMatch(match);
+        }
         match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false,0)));
         ks.currentKoRound().addDoneMatch(match);
       }
@@ -97,30 +106,48 @@ public class SkipMatchCommand extends BaseCommand {
 
     if (!gs.isFinished()) {
       // removes match from to do list
-      Optional<TourneyGroupMatch> match = gs.getMatchesToDo().stream().filter(m -> !m.isRunning() && m.getId() == id).findFirst();
-      gs.setMatchesToDo(gs.getMatchesToDo().stream().filter(m -> m.isRunning() || m.getId() != id).collect(Collectors.toList()));
+      Optional<TourneyGroupMatch> match = gs.getMatchesToDo().stream().filter(m -> m.getId() == id).findFirst();
+      gs.setMatchesToDo(gs.getMatchesToDo().stream().filter(m -> m.getId() != id).collect(Collectors.toList()));
 
       if (!match.isPresent()) {
         sendMatchDoesNotExist(sender, id);
       } else {
+        if (match.get().isRunning()) {
+          // TODO:
+          stopRunningMatch(match.get());
+        }
+
         match.get().getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match.get(), 0, 0, false, 0)));
         gs.addDoneMatch(match.get()); // add skipped match to done matches and add Statistics object to each team
       }
       verifyIfMatchIsRunning(gs.getMatchesToDo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), id, sender);
     } else if (gs.isFinished() && ks != null) {
       // removes match from to do list
-      Optional<TourneyKoMatch> match = ks.currentKoRound().getMatchesTodo().stream().filter(m -> !m.isRunning() && m.getId() == id).findFirst();
-      ks.currentKoRound().setMatchesTodo(ks.currentKoRound().getMatchesTodo().stream().filter(m -> m.isRunning() || m.getId() != id).collect(Collectors.toList()));
+      Optional<TourneyKoMatch> match = ks.currentKoRound().getMatchesTodo().stream().filter(m ->m.getId() == id).findFirst();
+      ks.currentKoRound().setMatchesTodo(ks.currentKoRound().getMatchesTodo().stream().filter(m -> m.getId() != id).collect(Collectors.toList()));
 
       if (!match.isPresent()) {
         sendMatchDoesNotExist(sender, id);
       } else {
+        if (match.get().isRunning()) {
+          // TODO:
+          stopRunningMatch(match.get());
+        }
+
         match.get().getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match.get(), 0, 0, false, 0)));
         ks.currentKoRound().addDoneMatch(match.get()); // add skipped match to done matches and add Statistics object to each team
       }
       verifyIfMatchIsRunning(ks.currentKoRound().getMatchesTodo().stream().map(m -> (TourneyMatch) m).collect(Collectors.toList()), id, sender);
     } else {
       sender.sendMessage(ChatColor.RED + BedwarsRel._l("tourney.errors.tournamentintrans"));
+    }
+  }
+
+  private void stopRunningMatch(TourneyMatch match) {
+    if(match.getGame() != null) {
+      match.getGame().stop();
+      match.getGame().run(null);
+      match.setGame(null);
     }
   }
 
@@ -131,7 +158,7 @@ public class SkipMatchCommand extends BaseCommand {
 
   @Override
   public CommandArgument[] getNewArguments() {
-    return new CommandArgument[]{new CommandArgument("matchID", Integer.class)};
+    return new CommandArgument[]{new CommandArgument("matchID", ManyInt.class)};
   }
 
   @Override

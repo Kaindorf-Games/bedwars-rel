@@ -1423,16 +1423,20 @@ public class Game {
 
     public boolean run(CommandSender sender) {
         if (this.state != GameState.STOPPED) {
-            sender
-                    .sendMessage(
-                            ChatWriter
-                                    .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.cantstartagain")));
+            if(sender != null) {
+                sender
+                        .sendMessage(
+                                ChatWriter
+                                        .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.cantstartagain")));
+            }
             return false;
         }
 
         GameCheckCode gcc = this.checkGame();
         if (gcc != GameCheckCode.OK) {
-            sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + gcc.getCodeMessage()));
+            if(sender != null) {
+                sender.sendMessage(ChatWriter.pluginMessage(ChatColor.RED + gcc.getCodeMessage()));
+            }
             return false;
         }
 
@@ -1652,9 +1656,11 @@ public class Game {
 
     public boolean start(CommandSender sender) {
         if (this.state != GameState.WAITING) {
-            sender.sendMessage(
-                    ChatWriter
-                            .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.startoutofwaiting")));
+            if(sender != null) {
+                sender.sendMessage(
+                        ChatWriter
+                                .pluginMessage(ChatColor.RED + BedwarsRel._l(sender, "errors.startoutofwaiting")));
+            }
             return false;
         }
 

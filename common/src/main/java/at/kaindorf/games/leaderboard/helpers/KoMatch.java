@@ -15,10 +15,13 @@ public class KoMatch implements Serializable {
 
     private List<GroupMember> teams;
     private String status;
+    private int id;
 
     public KoMatch(TourneyKoMatch match, String status) {
         this.teams = new LinkedList<>();
         this.status = status;
+        this.id = match.getId();
+
         for (TourneyTeam tourneyTeam : match.getTeams()) {
             List<Integer> matchIds = new LinkedList<>();
             matchIds.add(match.getId());
