@@ -33,8 +33,6 @@ public class TourneyKoMatch extends TourneyMatch {
     }
 
     public void findRematch(KoRound koRound) {
-        Bukkit.getLogger().info("Hello rematch");
-        Bukkit.getLogger().info("" + rematchId);
         if (rematchId != -1) {
             rematch = koRound.getMatchPerId(rematchId);
         }

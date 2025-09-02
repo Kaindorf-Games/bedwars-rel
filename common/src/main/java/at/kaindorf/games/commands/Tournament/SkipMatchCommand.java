@@ -74,7 +74,6 @@ public class SkipMatchCommand extends BaseCommand {
       // add skipped matches to done matches and add Statistics object to each team
       for (TourneyGroupMatch match : matches) {
         if (match.isRunning()) {
-          // TODO:
           stopRunningMatch(match);
         }
 
@@ -89,7 +88,6 @@ public class SkipMatchCommand extends BaseCommand {
       // add skipped matches to done matches and add Statistics object to each team
       for (TourneyKoMatch match : matches) {
         if (match.isRunning()) {
-          // TODO:
           stopRunningMatch(match);
         }
         match.getTeams().forEach(team -> team.addStatistic(new TourneyGameStatistic(TourneyGameStatistic.currentId++, match, 0, 0, false,0)));
@@ -113,7 +111,6 @@ public class SkipMatchCommand extends BaseCommand {
         sendMatchDoesNotExist(sender, id);
       } else {
         if (match.get().isRunning()) {
-          // TODO:
           stopRunningMatch(match.get());
         }
 
@@ -130,7 +127,6 @@ public class SkipMatchCommand extends BaseCommand {
         sendMatchDoesNotExist(sender, id);
       } else {
         if (match.get().isRunning()) {
-          // TODO:
           stopRunningMatch(match.get());
         }
 
@@ -148,6 +144,9 @@ public class SkipMatchCommand extends BaseCommand {
       match.getGame().stop();
       match.getGame().run(null);
       match.setGame(null);
+    }
+    if(match.getTeams() != null) {
+      match.getTeams().forEach(team -> team.setGame(null));
     }
   }
 

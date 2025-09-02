@@ -79,9 +79,6 @@ public class GroupStage {
         List<TourneyTeam> teams = Tournament.getInstance().getTeams();
         List<TourneyGroup> groups = Tournament.getInstance().getGroups();
 
-        Bukkit.getLogger().info(teams.size() + "");
-        Bukkit.getLogger().info(groups.size() + "");
-
         if (teams.size() <= 1) {
             return;
         }
@@ -111,7 +108,5 @@ public class GroupStage {
             }
         }
 
-//    groups.forEach(g -> Bukkit.getLogger().info(g.getName() + ": "+g.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + ", "+t2).orElse("")));
-//    this.getMatchesToDo().forEach(m -> Bukkit.getLogger().info(m.getId() + ": " + m.getGroup().getName() +", "+ m.getRound() + ", "+m.getTeams().stream().map(TourneyTeam::getName).reduce((t1, t2) -> t1 + "|"+t2).orElse("")));
     }
 }

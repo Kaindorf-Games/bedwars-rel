@@ -30,7 +30,6 @@ public class TeamPauseCommand extends BaseCommand implements ICommand {
       return false;
     }
 
-    Bukkit.getLogger().info(sender.getName());
     Optional<TourneyTeam> team = Optional.empty();
     String err = "";
 

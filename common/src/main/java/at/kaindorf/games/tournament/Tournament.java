@@ -279,7 +279,6 @@ public class Tournament {
   public void continueStoopedTournament() {
     clear();
     CurrentState state = Loader.loadTournamentState();
-    Bukkit.getLogger().info(""+state);
 
     TournamentStartEvent event = new TournamentStartEvent(qualifiedTeams, rematchKo, rematchFinal);
     BedwarsRel.getInstance().getServer().getPluginManager().callEvent(event);

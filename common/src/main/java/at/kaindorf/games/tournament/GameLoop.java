@@ -139,7 +139,6 @@ public class GameLoop extends BukkitRunnable {
 
     private void throwPlayersIntoTheGame(List<TourneyPlayer> players, Game game) {
         game.kickAllPlayers();
-        game.getTeams().keySet().forEach(Bukkit.getLogger()::info);
 
         for (TourneyPlayer tourneyPlayer : players) {
             if (tourneyPlayer.getPlayer() != null && tourneyPlayer.getPlayer().isOnline()) {

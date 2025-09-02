@@ -50,16 +50,13 @@ public class DevKillAllCommand extends DevBaseCommand implements ICommand {
             game.handleDestroyTargetMaterial(winner.getPlayers().get(r.nextInt(winner.getPlayers().size())), team.getHeadTarget());
         }
 
-        Bukkit.getLogger().info("1");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        Bukkit.getLogger().info("2");
 
         for (Player player: teams.stream().map(Team::getPlayers).flatMap(Collection::stream).collect(Collectors.toList())) {
-            Bukkit.getLogger().info(player.getDisplayName());
             player.setHealth(0);
 //            player.
 //            game.getCycle().onPlayerDies(player, winner.getPlayers().get(r.nextInt(winner.getPlayers().size())));

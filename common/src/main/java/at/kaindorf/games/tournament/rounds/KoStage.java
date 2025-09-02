@@ -56,7 +56,6 @@ public class KoStage implements Serializable {
         }
 
         currentKoRound++;
-        Collections.shuffle(teams);
         koRounds.get(currentKoRound).generateMatches(teams);
     }
 
@@ -66,12 +65,10 @@ public class KoStage implements Serializable {
 
     public void generateKoStage(List<TourneyTeam> teams) {
         int teamsRemaining = teams.size();
-        Bukkit.getLogger().info("Teams Remaining: " + teamsRemaining);
         if (teamsRemaining <= 4) {
             KoRound finalRound = new KoRound(null, rematchFinal);
             finalRound.generateFinal(teams);
             addKoRound(finalRound);
-            finalRound.getMatchesTodo().forEach(m -> Bukkit.getLogger().info(m.toString()));
             startKoRound();
             return;
         }
